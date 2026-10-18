@@ -16,7 +16,7 @@ review the diff and use `verify_snapshot.py --refresh`. Python scripts use type 
 nontrivial decisions have Russian comments. Secrets belong in Keychain/environment,
 never source, Git or logs.
 
-The local baseline passed 64 domain and 178 shared XCTest checks.
+The local baseline passed 64 domain and 180 shared XCTest checks.
 Hosted CI may skip real Codex CLI tests when it is absent. It does not replace live
 client, TCC, sleep or notification acceptance.
 
