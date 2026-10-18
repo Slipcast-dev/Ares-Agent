@@ -131,7 +131,7 @@ def main() -> None:
             "CFBundleIdentifier": metadata["bundleIdentifier"],
             "CFBundleName": metadata["appName"],
             "CFBundleDisplayName": metadata["appName"],
-            "CFBundleVersion": "20261018",
+            "CFBundleVersion": metadata.get("bundleBuild", "20261018"),
             "CFBundleShortVersionString": metadata["version"],
             "CFBundleIconFile": icon,
             "LSMinimumSystemVersion": "14.0",

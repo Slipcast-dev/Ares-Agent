@@ -29,7 +29,7 @@
     "Sources/EcosystemClientAdapters/HarnessModels.swift": "2d85dadd7b0accf358f3efa262947fc676cb791a90e2a9bd47678691a8a2c602",
     "Sources/EcosystemClientAdapters/HarnessPatch.swift": "b3ec34154aea7c01eb2b594ff92d2568a57b2e4942771326e15411c71f266414",
     "Sources/EcosystemContracts/ContractCodec.swift": "c5440cb569098e58c465041a654baf7dec551a7963c8b348a0fcdd0d0f885ce1",
-    "Sources/EcosystemContracts/ContractResources.swift": "b45314a972096566c382fd1980ead6a6dbba1879bcc3d952d85f0c577699ff1e",
+    "Sources/EcosystemContracts/ContractResources.swift": "9ced510c5facf14106364a05cfe965c51643e4b17b91f3129b4b4bf43ae9999b",
     "Sources/EcosystemContracts/KnownErrorCode.swift": "b2b5d44837d66335ab6ee818ad52f9dbe13b7e814fac2c4b1bc1c1c62dbd751a",
     "Sources/EcosystemContracts/Models.swift": "c82a699a3368e187ff72a9ef3577e0bcd4ff84112a8987094d1058d3f3c15b4f",
     "Sources/EcosystemContracts/Resources/Roles/ares.json": "db8ee7b8c07a3b6d45d04301c81cd0cd896006df2797f35b77c15ac6633de948",
@@ -82,6 +82,7 @@
     "Tests/EcosystemClientAdaptersTests/HarnessAdapterTests.swift": "72f11a91eb48734200a81d78492bfbc871f23f103895001e69ef5b11fed4004f",
     "Tests/EcosystemContractsTests/ContractTests.swift": "f79a6d94cc7a957213d9807068d7f107085545748bd1e8c0ef852299e9fb9700",
     "Tests/EcosystemContractsTests/Fixtures/result-v1.json": "073f7930236148014aa0bd158aa119c2f499a7961d350640d22b3da211dd305d",
+    "Tests/EcosystemContractsTests/ResourceLayoutTests.swift": "5e78cad87ae62062f0fde4eb865b392b6252402533a0a6a085628610e35c9e8c",
     "Tests/EcosystemLocalIPCTests/LocalAccessPolicyTests.swift": "e5c4aee317d0b53f121f557478928f30028cb07636caf1ee2e8163c16e7949ba",
     "Tests/EcosystemLocalIPCTests/LocalAutomationScheduleTests.swift": "0c86e1b661004b4580537ce53396e4ba6877945613b186525e103fbc566a41da",
     "Tests/EcosystemLocalIPCTests/LocalAutomationServiceTests.swift": "af218b656cecb6dec136821c155b03121238263f505e6b6ddc22dc5be7ee1dd5",
@@ -96,5 +97,7 @@
     "Tests/EcosystemRuntimeSupportTests/QueueTests.swift": "70ad8fad75f625e9036981dc167a9cee37a144d6d410c43f98d18fd12a98244d",
     "Tests/EcosystemUITests/SidebarTests.swift": "3acafece3f6d266cd223b81817886ea3f7c556524811b78a9e9c259e8e251e2f",
     "VERSION": "8a932413d42f95082f8323447652379a4885e328329efca3a67ec9c793c09940"
-  }
+  },
+  "releaseTag": "v0.12.0-intermediate.1",
+  "bundleBuild": "2026101803"
 }

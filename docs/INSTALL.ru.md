@@ -2,7 +2,8 @@
 
 [English](INSTALL.en.md) · [Главная](../README.md)
 
-Текущий выпуск: E10, Apple Silicon, macOS14+, Python3. PKG/DMG не имеют подписи
+Текущий выпуск: E10, Apple Silicon, macOS14+, Python3 по пути `/usr/bin/python3`
+(обычно предоставляется Command Line Tools). PKG/DMG не имеют подписи
 Developer ID и не нотариализованы. Внутренние executable подписаны ad-hoc.
 Для обычного локального запуска сертификат разработчика не нужен, однако macOS
 может запросить дополнительное ручное разрешение открытия или блокировать пакет.

@@ -27,3 +27,5 @@ rebuild its ad-hoc signature. Developer ID distribution remains a separate stage
 
 Future work: Hermes adapter extensibility, final UX, native signed bootstrap,
 consistent migrations, clean installation/upgrade and outstanding release gates.
+
+CI portability fixes: explicit @main filename for Ares MCP; both SwiftPM resource bundle layouts; two regression tests.

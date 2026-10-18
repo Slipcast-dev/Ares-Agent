@@ -27,3 +27,5 @@ app и заново создать локальную подпись. Для Dev
 
 Будущие работы: расширяемый адаптер Hermes, финальный UX, нативный подписанный
 bootstrap, согласованные миграции, чистая установка/upgrade и release gates.
+
+CI portability fixes: explicit @main filename for Ares MCP; both SwiftPM resource bundle layouts; two regression tests.

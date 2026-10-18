@@ -2,7 +2,8 @@
 
 [Русский](INSTALL.ru.md) · [Home](../README.en.md)
 
-The E10 build targets Apple Silicon, macOS14+ and Python3. Neither PKG nor DMG is
+The E10 build targets Apple Silicon, macOS14+ and Python3 at `/usr/bin/python3`
+(usually supplied by Command Line Tools). Neither PKG nor DMG is
 Developer ID-signed or notarized; executables have ad-hoc signatures. A developer
 certificate is not required for ordinary local execution, but macOS may request
 manual approval or block the package. Do not disable platform security or bypass
