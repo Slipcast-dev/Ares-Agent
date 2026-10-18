@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ecosystem:registry:1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "capabilities"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "urn:ecosystem:contracts:1#/$defs/ContractVersion"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:ecosystem:contracts:1#/$defs/CapabilityDescriptor"
+      }
+    }
+  },
+  "additionalProperties": false
+}

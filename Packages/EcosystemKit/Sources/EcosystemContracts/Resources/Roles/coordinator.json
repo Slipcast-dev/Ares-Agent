@@ -1,0 +1,16 @@
+{
+  "schemaVersion": {
+    "major": 1,
+    "minor": 0
+  },
+  "roleId": "coordinator",
+  "instructionFile": "coordinator.md",
+  "allowedAgentIds": [
+    "ares",
+    "athena"
+  ],
+  "allowedCapabilities": [],
+  "modelOverride": null,
+  "toolRestriction": "adapter-must-inspect-support",
+  "enabledByDefault": false
+}

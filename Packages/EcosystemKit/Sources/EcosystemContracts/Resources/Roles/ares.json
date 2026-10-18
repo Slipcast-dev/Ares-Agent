@@ -1,0 +1,39 @@
+{
+  "schemaVersion": {
+    "major": 1,
+    "minor": 0
+  },
+  "roleId": "ares",
+  "instructionFile": "ares.md",
+  "allowedAgentIds": [
+    "ares"
+  ],
+  "allowedCapabilities": [
+    "agent.get_capabilities",
+    "agent.get_status",
+    "task.get",
+    "task.list",
+    "task.get_result",
+    "task.cancel",
+    "event.list",
+    "audit.list",
+    "file.list_roots",
+    "file.scan",
+    "file.search",
+    "file.analyze_storage",
+    "file.compute_duplicates",
+    "file.find_duplicates",
+    "rule.list",
+    "rule.get",
+    "rule.validate",
+    "rule.preview",
+    "rule.propose",
+    "rule.run",
+    "rule.request_enable",
+    "rule.disable",
+    "rule.history"
+  ],
+  "modelOverride": null,
+  "toolRestriction": "adapter-must-inspect-support",
+  "enabledByDefault": false
+}

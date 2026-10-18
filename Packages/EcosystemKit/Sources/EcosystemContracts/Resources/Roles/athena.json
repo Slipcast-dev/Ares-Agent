@@ -1,0 +1,35 @@
+{
+  "schemaVersion": {
+    "major": 1,
+    "minor": 0
+  },
+  "roleId": "athena",
+  "instructionFile": "athena.md",
+  "allowedAgentIds": [
+    "athena"
+  ],
+  "allowedCapabilities": [
+    "agent.get_capabilities",
+    "agent.get_status",
+    "task.get",
+    "task.list",
+    "task.get_result",
+    "task.cancel",
+    "event.list",
+    "audit.list",
+    "system.get_info",
+    "system.get_metrics",
+    "diagnostics.run",
+    "storage.get_overview",
+    "monitor.list",
+    "monitor.get",
+    "monitor.preview",
+    "monitor.propose",
+    "monitor.request_enable",
+    "monitor.disable",
+    "monitor.history"
+  ],
+  "modelOverride": null,
+  "toolRestriction": "adapter-must-inspect-support",
+  "enabledByDefault": false
+}

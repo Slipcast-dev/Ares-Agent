@@ -1,0 +1,1146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ecosystem:contracts:1",
+  "title": "Ecosystem contracts v1",
+  "$defs": {
+    "ContractVersion": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        }
+      },
+      "required": [
+        "major"
+      ],
+      "additionalProperties": true
+    },
+    "ClientContext": {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sessionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "clientId"
+      ],
+      "additionalProperties": false
+    },
+    "TaskProgress": {
+      "type": "object",
+      "properties": {
+        "phase": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "processed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "phase",
+        "processed"
+      ],
+      "additionalProperties": true
+    },
+    "TaskRequest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workflowId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parentTaskId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "agentId": {
+          "type": "string",
+          "enum": [
+            "ares",
+            "athena"
+          ]
+        },
+        "capabilityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[a-z][a-z0-9_.-]{0,127}$"
+        },
+        "parameters": {},
+        "origin": {
+          "type": "string",
+          "enum": [
+            "user",
+            "localRule",
+            "externalConnection"
+          ]
+        },
+        "clientContext": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ClientContext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "rootId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grantId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "planId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "planRevision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+        },
+        "deadlineAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disconnectPolicy": {
+          "type": "string",
+          "enum": [
+            "continueOnDisconnect",
+            "cancelOnDisconnect"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "agentId",
+        "capabilityId",
+        "parameters",
+        "origin",
+        "idempotencyKey",
+        "createdAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "capabilityId": {
+                "pattern": "^file\\.",
+                "not": {
+                  "const": "file.list_roots"
+                }
+              }
+            },
+            "required": [
+              "capabilityId"
+            ]
+          },
+          "then": {
+            "required": [
+              "rootId"
+            ],
+            "properties": {
+              "rootId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "agentId": {
+                "const": "ares"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "capabilityId": {
+                "pattern": "^(system|diagnostics|storage|monitor)\\."
+              }
+            },
+            "required": [
+              "capabilityId"
+            ]
+          },
+          "then": {
+            "properties": {
+              "agentId": {
+                "const": "athena"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "capabilityId": {
+                "pattern": "^(file|rule)\\."
+              }
+            },
+            "required": [
+              "capabilityId"
+            ]
+          },
+          "then": {
+            "properties": {
+              "agentId": {
+                "const": "ares"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TaskRecord": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "taskId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "request": {
+          "$ref": "#/$defs/TaskRequest"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "waitingForApproval",
+            "waitingForResource",
+            "cancelling",
+            "completed",
+            "partial",
+            "failed",
+            "cancelled",
+            "interrupted",
+            "recoveryRequired"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "progress": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TaskProgress"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cancellationRequestedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "originVerification": {
+          "type": "string",
+          "enum": [
+            "unverified",
+            "localPeerVerified"
+          ],
+          "default": "unverified"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "taskId",
+        "request",
+        "status",
+        "revision"
+      ],
+      "additionalProperties": true
+    },
+    "ContractError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Z][A-Z0-9_]{0,63}$"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "transport",
+            "operation"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "userAction": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correlationId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "code",
+        "scope",
+        "message",
+        "retryable",
+        "correlationId"
+      ],
+      "additionalProperties": true
+    },
+    "TaskResult": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "taskId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "partial",
+            "failed",
+            "cancelled",
+            "interrupted",
+            "recoveryRequired"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "data": {},
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContractError"
+          }
+        },
+        "startedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+        },
+        "dataClassification": {
+          "type": "string",
+          "enum": [
+            "aggregate",
+            "fileMetadata"
+          ]
+        },
+        "completeness": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable"
+          ]
+        },
+        "resultRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "snapshotId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "measuredAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "indexGeneration": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "skippedCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stale": {
+          "type": "boolean"
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "actionReceipts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "cancellationTooLate": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "taskId",
+        "status",
+        "summary",
+        "data",
+        "warnings",
+        "errors",
+        "finishedAt",
+        "dataClassification",
+        "completeness",
+        "resultRevision",
+        "startedAt"
+      ],
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "partial"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "completeness": {
+                "const": "partial"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "errors": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "cancellationTooLate": {
+                "const": true
+              }
+            },
+            "required": [
+              "cancellationTooLate"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "completed",
+                  "partial"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CapabilityDescriptor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "version": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "agentId": {
+          "type": "string",
+          "enum": [
+            "ares",
+            "athena"
+          ]
+        },
+        "inputSchema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "outputSchema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "readOnly",
+            "mutating"
+          ]
+        },
+        "readsContent": {
+          "type": "boolean"
+        },
+        "dataClassifications": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "aggregate",
+              "fileMetadata",
+              "localContent",
+              "contentExport",
+              "secret"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "supportsAsync": {
+          "type": "boolean"
+        },
+        "supportsCancel": {
+          "type": "boolean"
+        },
+        "maximumInputBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        },
+        "maximumPageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+        "requiresGrant": {
+          "type": "boolean"
+        },
+        "implementationStatus": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "implemented"
+          ],
+          "default": "planned"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "agentId",
+        "inputSchema",
+        "outputSchema",
+        "mode",
+        "readsContent",
+        "dataClassifications",
+        "supportsAsync",
+        "supportsCancel",
+        "maximumInputBytes",
+        "maximumPageSize",
+        "requiresGrant"
+      ],
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "mutating"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "requiresGrant": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "GrantDescriptor": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "grantId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "agentId": {
+          "type": "string",
+          "enum": [
+            "ares",
+            "athena"
+          ]
+        },
+        "rootIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "objectIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "capabilityIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "dataClassification": {
+          "type": "string",
+          "enum": [
+            "aggregate",
+            "fileMetadata",
+            "localContent",
+            "contentExport",
+            "secret"
+          ]
+        },
+        "maximumBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "maximumObjects": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "periodMilliseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+        },
+        "revokedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorizationBasis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "grantId",
+        "agentId",
+        "capabilityIds",
+        "dataClassification",
+        "maximumBytes",
+        "maximumObjects",
+        "periodMilliseconds",
+        "revision",
+        "issuedAt",
+        "expiresAt",
+        "authorizationBasis"
+      ],
+      "additionalProperties": true
+    },
+    "AgentEvent": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "ares",
+            "athena"
+          ]
+        },
+        "detectedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+        },
+        "occurredAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "taskId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "workflowId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ruleId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "dataClassification": {
+          "type": "string",
+          "enum": [
+            "aggregate",
+            "fileMetadata"
+          ]
+        },
+        "payload": {}
+      },
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "sequence",
+        "source",
+        "detectedAt",
+        "type",
+        "severity",
+        "dataClassification",
+        "payload"
+      ],
+      "additionalProperties": true
+    },
+    "PageRequest": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500,
+          "default": 100
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "SnapshotCursor": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "filterFingerprint": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        }
+      },
+      "required": [
+        "snapshotId",
+        "filterFingerprint",
+        "offset"
+      ],
+      "additionalProperties": true
+    },
+    "ClientCapabilityFlags": {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "localMCP": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "nativeDelegation": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "namedRoles": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "toolFiltering": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "hotReload": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "headlessRunner": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "resumableSessions": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "clientId"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/TaskRequest"
+    },
+    {
+      "$ref": "#/$defs/TaskResult"
+    },
+    {
+      "$ref": "#/$defs/AgentEvent"
+    }
+  ]
+}

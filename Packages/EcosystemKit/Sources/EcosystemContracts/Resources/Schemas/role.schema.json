@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "roleId",
+    "instructionFile",
+    "allowedAgentIds",
+    "allowedCapabilities",
+    "modelOverride",
+    "toolRestriction",
+    "enabledByDefault"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        }
+      },
+      "required": [
+        "major"
+      ],
+      "additionalProperties": true
+    },
+    "roleId": {
+      "enum": [
+        "ares",
+        "athena",
+        "coordinator"
+      ]
+    },
+    "instructionFile": {
+      "type": "string",
+      "pattern": "^(ares|athena|coordinator)\\.md$"
+    },
+    "allowedAgentIds": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "ares",
+          "athena"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "allowedCapabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "modelOverride": {
+      "type": "null"
+    },
+    "toolRestriction": {
+      "const": "adapter-must-inspect-support"
+    },
+    "enabledByDefault": {
+      "const": false
+    }
+  },
+  "additionalProperties": false
+}

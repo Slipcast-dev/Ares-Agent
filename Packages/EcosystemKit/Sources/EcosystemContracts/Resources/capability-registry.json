@@ -1,0 +1,913 @@
+{
+  "schemaVersion": {
+    "major": 1,
+    "minor": 0
+  },
+  "capabilities": [
+    {
+      "id": "agent.get_capabilities",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "agent.get_status",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.get",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.list",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.get_result",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.cancel",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "event.list",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "audit.list",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "file.list_roots",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "file.scan",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": true,
+      "supportsCancel": true,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "file.search",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "file.analyze_storage",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "file.compute_duplicates",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": true,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": true,
+      "supportsCancel": true,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "file.find_duplicates",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.list",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.get",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.validate",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.preview",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": true,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.propose",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.run",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": true,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": true,
+      "supportsCancel": true,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.request_enable",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.disable",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "rule.history",
+      "agentId": "ares",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate",
+        "fileMetadata"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "agent.get_capabilities",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "agent.get_status",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.get",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.list",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.get_result",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "task.cancel",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "event.list",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "audit.list",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "system.get_info",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "system.get_metrics",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "diagnostics.run",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": true,
+      "supportsCancel": true,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "storage.get_overview",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.list",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.get",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.preview",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.propose",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.request_enable",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.disable",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "mutating",
+      "requiresGrant": true,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    },
+    {
+      "id": "monitor.history",
+      "agentId": "athena",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "inputSchema": "urn:ecosystem:contracts:1#/$defs/TaskRequest",
+      "outputSchema": "urn:ecosystem:contracts:1#/$defs/TaskResult",
+      "implementationStatus": "planned",
+      "mode": "readOnly",
+      "requiresGrant": false,
+      "readsContent": false,
+      "dataClassifications": [
+        "aggregate"
+      ],
+      "supportsAsync": false,
+      "supportsCancel": false,
+      "maximumInputBytes": 1048576,
+      "maximumPageSize": 500
+    }
+  ]
+}
