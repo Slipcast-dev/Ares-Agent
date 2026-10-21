@@ -77,7 +77,7 @@
     },
     {
       "path": "Sources/EcosystemContracts/ContractResources.swift",
-      "sha256": "b45314a972096566c382fd1980ead6a6dbba1879bcc3d952d85f0c577699ff1e"
+      "sha256": "7394c7b11565db99b3773d936a35efdac4d5df271540cdaf10e679edce668c87"
     },
     {
       "path": "Sources/EcosystemContracts/KnownErrorCode.swift",

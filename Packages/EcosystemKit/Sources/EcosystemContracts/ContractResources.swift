@@ -14,6 +14,12 @@ public enum ContractResources {
     public static func data(relativePath: String) throws -> Data {
         guard !relativePath.hasPrefix("/"), !relativePath.split(separator: "/").contains(".."),
               let base = Bundle.module.resourceURL else { throw ContractFailure.invalidArgument }
-        return try Data(contentsOf: base.appendingPathComponent("Resources/" + relativePath))
+        // SwiftPM на разных версиях Xcode размещает .copy("Resources") либо
+        // под resourceURL/Resources, либо прямо под resourceURL. Выбираем только
+        // ресурс собственного bundle; внешние каталоги и cwd не участвуют.
+        let nested = base.appendingPathComponent("Resources/" + relativePath)
+        let direct = base.appendingPathComponent(relativePath)
+        let resource = FileManager.default.fileExists(atPath: nested.path) ? nested : direct
+        return try Data(contentsOf: resource)
     }
 }
