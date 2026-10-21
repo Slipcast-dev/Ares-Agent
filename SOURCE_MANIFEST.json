@@ -1,7 +1,7 @@
 {
-  "version": "0.28.0",
+  "version": "0.29.0",
   "upstreamProject": "FileOrganizer",
-  "upstreamCommit": "347f4bf54b57354e512327495c66c807a1c24424",
+  "upstreamCommit": "e590941703b13e3286a48b60929b40896a18f075",
   "sourceFiles": [
     {
       "path": ".editorconfig",
@@ -41,7 +41,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "cf49b0b693768381674f498896f55da5e1f9efe1a55a1f4ccfc4c526a67855eb"
+      "sha256": "adc2a311d3fb1bbe189ec06be1c2eaed368532e08a12cb3d9d4ece61515c6adb"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -497,11 +497,11 @@
     },
     {
       "path": "README.en.md",
-      "sha256": "0f7855157f4c9f37414685556732189168c3ac3b7b5cd75745e7779613b42760"
+      "sha256": "95e936df25461c8c6e7fc9b3e934a4114c035234a4e07444de483b6473f939a0"
     },
     {
       "path": "README.md",
-      "sha256": "bc5a9345cbdd8bc2d13db06d614c5ed5085d9f682731a00329e1614c8ad21e11"
+      "sha256": "585e41b8b7a34bfb08bd4dcbed0f1cdececc1dd50f2616ca5fef9df0d64a5fa9"
     },
     {
       "path": "SECURITY.md",
@@ -917,19 +917,19 @@
     },
     {
       "path": "docs/DEVELOPMENT.en.md",
-      "sha256": "707a3e6fa1b32dca445baa90564778f6dfba4bbcbfe62cb98b40736f784a41b4"
+      "sha256": "e62ec1e4dd3113e366105f299db2501f6b4f59911c4685e1ea84b36234e7bb53"
     },
     {
       "path": "docs/DEVELOPMENT.ru.md",
-      "sha256": "9ab0b0f55ca87768c9a22872d80ceacb38d53c1a72a99bff94c5fe234671814c"
+      "sha256": "1436c5e359032aa3d5932d7f94b00647324b36e5d665b5b85a503126288ae0f3"
     },
     {
       "path": "docs/INSTALL.en.md",
-      "sha256": "b1b31e7cf340bdb17cb8aec3b70485a20829b64ba323dc0595922f34841a04c2"
+      "sha256": "cc9dbfd2ae16ecf2662ead953a9ee2f9b3fb097b513f4020244c6aa6e9fb1189"
     },
     {
       "path": "docs/INSTALL.ru.md",
-      "sha256": "7cffdfcd80d4f7d6fbb80a3f99de2d13ed715b34a58691f4961728aca34a94af"
+      "sha256": "75682539379cbb327a68763e8138f68bf7b573fa5e51e0eefe78a4986b213034"
     },
     {
       "path": "docs/LIFECYCLE.md",
@@ -957,17 +957,11 @@
     },
     {
       "path": "scripts/package_app.zsh",
-      "sha256": "0ce42de871e123fdbbf92fc0994addf923172e3511c95cad6e6152ac36271042"
+      "sha256": "e15f3a5ed92d82fca8e5f77e59082e6ab1d8c215171104458889d174b910b76a"
     },
     {
       "path": "scripts/verify_ecosystem_dependency.py",
       "sha256": "33e022878fdb45e5e3b8d1bf3675b259e2cfe6e561855195171cee84e037e4b6"
     }
-  ],
-  "privateProfilesIncluded": false,
-  "implementationPromptsIncluded": false,
-  "internalWorkspaceDocumentationIncluded": false,
-  "vendoredCodeMatchesReviewedSource": true,
-  "publicDocumentationWrittenSeparately": true,
-  "scope": "published tracked files excluding SOURCE_MANIFEST.json"
+  ]
 }

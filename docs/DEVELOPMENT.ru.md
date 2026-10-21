@@ -1,4 +1,4 @@
-# Разработка Ares0.28.0
+# Разработка Ares0.29.0
 
 Swift5.9+, macOS14+ target. Vendored EcosystemKit0.23.0, Yams6.2.2 pinned.
 No sibling repository is required.

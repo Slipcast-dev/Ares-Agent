@@ -1,6 +1,6 @@
-# Установка Ares0.28.0
+# Установка Ares0.29.0
 
-[Скачать проверенный промежуточный выпуск](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.28.0).
+[Скачать проверенный промежуточный выпуск](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.29.0).
 
 ## Совместимость
 

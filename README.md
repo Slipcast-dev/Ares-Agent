@@ -8,13 +8,13 @@
 
 Арес — отдельный локальный агент macOS. Безопасная работа с файлами, правилами и индексом.
 
-Версия **0.28.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
+Версия **0.29.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
 Запуск на Intel и macOS14 отдельно ещё не принят. Проект с доступными исходниками
 использует собственную некоммерческую [лицензию](LICENSE), а не MIT/OSI-лицензию.
 
-[![Version 0.28.0](https://img.shields.io/badge/Version-0.28.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.28.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
+[![Version 0.29.0](https://img.shields.io/badge/Version-0.29.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.29.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
 
-[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/Ares-0.28.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/Ares-0.28.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/SHA256SUMS)
+[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/SHA256SUMS)
 
 ## Установка
 
@@ -57,3 +57,7 @@ scripts/package_app.zsh
 уязвимостях направляйте по правилам SECURITY.md.
 
 [Лицензия на русском](LICENSE) · [English license translation](LICENSE.en.md).
+
+## 0.29.0
+
+Согласованный комплект0.29.0. Поведение runtime Ареса и EcosystemKit0.23.0 сохранено; исправление backlog мониторинга относится к Афине.

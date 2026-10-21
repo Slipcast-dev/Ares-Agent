@@ -8,13 +8,13 @@
 
 Ares is an independent local macOS agent. Safe local file indexing, duplicate analysis and approved automation rules.
 
-Version **0.28.0** · macOS14+ target · current release **Apple Silicon arm64**.
+Version **0.29.0** · macOS14+ target · current release **Apple Silicon arm64**.
 Intel/macOS14 execution remains unverified. This is a source-available project
 under the custom non-commercial [LICENSE](LICENSE), not an MIT-licensed project.
 
-[![Version 0.28.0](https://img.shields.io/badge/Version-0.28.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.28.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
+[![Version 0.29.0](https://img.shields.io/badge/Version-0.29.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.29.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
 
-[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/Ares-0.28.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/Ares-0.28.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/SHA256SUMS)
+[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/SHA256SUMS)
 
 ## Installation
 
@@ -52,3 +52,7 @@ Read [CONTRIBUTING](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.m
 Security reports should follow SECURITY.md; do not post personal data in issues.
 
 [Лицензия на русском](LICENSE) · [English license translation](LICENSE.en.md).
+
+## 0.29.0
+
+Aligned0.29.0 distribution. Ares runtime behavior and EcosystemKit0.23.0 are unchanged; the monitor-backlog fix applies to Athena.

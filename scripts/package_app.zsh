@@ -63,7 +63,7 @@ BACKGROUND="$CONTENTS/Library/LoginItems/AresBackground.app"
 mkdir -p "$BACKGROUND/Contents/MacOS" "$BACKGROUND/Contents/Resources"
 cp "$BUILD_DIR/AresRuntime" "$BACKGROUND/Contents/MacOS/AresRuntime"
 cp -R "$CONTRACT_BUNDLE" "$BACKGROUND/Contents/Resources/"
-python3 - "$BACKGROUND/Contents/Info.plist" "${ECOSYSTEM_APP_VERSION:-0.28.0}" <<'PLIST'
+python3 - "$BACKGROUND/Contents/Info.plist" "${ECOSYSTEM_APP_VERSION:-0.29.0}" <<'PLIST'
 import plistlib
 import sys
 from pathlib import Path
@@ -76,7 +76,7 @@ Path(sys.argv[1]).write_bytes(plistlib.dumps({
     'LSMinimumSystemVersion': '14.0', 'LSUIElement': True,
     'NSPrincipalClass': 'NSApplication'}))
 PLIST
-/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ECOSYSTEM_APP_VERSION:-0.28.0}" "$CONTENTS/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ECOSYSTEM_APP_VERSION:-0.29.0}" "$CONTENTS/Info.plist"
 
 # `sips` создаёт обязательные размеры из исходного изображения Ареса; исходник
 # не меняется, поэтому приложение и репозиторий используют один визуальный образ.
