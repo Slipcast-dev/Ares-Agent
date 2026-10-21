@@ -71,6 +71,7 @@ public enum RulePolicyError: String, Error, LocalizedError, QueueDomainError, Se
 }
 /// Единая типизированная граница для GUI/MCP. Сервер проверяет поля по операции.
 public struct RuleControlRequest: Codable, Sendable {
+    public var cursor: String? = nil
     public var rule: AutomationRule?
     public var ruleID: UUID?
     public var runID: UUID?
@@ -80,7 +81,8 @@ public struct RuleControlRequest: Codable, Sendable {
     public var offset: Int?
     public var eventID: UUID?
     public var processingToken: UUID?
-    public init(rule: AutomationRule? = nil, ruleID: UUID? = nil, runID: UUID? = nil, planID: UUID? = nil, fingerprint: String? = nil, key: String? = nil, offset: Int? = nil, eventID: UUID? = nil, processingToken: UUID? = nil) {
+    public init(rule: AutomationRule? = nil, ruleID: UUID? = nil, runID: UUID? = nil, planID: UUID? = nil, fingerprint: String? = nil, key: String? = nil, offset: Int? = nil, eventID: UUID? = nil, processingToken: UUID? = nil, cursor: String? = nil) {
+        self.cursor = cursor
         self.eventID = eventID; self.processingToken = processingToken
         self.rule = rule; self.ruleID = ruleID; self.runID = runID; self.planID = planID; self.fingerprint = fingerprint; self.key = key; self.offset = offset
     }

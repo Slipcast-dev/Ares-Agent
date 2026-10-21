@@ -78,7 +78,7 @@ public actor FileIndexingService {
                 let version = try VerifiedFileReader.capture(root: rootURL, relative: relativePath)
                 let byteSize = version.byteSize
                 guard byteSize == Int64(values.fileSize ?? 0) else { throw AresFileFailure.staleSnapshot }
-                guard records.count < 50_000 else { throw AresFileFailure.capacityExceeded }
+                guard records.count < FileAnalysisLimits.maximumFiles else { throw AresFileFailure.capacityExceeded }
                 records.append(
                     FileRecord(
                         rootID: root.id,

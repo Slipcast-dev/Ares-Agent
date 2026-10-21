@@ -8,12 +8,14 @@ let package = Package(name: "EcosystemKit", platforms: [.macOS(.v14)], products:
     .library(name: "EcosystemRuntimeSupport", targets: ["EcosystemRuntimeSupport"]),
     .library(name: "EcosystemLocalIPC", targets: ["EcosystemLocalIPC"]),
     .library(name: "EcosystemClientAdapters", targets: ["EcosystemClientAdapters"]),
+    .executable(name: "EcosystemInstalledProbe", targets: ["EcosystemInstalledProbe"]),
     .executable(name: "EcosystemQueueProbe", targets: ["EcosystemQueueProbe"])
 ], dependencies: [
     .package(url: "https://github.com/jpsim/Yams.git", exact: "6.2.2")
 ], targets: [
-    .target(name: "EcosystemClientAdapters", dependencies: [.product(name: "Yams", package: "Yams")]),
+    .target(name: "EcosystemClientAdapters", dependencies: ["EcosystemContracts", .product(name: "Yams", package: "Yams")]),
     .testTarget(name: "EcosystemClientAdaptersTests", dependencies: ["EcosystemClientAdapters"]),
+    .executableTarget(name: "EcosystemInstalledProbe", dependencies: ["EcosystemLocalIPC"]),
     .target(name: "EcosystemLocalIPC", dependencies: ["EcosystemRuntimeSupport"]),
     .testTarget(name: "EcosystemLocalIPCTests", dependencies: ["EcosystemLocalIPC"]),
     .target(name: "EcosystemRuntimeSupport", dependencies: ["EcosystemContracts"],

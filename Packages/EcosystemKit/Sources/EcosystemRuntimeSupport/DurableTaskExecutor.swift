@@ -3,9 +3,10 @@ import Foundation
 
 public struct RegisteredQueueOperation: Sendable {
     public let mutating: Bool
+    public let workload: QueueWorkload
     public let perform: @Sendable (Data, QueueExecutionContext) async throws -> Data
-    public init(mutating: Bool, perform: @escaping @Sendable (Data, QueueExecutionContext) async throws -> Data) {
-        self.mutating = mutating; self.perform = perform
+    public init(mutating: Bool, workload: QueueWorkload = .light, perform: @escaping @Sendable (Data, QueueExecutionContext) async throws -> Data) {
+        self.mutating = mutating; self.workload = workload; self.perform = perform
     }
 }
 
@@ -49,44 +50,80 @@ public struct QueueExecutionContext: Sendable {
 public actor DurableTaskExecutor {
     private struct RunningJob {
         let operation: Task<Data, Error>
+        let workload: QueueWorkload
         let heartbeat: Task<Void, Never>
         let deadline: Task<Void, Never>?
     }
     private let queue: DurableTaskQueue
     private let operations: [String: RegisteredQueueOperation]
+    private let powerState: @Sendable () -> QueuePowerState
     private var running: [UUID: RunningJob] = [:]
     private var pumping = false
     private var pumpAgain = false
     private var accepting = true
+    private var emergencyBlocked = false
+    private var emergencyChanging = false
     private var supervisor: Task<Void, Never>?
     private var supervisionFailure: QueueFailure?
-    private var supervisionTicks = 0
+    private var supervisionSleep: Task<Void, Error>?
+    private var supervisionGeneration: UInt64 = 0
+    private var lastMaintenance = ContinuousClock.now
     private var finalizationFailures: [UUID: QueueFailure] = [:]
 
-    public init(queue: DurableTaskQueue, operations: [String: RegisteredQueueOperation]) throws {
+    public init(queue: DurableTaskQueue, operations: [String: RegisteredQueueOperation],
+                powerState: @escaping @Sendable () -> QueuePowerState = { QueuePowerState.current() }) throws {
         try operations.keys.forEach { try ContractValidation.identifier($0) }
-        self.queue = queue; self.operations = operations
+        self.queue = queue; self.operations = operations; self.powerState = powerState
     }
     public func submit(_ value: QueueSubmission, retrying previousID: UUID? = nil) async throws -> DurableTask {
         guard accepting, let operation = operations[value.capabilityID], operation.mutating == value.mutating else {
             throw QueueFailure.invalidArgument
         }
+        guard !emergencyBlocked else { throw QueueFailure.emergencyStopped }
         let accepted = try await queue.accept(value, retrying: previousID)
+        wakeSupervision()
         try await pump()
         return accepted
     }
     /// Runtime явно включает supervisor после готовности handlers/БД. Он
     /// отменяет fenced callbacks и не освобождает физический слот до их возврата.
     public func startSupervision() {
-        guard supervisor == nil else { return }
-        supervisor = Task { [weak self] in
+        guard supervisor == nil, accepting else { return }
+        supervisor = Task(priority: .utility) { [weak self] in
             while !Task.isCancelled {
-                do { try await Task.sleep(nanoseconds: 1_000_000_000) }
-                catch { return }
                 guard let self else { return }
-                await self.supervise()
+                guard await self.supervisionCycle() else { return }
             }
         }
+    }
+    /// Пустая очередь требует только минутного maintenance. При работе или
+    /// неопределённом результате сохраняется прежняя секундная проверка.
+    /// Sleep отдельный: новый submit прерывает ожидание, но не callback.
+    private func wakeSupervision() {
+        supervisionGeneration &+= 1
+        supervisionSleep?.cancel()
+    }
+    private func supervisionCycle() async -> Bool {
+        guard accepting, !Task.isCancelled else { return false }
+        let seen = supervisionGeneration
+        await supervise()
+        var seconds: Double = 1
+        if running.isEmpty, finalizationFailures.isEmpty, supervisionFailure == nil {
+            do {
+                let active = try await queue.executingTasks()
+                let queued = try await queue.nextQueuedTask()
+                if active.isEmpty, queued == nil { seconds = 60 }
+            } catch { supervisionFailure = .storageFailure }
+        }
+        guard accepting, !Task.isCancelled else { return false }
+        // Actor reentrancy: submit/finalize во время чтения БД нельзя потерять
+        // между вычислением срока и установкой idle sleep.
+        guard seen == supervisionGeneration else { return true }
+        let sleep = Task { try await Task.sleep(for: .seconds(seconds)) }
+        supervisionSleep = sleep
+        do { try await sleep.value } catch { /* Новый сигнал пересчитает состояние. */ }
+        supervisionSleep = nil
+        return accepting && !Task.isCancelled
     }
     private func supervise() async {
         do {
@@ -96,10 +133,11 @@ public actor DurableTaskExecutor {
                     running[id]?.operation.cancel()
                 }
             }
-            supervisionTicks += 1
-            if supervisionTicks >= 60 {
+            // Retention привязан к монотонному времени, а не числу passes:
+            // уменьшение idle wakeups не откладывает purge на час.
+            if lastMaintenance.duration(to: .now) >= .seconds(60) {
                 _ = try await queue.purgeExpiredReadHistory()
-                supervisionTicks = 0
+                lastMaintenance = .now
             }
             for id in Array(finalizationFailures.keys) {
                 if try await queue.task(id)?.status.isTerminal == true { finalizationFailures[id] = nil }
@@ -108,9 +146,10 @@ public actor DurableTaskExecutor {
             supervisionFailure = nil
         } catch { supervisionFailure = .storageFailure }
     }
-    public func resumeQueuedTasks() async throws { try await pump() }
+    public func resumeQueuedTasks() async throws { wakeSupervision(); try await pump() }
     public func cancel(_ id: UUID) async throws {
         _ = try await queue.requestCancellation(id)
+        wakeSupervision()
         running[id]?.operation.cancel()
         try await pump()
     }
@@ -135,9 +174,39 @@ public actor DurableTaskExecutor {
             }
         }
     }
+    public func emergencyStatus() async throws -> QueueEmergencyStatus {
+        var state = try await queue.emergencyStatus()
+        state.stopped = state.stopped || emergencyBlocked
+        state.activeCallbacks = running.count
+        return state
+    }
+    public func emergencyStop() async throws -> QueueEmergencyStatus {
+        guard !emergencyChanging else { throw QueueFailure.resourceBusy }
+        emergencyChanging = true; defer { emergencyChanging = false }
+        // Закрываем admission до первого await. При ошибке SQL процесс остаётся
+        // закрытым, но ошибка не выдаётся за сохранённое успешное состояние.
+        emergencyBlocked = true
+        do { try await queue.emergencyStop() }
+        catch {
+            for job in running.values { job.operation.cancel() }
+            throw error
+        }
+        for job in running.values { job.operation.cancel() }
+        return try await emergencyStatus()
+    }
+    public func resumeAdmission() async throws -> QueueEmergencyStatus {
+        guard accepting, !emergencyChanging else { throw QueueFailure.resourceBusy }
+        emergencyChanging = true; defer { emergencyChanging = false }
+        try await queue.resumeAdmission()
+        emergencyBlocked = false
+        wakeSupervision()
+        try await pump()
+        return try await emergencyStatus()
+    }
     public func stopAcceptingAndCancelRunning() async throws {
         accepting = false
         supervisor?.cancel(); supervisor = nil
+        wakeSupervision()
         for id in Array(running.keys) {
             _ = try await queue.requestCancellation(id)
             running[id]?.operation.cancel()
@@ -169,16 +238,24 @@ public actor DurableTaskExecutor {
     }
 
     private func pump() async throws {
-        guard accepting else { return }
+        guard accepting, !emergencyBlocked else { return }
         if pumping { pumpAgain = true; return }
         pumping = true
         defer { pumping = false }
         repeat {
             pumpAgain = false
-            while accepting, running.count < queue.maximumConcurrentTasks, let value = try await queue.nextQueuedTask() {
+            while accepting, !emergencyBlocked, running.count < queue.maximumConcurrentTasks, let value = try await queue.nextQueuedTask() {
+                // Сохраняем FIFO: heavy в голове ждёт физического heavy callback,
+                // а не обходит старшие задания. Light сама не расходует heavy slot.
+                // Нельзя считать terminal lease освобождением физического слота:
+                // fenced callback хранится в running до фактического возврата.
+                if operations[value.capabilityID]?.workload == .heavy,
+                   running.values.contains(where: { $0.workload == .heavy }),
+                   powerState().limitsHeavyConcurrency { break }
                 let token: QueueLease
                 do { token = try await queue.claim(value.id) }
                 catch QueueFailure.capacityReached { break }
+                catch QueueFailure.emergencyStopped { break }
                 catch QueueFailure.invalidState { continue } // queued отменён между await.
                 guard let registered = operations[value.capabilityID], registered.mutating == value.mutating else {
                     _ = try await queue.finish(token, status: .failed, errorCode: .unknownCapability)
@@ -186,7 +263,7 @@ public actor DurableTaskExecutor {
                 }
                 // Actor мог принять shutdown во время await claim. Такой callback
                 // ещё не начат: закрываем его без запуска и без файлового эффекта.
-                guard accepting else {
+                guard accepting, !emergencyBlocked else {
                     _ = try await queue.requestCancellation(value.id)
                     _ = try await queue.finish(token, status: .cancelled, errorCode: .cancelled)
                     break
@@ -222,10 +299,10 @@ public actor DurableTaskExecutor {
                         } catch { return }
                     }
                 }
-                running[value.id] = RunningJob(operation: operation, heartbeat: heartbeat, deadline: deadline)
+                running[value.id] = RunningJob(operation: operation, workload: registered.workload, heartbeat: heartbeat, deadline: deadline)
                 Task { await finalize(value.id, token: token, result: await operation.result) }
             }
-        } while pumpAgain && accepting
+        } while pumpAgain && accepting && !emergencyBlocked
     }
     private func finalize(_ id: UUID, token: QueueLease, result: Result<Data, Error>) async {
         running[id]?.heartbeat.cancel()
@@ -261,6 +338,7 @@ public actor DurableTaskExecutor {
             }
         }
         running[id] = nil
+        wakeSupervision()
         do { try await pump() }
         catch {
             if finalizationFailures.count >= 64 { finalizationFailures.removeAll() }

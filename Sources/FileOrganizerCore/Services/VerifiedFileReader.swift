@@ -20,6 +20,13 @@ public struct FileVersion: Codable, Equatable, Sendable {
         changedSeconds = Int64(value.st_ctimespec.tv_sec); changedNanoseconds = Int64(value.st_ctimespec.tv_nsec)
     }
 }
+/// Один предел для обхода, записи и чтения снимка: разные ограничения приводили
+/// бы к успешному сканированию, которое невозможно сохранить или открыть.
+/// 100 000 — обязательный набор AC34; правила сохраняют собственную меньшую квоту.
+public enum FileAnalysisLimits {
+    public static let maximumFiles = 100_000
+}
+
 public enum AresFileFailure: String, Error, LocalizedError, Sendable, QueueDomainError {
     public var knownCode: KnownErrorCode {
         switch self {
@@ -34,7 +41,7 @@ public enum AresFileFailure: String, Error, LocalizedError, Sendable, QueueDomai
         case .staleSnapshot: "Файлы изменились. Обновите список файлов и повторите запрос."
         case .snapshotRequired: "Сначала обновите список файлов этой папки."
         case .unsafePath: "Файл недоступен или путь содержит ссылку."
-        case .capacityExceeded: "Папка превышает лимит этого анализа: 50 000 файлов."
+        case .capacityExceeded: "Папка превышает лимит этого анализа: 100 000 файлов."
         case .invalidCursor: "Страница не соответствует текущему запросу. Начните просмотр заново."
         case .hashesNotComputed: "Сначала выполните вычисление дубликатов."
         }

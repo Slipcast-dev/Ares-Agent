@@ -8,7 +8,9 @@ import XCTest
 private final class TestClock: @unchecked Sendable {
     private let lock = NSLock()
     private var time = Date(timeIntervalSince1970: 1_800_000_000)
-    func now() -> Date { lock.lock(); defer { lock.unlock() }; return time }
+    private var reads = 0
+    func readCount() -> Int { lock.lock(); defer { lock.unlock() }; return reads }
+    func now() -> Date { lock.lock(); defer { lock.unlock() }; reads += 1; return time }
     func advance(_ seconds: TimeInterval) { lock.lock(); defer { lock.unlock() }; time.addTimeInterval(seconds) }
 }
 private struct Parameters: Codable, Sendable { let value: Int }
@@ -17,6 +19,62 @@ private enum InjectedFailure: Error { case crash }
 private struct StaleDomainFailure: QueueDomainError { let knownCode: KnownErrorCode = .staleSnapshot }
 
 final class QueueTests: XCTestCase {
+    /// Пустой владелец не должен заново читать/изменять SQLite каждую секунду.
+    /// Счётчик реальных обращений к clock store не зависит от внутреннего timer.
+    func testIdleSupervisionDoesNotPollQueueEverySecond() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let clock = TestClock()
+        let queue = try DurableTaskQueue(directory: path, agentID: .ares, clock: { clock.now() })
+        let executor = try DurableTaskExecutor(queue: queue, operations: [:])
+        await executor.startSupervision()
+        try await Task.sleep(for: .milliseconds(1200))
+        let initial = clock.readCount()
+        try await Task.sleep(for: .milliseconds(1200))
+        XCTAssertEqual(clock.readCount(), initial, "Idle queue was polled again within maintenance interval")
+        try await executor.stopAcceptingAndCancelRunning()
+    }
+
+    /// Новое поручение прерывает idle sleep; expiry сохраняет quarantine и
+    /// физический слот, даже если callback игнорирует cooperative cancellation.
+    func testSubmitFromIdleStillSupervisesExpiredPhysicalMutation() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let clock = TestClock(), gate = PhysicalGate()
+        let queue = try DurableTaskQueue(directory: path, agentID: .ares, clock: { clock.now() })
+        let executor = try DurableTaskExecutor(queue: queue, operations: ["file.scan": RegisteredQueueOperation(mutating: true) { _, context in
+            try await context.recordedAction(key: "test.pending") { await gate.waitFirst(); return Data("returned".utf8) }
+        }])
+        await executor.startSupervision()
+        try await Task.sleep(for: .milliseconds(100))
+        let first = try await executor.submit(submission("idle-mutation", resource: "root.first", mutating: true))
+        for _ in 0..<200 { if await gate.entered == 1 { break }; try await Task.sleep(for: .milliseconds(5)) }
+        clock.advance(31)
+        for _ in 0..<300 { if try await queue.task(first.id)?.status == .recoveryRequired { break }; try await Task.sleep(for: .milliseconds(5)) }
+        let status = try await queue.task(first.id)?.status
+        let locked = try await queue.hasReservation("root.first")
+        let stopped = await executor.canReconcile(first.id)
+        XCTAssertEqual(status, .recoveryRequired); XCTAssertTrue(locked); XCTAssertFalse(stopped)
+        await gate.release()
+        _ = try await executor.drain(timeoutSeconds: 1)
+    }
+
+    /// При active lease без локального handle (например, ошибка финализации)
+    /// нельзя выбрать длинный idle interval только по running dictionary.
+    func testOrphanLeaseKeepsRecoveryActive() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let clock = TestClock()
+        let queue = try DurableTaskQueue(directory: path, agentID: .ares, clock: { clock.now() })
+        let value = try await queue.accept(submission("orphan"))
+        _ = try await queue.claim(value.id)
+        let executor = try DurableTaskExecutor(queue: queue, operations: [:])
+        await executor.startSupervision()
+        try await Task.sleep(for: .milliseconds(100))
+        clock.advance(31)
+        for _ in 0..<300 { if try await queue.task(value.id)?.status == .interrupted { break }; try await Task.sleep(for: .milliseconds(5)) }
+        let stored = try await queue.task(value.id)
+        XCTAssertEqual(stored?.status, .interrupted)
+        try await executor.stopAcceptingAndCancelRunning()
+    }
+
     /// Типизированная ошибка домена переживает сохранение и чтение очереди.
     func testDomainErrorCodeSurvivesExecutorFinalization() async throws {
         let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
@@ -31,6 +89,103 @@ final class QueueTests: XCTestCase {
         XCTAssertEqual(persisted?.errorCode, .staleSnapshot)
     }
 
+    func testEmergencyStopCancelsEntireQueueAndSurvivesRestart() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        var queue: DurableTaskQueue? = try DurableTaskQueue(directory: path, agentID: .ares)
+        var ids: [UUID] = []
+        for i in 0..<125 {
+            ids.append(try await queue!.accept(submission("stop-" + String(i), resource: "root." + String(i))).id)
+        }
+        try await queue!.emergencyStop()
+        let rows = try await queue!.tasks(limit: 500)
+        XCTAssertEqual(rows.count, 125); XCTAssertTrue(rows.allSatisfy { $0.status == .cancelled })
+        await expect(.emergencyStopped) { _ = try await queue!.accept(self.submission("after-stop")) }
+        await expect(.emergencyStopped) { _ = try await queue!.claim(ids[0]) }
+        queue = nil
+        let reopened = try DurableTaskQueue(directory: path, agentID: .ares)
+        let state = try await reopened.emergencyStatus()
+        XCTAssertTrue(state.stopped); XCTAssertEqual(state.pendingTasks, 0)
+        await expect(.emergencyStopped) { _ = try await reopened.accept(self.submission("after-restart")) }
+        try await reopened.resumeAdmission()
+        let new = try await reopened.accept(submission("explicit-resume"))
+        XCTAssertEqual(new.status, .queued)
+        let old = try await reopened.task(ids[0]); XCTAssertEqual(old?.status, .cancelled)
+    }
+    func testEmergencyStopRacingAdmissionsLeavesNoQueuedWork() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let queue = try DurableTaskQueue(directory: path, agentID: .ares)
+        let submissions = try (0..<80).map { try submission("race-" + String($0), resource: "resource." + String($0)) }
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for value in submissions {
+                group.addTask {
+                    do { _ = try await queue.accept(value) }
+                    catch QueueFailure.emergencyStopped { /* Ожидаемый отказ после барьера. */ }
+                }
+            }
+            group.addTask { try await queue.emergencyStop() }
+            try await group.waitForAll()
+        }
+        let rows = try await queue.tasks(limit: 500)
+        XCTAssertTrue(rows.allSatisfy { $0.status == .cancelled })
+        let state = try await queue.emergencyStatus(); XCTAssertTrue(state.stopped)
+    }
+    func testEmergencyStopCancelsPhysicalWorkAndKeepsOtherDomainIndependent() async throws {
+        let path = directory(), otherPath = directory()
+        defer { try? FileManager.default.removeItem(at: path); try? FileManager.default.removeItem(at: otherPath) }
+        let queue = try DurableTaskQueue(directory: path, agentID: .ares)
+        let other = try DurableTaskQueue(directory: otherPath, agentID: .athena)
+        let executor = try DurableTaskExecutor(queue: queue, operations: ["file.scan": RegisteredQueueOperation(mutating: false) { _, context in
+            while true { try await context.checkpoint(); try await Task.sleep(nanoseconds: 1_000_000) }
+        }])
+        let task = try await executor.submit(submission("running-stop"))
+        let stopped = try await executor.emergencyStop(); XCTAssertTrue(stopped.stopped)
+        let final = try await executor.waitForTerminal(task.id); XCTAssertEqual(final.status, .cancelled)
+        await expect(.emergencyStopped) { _ = try await executor.submit(self.submission("blocked")) }
+        let admitted = try await other.accept(submission("independent", agent: .athena))
+        XCTAssertEqual(admitted.status, .queued)
+        let resumed = try await executor.resumeAdmission(); XCTAssertFalse(resumed.stopped)
+    }
+    func testEmergencyStopDoesNotClaimNonCooperativeMutationFinished() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let clock = TestClock(), gate = PhysicalGate()
+        let queue = try DurableTaskQueue(directory: path, agentID: .ares, clock: { clock.now() })
+        let executor = try DurableTaskExecutor(queue: queue, operations: ["file.scan": RegisteredQueueOperation(mutating: true) { _, context in
+            try await context.recordedAction(key: "pending.effect") { await gate.waitFirst(); return Data("effect".utf8) }
+        }])
+        let task = try await executor.submit(submission("mutation-stop", mutating: true))
+        for _ in 0..<100 { if await gate.entered == 1 { break }; try await Task.sleep(nanoseconds: 1_000_000) }
+        let entered = await gate.entered; XCTAssertEqual(entered, 1)
+        let stopped = try await executor.emergencyStop()
+        XCTAssertEqual(stopped.activeCallbacks, 1); XCTAssertEqual(stopped.pendingTasks, 1)
+        clock.advance(31); try await queue.recoverExpiredLeases()
+        let quarantined = try await executor.emergencyStatus()
+        XCTAssertEqual(quarantined.recoveryTasks, 1); XCTAssertEqual(quarantined.activeCallbacks, 1)
+        await expect(.resourceBusy) { _ = try await executor.reconcile(task.id, resolutions: [:]) }
+        await gate.release()
+        for _ in 0..<100 { if await executor.canReconcile(task.id) { break }; try await Task.sleep(nanoseconds: 1_000_000) }
+        let locked = try await queue.hasReservation("root.test"); XCTAssertTrue(locked)
+    }
+    func testVersionOneQueueMigratesWithoutDroppingHistory() async throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        var queue: DurableTaskQueue? = try DurableTaskQueue(directory: path, agentID: .ares)
+        let task = try await queue!.accept(submission("legacy-pending"))
+        queue = nil
+        do {
+            let database = try QueueDatabase(directory: path)
+            try database.query("DROP TABLE queue_control")
+            try database.query("PRAGMA user_version=1")
+        }
+        let migrated = try DurableTaskQueue(directory: path, agentID: .ares)
+        let row = try await migrated.task(task.id); XCTAssertEqual(row?.status, .queued)
+        let state = try await migrated.emergencyStatus(); XCTAssertFalse(state.stopped)
+    }
+    func testMissingVersionTwoLatchFailsClosed() throws {
+        let path = directory(); defer { try? FileManager.default.removeItem(at: path) }
+        var queue: DurableTaskQueue? = try DurableTaskQueue(directory: path, agentID: .ares)
+        XCTAssertNotNil(queue); queue = nil
+        do { let database = try QueueDatabase(directory: path); try database.query("DROP TABLE queue_control") }
+        XCTAssertThrowsError(try DurableTaskQueue(directory: path, agentID: .ares))
+    }
     private func directory() -> URL {
         URL(fileURLWithPath: "/private/tmp", isDirectory: true).appendingPathComponent("e3-" + UUID().uuidString)
     }

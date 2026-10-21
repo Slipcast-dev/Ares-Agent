@@ -48,7 +48,7 @@ public enum LocalRuntimeFailure: String, Error, Codable, LocalizedError, QueueDo
             }
         }
         switch error as? QueueFailure {
-        case .resourceBusy, .ownerBusy, .capacityReached: return .busy
+        case .resourceBusy, .ownerBusy, .capacityReached, .emergencyStopped: return .busy
         case .idempotencyConflict: return .conflict
         case .cancelled: return .cancelled
         case .deadlineExceeded: return .deadlineExceeded

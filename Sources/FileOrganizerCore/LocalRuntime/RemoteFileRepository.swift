@@ -4,6 +4,9 @@ import EcosystemLocalIPC
 /// Одна ограниченная payload-модель для внутренних CRUD. Сервер дополнительно
 /// проверяет разрешённые поля отдельно для каждой операции и роль соединения.
 struct RepositoryPayload: Codable, Sendable {
+    var cursor: String?
+    var offset: Int?
+    var runID: UUID?
     var id: UUID?
     var rootID: UUID?
     var query: String?
@@ -45,6 +48,9 @@ public actor RemoteFileRepository: FileRepository {
     public func saveRuleObject<T: Encodable & Sendable>(_ object: T, id: String, table: SQLiteFileRepository.RuleTable) async throws {
         guard table == .rules else { throw LocalRuntimeFailure.denied }
         let _: LocalEmpty = try await read("repo.saveRule", RepositoryPayload(object: try LocalWire.encode(object), objectID: id, table: table))
+    }
+    public func ruleHistoryPage(ruleID: UUID, runID: UUID?, offset: Int, cursor: String?) async throws -> RuleHistoryPage {
+        try await read("repo.ruleHistory", RepositoryPayload(cursor: cursor, offset: offset, runID: runID, id: ruleID))
     }
     public func deleteRule(id: UUID) async throws { let _: LocalEmpty = try await read("repo.deleteRule", RepositoryPayload(id: id)) }
     // Эти записи выполняют только доменные handlers в runtime. Proxy не даёт

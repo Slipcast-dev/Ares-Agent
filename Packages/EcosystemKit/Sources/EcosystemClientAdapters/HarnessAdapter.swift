@@ -15,7 +15,7 @@ public actor HarnessAdapter {
     private var manifest: URL { state.appendingPathComponent("ownership.json") }
     private var journal: URL { state.appendingPathComponent("pending.json") }
     private var name: String { configuration.domain.rawValue }
-    private var supported: Bool { configuration.installedVersion == HarnessPatch.supportedVersion && configuration.profile == "desktop" }
+    private var supported: Bool { HarnessPatch.supports(version: configuration.installedVersion) && configuration.profile == "desktop" }
 
     public init(configuration: HarnessAdapterConfiguration) {
         self.configuration = configuration; beforeCommitWrite = nil
@@ -200,6 +200,14 @@ public actor HarnessAdapter {
                 if let range = try blockRange(text, domain: name) { outside.removeSubrange(range) }
                 guard !HarnessPatch.conflicts(try HarnessPatch.inspect(Data(outside.utf8)), domain: configuration.domain) else {
                     throw HarnessAdapterError.conflict
+                }
+                // Владение hash подтверждает только происхождение bytes. После
+                // обновления Harness прежний блок может быть синтаксически верен,
+                // но содержать удалённый контракт persona/toolFilter. Status не
+                // мигрирует его молча: GUI предложит штатный preview подключения.
+                guard let range = try blockRange(text, domain: name),
+                      String(text[range]) == HarnessPatch.block(configuration: configuration) else {
+                    return makeStatus(false, "updateRequired", "Настройки Harness требуют обновления для установленной версии. Нажмите «Подключить», проверьте план и подтвердите обновление.")
                 }
                 return makeStatus(true, "connected", "Роль, provider и MCP настроены в профиле; загрузка текущим чатом и делегирование проверяются отдельно.")
             }

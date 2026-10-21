@@ -14,13 +14,17 @@ enum RuleMCP {
         case "rule.list": allowed = ["offset"]
         case "rule.validate", "rule.propose": allowed = ["rule"]
         case "rule.run": allowed = ["ruleId", "planId", "idempotencyKey", "eventID", "processingToken"]
-        case "rule.history": allowed = ["ruleId", "runId", "offset"]
+        case "rule.history": allowed = ["ruleId", "runId", "offset", "cursor"]
         default: allowed = ["ruleId"]
         }
         guard names.contains(name), Set(args.keys).isSubset(of: allowed) else { throw LocalRuntimeFailure.invalidRequest }
         var wire: [String: Any] = [:]
         for (external, local) in [("ruleId", "ruleID"), ("planId", "planID"), ("runId", "runID")] {
             if let value = args[external] { guard let text = value as? String, UUID(uuidString: text) != nil else { throw LocalRuntimeFailure.invalidRequest }; wire[local] = text }
+        }
+        if let cursor = args["cursor"] {
+            guard let cursor = cursor as? String, !cursor.isEmpty, cursor.utf8.count <= 2048, args["offset"] == nil, args["runId"] == nil else { throw LocalRuntimeFailure.invalidRequest }
+            wire["cursor"] = cursor
         }
         if let offset = args["offset"] {
             guard let number = offset as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(), number.doubleValue.rounded() == number.doubleValue, (0...100_000).contains(number.intValue) else { throw LocalRuntimeFailure.invalidRequest }
@@ -166,7 +170,7 @@ enum RuleMCP {
                 properties["eventID"] = ["type": "string", "format": "uuid"]
                 properties["processingToken"] = ["type": "string", "format": "uuid"]
             }
-            if name == "rule.history" { properties["runId"] = ["type": "string", "format": "uuid"] }
+            if name == "rule.history" { properties["runId"] = ["type": "string", "format": "uuid"]; properties["cursor"] = ["type": "string", "minLength": 1, "maxLength": 2048] }
             if ["rule.list", "rule.history"].contains(name) { properties["offset"] = ["type": "integer", "minimum": 0, "maximum": 100000] }
             return ["name": name, "description": "Правила Ares: \(name). Мутации требуют локально утверждённого плана или включённого правила; MCP не выдаёт подтверждение.", "inputSchema": ["type": "object", "additionalProperties": false, "properties": properties, "required": required]]
         }

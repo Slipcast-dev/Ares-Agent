@@ -8,7 +8,7 @@ public enum QueueFailure: Error, Equatable {
     case invalidArgument, ownerBusy, unsafeStorage, incompatibleStorage, corruptStorage
     case storageFailure, storageFull, wrongDomain, resourceBusy, idempotencyConflict, taskNotFound
     case invalidState, staleLease, capacityReached, cancelled, deadlineExceeded
-    case receiptAlreadyExists, recoveryRequired
+    case receiptAlreadyExists, recoveryRequired, emergencyStopped
 }
 
 /// Только доверенный runtime строит submission после проверки capability/grant.
@@ -116,5 +116,18 @@ public extension DurableTask {
     /// lease/fencing, ресурсы, idempotency key или fingerprint admission.
     func forExternalClient() -> Self {
         Self(id: id, agentID: agentID, capabilityID: capabilityID, idempotencyKey: "", fingerprint: "", request: Data(), resources: [], mutating: mutating, createdAt: createdAt, deadline: deadline, parentAttemptID: nil, status: status, revision: revision, lease: nil, progress: progress, cancellationRequestedAt: cancellationRequestedAt, cancellationTooLate: cancellationTooLate, result: result, errorCode: errorCode, reconciledAt: reconciledAt, finishedAt: finishedAt)
+    }
+}
+
+/// Только счётчики: экспорт не раскрывает параметры, идентификаторы или пути.
+/// activeCallbacks учитывает физическую работу даже после истечения lease.
+public struct QueueEmergencyStatus: Codable, Sendable {
+    public var stopped: Bool
+    public let pendingTasks: Int
+    public let recoveryTasks: Int
+    public var activeCallbacks: Int
+    public init(stopped: Bool, pendingTasks: Int, recoveryTasks: Int, activeCallbacks: Int = 0) {
+        self.stopped = stopped; self.pendingTasks = pendingTasks
+        self.recoveryTasks = recoveryTasks; self.activeCallbacks = activeCallbacks
     }
 }

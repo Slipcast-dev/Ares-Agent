@@ -1,4 +1,5 @@
 import SwiftUI
+import EcosystemUI
 import FileOrganizerCore
 
 /// Секции встраиваются непосредственно в общую Form, без вложенного List
@@ -13,7 +14,7 @@ struct AgentSettingsSections: View {
                     HStack(alignment: .center, spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(agent.title).font(.headline)
-                            Label(model.connected.contains(agent) ? "Зарегистрирован" : "Не подключён",
+                            Label(model.connected.contains(agent) ? "Настроено" : "Не подключено",
                                   systemImage: model.connected.contains(agent) ? "checkmark.circle" : "minus.circle")
                                 .font(.caption)
                             Text(model.registrationMessages[agent] ?? "Проверка регистрации…")
@@ -26,8 +27,9 @@ struct AgentSettingsSections: View {
                             .accessibilityLabel("\(model.connected.contains(agent) ? "Отключить" : "Подключить") \(agent.title)")
                     }.padding(.vertical, 8)
                 }
+                PlannedHermesConnection()
                 if model.isRegistering { ProgressView("Изменение подключения…") }
-                Text("После изменения подключения начните новый чат выбранного клиента. Уже открытый сеанс может сохранить прежний набор инструментов; автоматическое обновление не гарантируется.")
+                Text("Статус показывает наличие настройки, а не проверенный сеанс. После изменения подключения начните новый чат выбранного клиента. Уже открытый сеанс может сохранить прежний набор инструментов; автоматическое обновление не гарантируется.")
                     .font(.caption).foregroundStyle(.secondary)
             } header: { Label("Подключение агентов", systemImage: "cpu") }
 
@@ -50,14 +52,6 @@ struct AgentSettingsSections: View {
                 Text("Подключение внешнего агента не разрешает произвольные пути, shell-команды или изменение файлов. Разрешённые папки управляются в «Обзоре».")
                     .font(.caption).foregroundStyle(.secondary)
             } header: { Label("Интеграции и безопасность", systemImage: "lock.shield") }
-
-            Section {
-                if model.tasks.isEmpty { Text("Фоновые MCP-задачи ещё не запускались.").foregroundStyle(.secondary) }
-                ForEach(model.tasks) { task in
-                    LabeledContent(task.origin.rawValue, value: task.status.rawValue)
-                        .accessibilityLabel("Задача \(task.origin.rawValue), статус \(task.status.rawValue)")
-                }
-            } header: { Label("Последние MCP-задачи", systemImage: "clock") }
         }
         .confirmationDialog("Подключение субагента Harness", isPresented: Binding(
             get: { model.harnessPlan != nil }, set: { if !$0 { model.harnessPlan = nil } }

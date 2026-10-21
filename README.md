@@ -1,91 +1,59 @@
-![Ares — Files. Rules. Control.](assets/ares-banner.png)
+![Ares](assets/ares-banner.png)
 
-<p align="center"><strong>Файлы под вашим контролем</strong><br>Папки, индекс файлов, дубликаты и правила автоматизации.</p>
-<p align="center"><strong>Русский</strong> · <a href="README.en.md">English</a></p>
+<p align="center"><img src="docs/assets/ares-icon.png" width="160" alt="Ares"></p>
 
-[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.12.0-intermediate.1)
-[![Apple Silicon](https://img.shields.io/badge/Apple_Silicon-arm64-414b60?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.12.0-intermediate.1)
-[![Swift](https://img.shields.io/badge/Swift-5.9%2B-f06438?style=flat-square)](Package.swift)
-[![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/License-Non--commercial-686b73?style=flat-square)](LICENSE)
+# Арес / Ares
 
-Ares — отдельный нативный агент для macOS. Он выполняет разрешённые локальные
-операции самостоятельно, а Codex и DeepSeek Harness подключаются через MCP
-и могут делегировать работу отдельному специалисту. Данные, очередь и разрешения
-остаются у этого агента. Для сборки второй проект не требуется.
+[Русский](README.md) · [English](README.en.md)
 
-> **Промежуточная версия E10 · Без подписи разработчика Developer ID.**
-> PKG и DMG не имеют подписи Developer ID и не нотариализованы Apple.
-> Внутренние executable имеют только локальную ad-hoc подпись.
-> Это проверяемый промежуточный выпуск, а не окончательный публичный релиз.
+Арес — отдельный локальный агент macOS. Безопасная работа с файлами, правилами и индексом.
 
-[**Скачать DMG**](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.12.0-intermediate.1/Ares-E10-arm64-local.dmg) · [Скачать PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.12.0-intermediate.1/Ares-E10-arm64-local.pkg) · [Все файлы выпуска](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.12.0-intermediate.1)
+Версия **0.28.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
+Запуск на Intel и macOS14 отдельно ещё не принят. Проект с доступными исходниками
+использует собственную некоммерческую [лицензию](LICENSE), а не MIT/OSI-лицензию.
 
-## Возможности
+[![Version 0.28.0](https://img.shields.io/badge/Version-0.28.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.28.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
 
-| Раздел | Возможности |
-|---|---|
-| Папки | Явный выбор корней, bookmarks, отдельные права клиентов |
-| Индекс | Устойчивые снимки, версии файлов, поиск и страницы результатов |
-| Дубликаты | SHA-256 в пределах разрешённого доступа, отмена и лимиты |
-| Правила | Предпросмотр и подтверждение; теги, ZIP, копии, уведомления, история |
-| Фон | Файловые события, расписания, очередь и восстановление после сбоя |
-
-Общий EcosystemKit 0.12.0 находится в `Packages/EcosystemKit`.
-Каталог MCP содержит 32 команды; наличие команды не выдаёт доступ к данным.
-Права клиентам выдаются отдельно через GUI. Подключение сохраняет выбранную
-модель и провайдера клиента. Интерфейс текущего приложения — на русском языке.
+[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/Ares-0.28.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/Ares-0.28.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.28.0/SHA256SUMS)
 
 ## Установка
 
-1. Нужны **Mac с Apple Silicon**, macOS 14+ и Python 3 для промежуточного launcher.
-2. Скачайте **DMG** из Releases, откройте образ, затем pkg внутри него.
-3. Установите `Ares Intermediate.app` в `/Applications` и откройте приложение.
-4. Подтвердите необходимые права в GUI. Автозапуск при входе включается отдельно.
+PKG/DMG прикладываются к релизу отдельно от исходников. Выпуск **без подписи
+Apple Developer ID и без notarization**. Перед использованием сверьте SHA256SUMS.
+Локальная ad-hoc подпись защищает целостность, но не подтверждает издателя.
+Не отключайте Gatekeeper глобально. Автоматическая установка не выполняется.
 
-Иконка pkg и значок диска сохраняются внутри DMG после скачивания. Внешняя
-пользовательская иконка одиночного pkg/DMG зависит от метаданных Finder и
-при прямой загрузке файла не переносится. Контрольные суммы — в `SHA256SUMS.txt`.
+## Сборка
 
-macOS может заблокировать неподписанный выпуск. Не отключайте Gatekeeper или TCC.
-Подробнее: [установка и ограничения](docs/INSTALL.ru.md).
-
-## Codex и DeepSeek Harness
-
-В настройках подключите нужного клиента: сначала просмотрите план, затем подтвердите
-его применение. Выдача прав на данные — отдельное действие. Начните новый чат клиента.
-Harness проверен на версии **0.2.0-rc.2**; другие версии требуют проверки совместимости.
-Hermes пока не подключён. Если эта же роль уже настроена на другую установку агента,
-не перезаписывайте её вслепую: используйте штатное отключение/переподключение.
-
-## Сборка и участие
+Нужны Xcode/Command Line Tools, Swift5.9+ и SDK macOS14+. Общий EcosystemKit
+включён в репозиторий: соседние папки не требуются. Yams6.2.2 закреплён lock-файлом.
 
 ```sh
-swift build
+python3 scripts/verify_ecosystem_dependency.py
 swift test
-swift test --package-path Packages/EcosystemKit
-python3 scripts/verify_snapshot.py
-python3 scripts/build_snapshot.py --configuration release
+swift build -c release
+scripts/package_app.zsh
 ```
 
-Для первой сборки нужны Xcode/Command Line Tools, Python 3 и доступ к закреплённому
-Yams 6.2.2. Публичный CI проверяет сборку и тесты; live-тесты клиентов требуют
-установленных клиентов и отдельно разрешённых тестовых профилей.
+Приложение появится в `dist/Ares.app`. Технические имена исполняемых файлов
+сохранены ради совместимости модулей и клиентских конфигураций.
 
-[Архитектура и проверка](docs/DEVELOPMENT.ru.md) · [Вклад в проект](CONTRIBUTING.md) ·
-[Правила общения](CODE_OF_CONDUCT.md) · [Безопасность](SECURITY.md)
+## Управление и безопасность
 
-## Статус выпуска
+Интерфейс и фоновая служба разделены. Доступ к данным по умолчанию запрещён;
+разрешения выдаются внутри каждого агента отдельно. Подключение Codex/Harness
+выполняется через проверяемый план в интерфейсе. Hermes предусмотрен архитектурой,
+но действующее подключение ещё не реализовано. Ключи моделей и личные данные
+в комплект не входят.
 
-Остаются открытыми Developer ID/notarization, реальная установка/обновление на чистом
-Mac, проверка macOS 14 на отдельном хосте, Intel, реальные sleep/logout/login,
-видимый баннер уведомления и 24-часовой прогон. Установщик не импортирует личные
-данные и не регистрирует клиентов автоматически.
+[Эксплуатация](docs/OPERATIONS.md) · [Архитектура](docs/ARCHITECTURE.md) ·
+[Безопасность](SECURITY.md) · [Производительность](docs/PERFORMANCE.md) ·
+[Изменения](CHANGELOG.md) · [Поддержка](SUPPORT.md).
 
-## Лицензия
+## Участие
 
-Copyright © 2026 Slipcast-dev. [Публичное некоммерческое использование](LICENSE).
-Коммерческое использование, перепубликация и производные версии требуют письменного
-разрешения правообладателя. Это не лицензия MIT и не разрешение на свободное
-распространение. [English translation](LICENSE.en.md).
-[Условия сторонних компонентов](THIRD_PARTY_NOTICES.md).
+Прочитайте [CONTRIBUTING](CONTRIBUTING.md), [правила общения](CODE_OF_CONDUCT.md)
+и лицензию. Не публикуйте в issue личные файлы, профили и секреты. Сообщения об
+уязвимостях направляйте по правилам SECURITY.md.
+
+[Лицензия на русском](LICENSE) · [English license translation](LICENSE.en.md).

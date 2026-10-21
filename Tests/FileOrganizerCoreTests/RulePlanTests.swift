@@ -54,6 +54,29 @@ final class RulePlanTests: XCTestCase {
         let plan: RulePlanSummary = try await call(f, "rule.preview", RuleControlRequest(ruleID: rule.id))
         return try await call(f, "rule.approve", RuleControlRequest(planID: plan.id, fingerprint: plan.fingerprint), role: .gui)
     }
+    func testEmergencyControlIsGUIOnlyAndBlocksApprovedRuleExecution() async throws {
+        let f = try await fixture(); defer { try? FileManager.default.removeItem(at: f.base) }
+        let draft = rule(f)
+        let plan = try await approved(f, draft)
+        for operation in ["operations.emergency_status", "operations.emergency_stop", "operations.emergency_resume"] {
+            for role in [LocalRole.mcp, .worker] {
+                do {
+                    _ = try await f.service.handle(role: role, request: LocalRPCRequest(domain: "ares", operation: operation, payload: Data("{}".utf8)))
+                    XCTFail("Non-GUI emergency control")
+                } catch { XCTAssertEqual(error as? LocalRuntimeFailure, .denied) }
+            }
+        }
+        _ = try await f.service.handle(role: .gui, request: LocalRPCRequest(domain: "ares", operation: "operations.emergency_stop", payload: Data("{}".utf8)))
+        do {
+            let _: LocalTaskID = try await call(f, "rule.run", RuleControlRequest(ruleID: draft.id, planID: plan.id, key: "stop-approved"))
+            XCTFail("Stopped runtime accepted approved mutation")
+        } catch { XCTAssertEqual(error as? QueueFailure, .emergencyStopped) }
+        XCTAssertFalse(FileManager.default.fileExists(atPath: f.target.appendingPathComponent("Ares Results").path))
+        _ = try await f.service.handle(role: .gui, request: LocalRPCRequest(domain: "ares", operation: "operations.emergency_resume", payload: Data("{}".utf8)))
+        let task: LocalTaskID = try await call(f, "rule.run", RuleControlRequest(ruleID: draft.id, planID: plan.id, key: "resumed-approved"))
+        let result = try await finish(f, task.id); XCTAssertEqual(result.status.rawValue, "completed")
+        await f.work.shutdown()
+    }
     func testPlanNeedsGUIAndCopyZIPAreVerifiedAndIdempotent() async throws {
         let f = try await fixture(); defer { try? FileManager.default.removeItem(at: f.base) }
         var draft = rule(f); draft.enabled = true

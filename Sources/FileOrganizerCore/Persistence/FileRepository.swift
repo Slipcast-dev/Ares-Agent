@@ -27,6 +27,7 @@ public protocol FileRepository: AuthorizedRootStoring, AuditRecording {
     func saveRuleObject<T: Encodable & Sendable>(_ object: T, id: String, table: SQLiteFileRepository.RuleTable) async throws
     func ruleObjects<T: Decodable & Sendable>(_ type: T.Type, table: SQLiteFileRepository.RuleTable) async throws -> [T]
     func ruleObject<T: Decodable & Sendable>(_ type: T.Type, id: String, table: SQLiteFileRepository.RuleTable) async throws -> T?
+    func ruleHistoryPage(ruleID: UUID, runID: UUID?, offset: Int, cursor: String?) async throws -> RuleHistoryPage
     func deleteRule(id: UUID) async throws
 }
 public extension FileRepository {
@@ -35,3 +36,22 @@ public extension FileRepository {
         try await searchRecords(forRootID: id, query: query, limit: 100)
     }
 }
+
+/// Страница содержит только публичные поля истории, без message/receipt payload.
+public struct RuleHistoryItem: Codable, Sendable {
+    public let runID: UUID
+    public let taskID: UUID?
+    public let runStatus: String
+    public let createdAt: Date
+    public let actionID: UUID?
+    public let kind: RuleActionKind?
+    public let relativePath: String
+    public let status: String
+}
+public struct RuleHistoryPage: Codable, Sendable {
+    public let items: [RuleHistoryItem]
+    public let nextOffset: Int?
+    public let nextCursor: String?
+    public let runTaskID: UUID?
+}
+public enum RuleHistoryFailure: Error, Sendable { case invalidRequest, missingRun }

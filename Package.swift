@@ -10,6 +10,7 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
+        .executable(name: "AresMaintenance", targets: ["AresMaintenance"]),
         .library(name: "FileOrganizerCore", targets: ["FileOrganizerCore"]),
         .executable(name: "FileOrganizer", targets: ["FileOrganizer"]),
         // MCP вынесен в отдельный процесс, чтобы будущий внешний клиент не
@@ -22,6 +23,7 @@ let package = Package(
     // Общий пакет версионируется в соседнем репозитории Athena.
     dependencies: [.package(path: "Packages/EcosystemKit")],
     targets: [
+        .executableTarget(name: "AresMaintenance", dependencies: [.product(name: "EcosystemLocalIPC", package: "EcosystemKit")]),
         .target(name: "FileOrganizerCore", dependencies: [
             .product(name: "EcosystemContracts", package: "EcosystemKit"),
             .product(name: "EcosystemLocalIPC", package: "EcosystemKit"),

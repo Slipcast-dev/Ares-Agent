@@ -36,6 +36,45 @@ final class LocalAutomationServiceTests: XCTestCase {
         try await service.record(id: id, kind: "monitor.threshold", capability: "monitor.history",
                                  capturedAt: at, significant: significant)
     }
+    func testBackwardClockKeepsFutureEventScheduled() async throws {
+        let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let service = try LocalAutomationService(directory: path, domain: "athena", notifications: InboxTestNotificationSink())
+        let now = Date()
+        try await service.configure(paused: nil, notificationsEnabled: true)
+        try await record(service, at: now)
+        let delay = await service.notificationRetryDelay(now: now.addingTimeInterval(-120))
+        XCTAssertEqual(try XCTUnwrap(delay), 120, accuracy: 0.001)
+        await service.flushNotifications(now: now)
+        let complete = await service.notificationRetryDelay(now: now); XCTAssertNil(complete)
+    }
+
+    func testRetryRespectsCooldownAndStopsAfterLastDelivery() async throws {
+        let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let service = try LocalAutomationService(directory: path, domain: "athena", notifications: InboxTestNotificationSink())
+        let now = Date()
+        try await service.configure(paused: nil, notificationsEnabled: true)
+        try await record(service, at: now); try await record(service, at: now)
+        await service.flushNotifications(now: now)
+        let pending = await service.notificationRetryDelay(now: now.addingTimeInterval(20))
+        XCTAssertEqual(try XCTUnwrap(pending), 40, accuracy: 0.001)
+        await service.flushNotifications(now: now.addingTimeInterval(60))
+        let done = await service.notificationRetryDelay(now: now.addingTimeInterval(60)); XCTAssertNil(done)
+    }
+
+    func testRetryDeadlineOnlyExistsForFreshUndeliveredEvents() async throws {
+        let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let sink = InboxTestNotificationSink(authorization: "denied")
+        let service = try LocalAutomationService(directory: path, domain: "athena", notifications: sink)
+        let now = Date()
+        try await service.configure(paused: nil, notificationsEnabled: true)
+        let empty = await service.notificationRetryDelay(now: now); XCTAssertNil(empty)
+        try await record(service, at: now)
+        let pending = await service.notificationRetryDelay(now: now); XCTAssertEqual(pending, 60)
+        let expired = await service.notificationRetryDelay(now: now.addingTimeInterval(3601)); XCTAssertNil(expired)
+        try await service.configure(paused: nil, notificationsEnabled: false)
+        let disabled = await service.notificationRetryDelay(now: now); XCTAssertNil(disabled)
+    }
+
     func testDeniedSystemNotificationsPreserveInboxAcrossRestartWithoutPrompt() async throws {
         let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
         let sink = InboxTestNotificationSink(authorization: "denied")
@@ -86,6 +125,23 @@ final class LocalAutomationServiceTests: XCTestCase {
         XCTAssertEqual(sent.map(\.id), [important])
         let events = try await restored.inbox.events(now: captured)
         XCTAssertEqual(Set(events.map(\.id)), [ordinary, important])
+    }
+    func testProvisionalDeliveryPreservesQuietStatusAndDurableReceipt() async throws {
+        let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
+        let sink = InboxTestNotificationSink(authorization: "provisional")
+        let service = try LocalAutomationService(directory: path, domain: "athena", notifications: sink)
+        let captured = await service.cutoff().addingTimeInterval(1), id = UUID()
+        try await service.configure(paused: nil, notificationsEnabled: true)
+        try await record(service, id: id, at: captured)
+        await service.flushNotifications(now: captured.addingTimeInterval(2))
+        let status = try await service.status()
+        XCTAssertEqual(status.notificationAuthorization, "provisional")
+        let restored = try LocalAutomationService(directory: path, domain: "athena", notifications: sink)
+        await restored.flushNotifications(now: captured.addingTimeInterval(3))
+        let sent = await sink.sent()
+        XCTAssertEqual(sent.map(\.id), [id])
+        XCTAssertEqual(sent.first?.title, "Афина")
+        XCTAssertFalse(sent.first?.body.contains("/") ?? true)
     }
     func testPausedAndNotificationPreferencesPersistIndependently() async throws {
         let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }

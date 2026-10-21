@@ -43,6 +43,147 @@ final class HarnessAdapterTests: XCTestCase {
         XCTAssertEqual(try bytes(root), original)
     }
 
+    func testNewHarnessContractUsesIndependentPresetsAndPreservesForeignBytes() async throws {
+        let root = try fixture(), original = try bytes(root)
+        for domain in [HarnessAgentDomain.ares, .athena] {
+            let client = HarnessAdapter(configuration: configuration(root, domain, version: "0.2.1-rc.2"))
+            let plan = try await client.preview(connected: true)
+            let status = try await client.apply(plan)
+            XCTAssertTrue(status.connected)
+            XCTAssertTrue(status.nativeDelegation)
+        }
+        let document = try XCTUnwrap(Yams.compose(yaml: String(decoding: try bytes(root), as: UTF8.self))?.sequence)
+        for operation in document.suffix(2) {
+            let rows = try XCTUnwrap(operation["insert"]?.sequence)
+            let preset = try XCTUnwrap(rows.first?["config"])
+            let domain = try XCTUnwrap(preset["id"]?.string)
+            XCTAssertEqual(rows.count, 3)
+            let plugins = try XCTUnwrap(preset["plugins"]?.sequence)
+            XCTAssertEqual(plugins.count, 3)
+            let module = try XCTUnwrap(plugins[0]["name"]?.string)
+            let encoded = try XCTUnwrap(module.components(separatedBy: "base64,").last)
+            let code = String(decoding: try XCTUnwrap(Data(base64Encoded: encoded)), as: UTF8.self)
+            XCTAssertTrue(code.contains("agent/created"))
+            XCTAssertTrue(code.contains("scoped.tools.restrict({allow})"))
+            XCTAssertTrue(code.contains("name.startsWith('mcp__'+config.serverName+'__')"))
+            XCTAssertEqual(plugins[0]["config"]?["serverName"]?.string, String(domain.dropFirst("ecosystem_".count)))
+            XCTAssertEqual(plugins[1]["name"]?.string, "@deepseek-ai/dsh-persona")
+            XCTAssertTrue(plugins[1]["config"]?["prefix"]?.string?.contains("Не меняй модель") == true)
+            XCTAssertEqual(plugins[2]["name"]?.string, "@deepseek-ai/dsh-mcp-client")
+            let delegate = try XCTUnwrap(rows[2]["config"])
+            XCTAssertEqual(delegate["agentPreset"]?.string, domain)
+            XCTAssertNil(delegate["persona"])
+            XCTAssertNil(delegate["toolFilter"])
+            XCTAssertNil(delegate["backgroundMode"])
+            XCTAssertNil(delegate["agentOptions"])
+            XCTAssertNil(delegate["allowedAgentPresets"])
+            XCTAssertNil(delegate["modelSelectionSettings"])
+        }
+        for domain in [HarnessAgentDomain.athena, .ares] {
+            let client = HarnessAdapter(configuration: configuration(root, domain, version: "0.2.1-rc.2"))
+            _ = try await client.apply(client.preview(connected: false))
+        }
+        XCTAssertEqual(try bytes(root), original)
+    }
+
+    /// Отдельный opt-in exporter даёт Node boot точные production bytes,
+    /// а не вручную переписанный YAML. Ограничение пути защищает рабочий профиль.
+    func testExportNewHarnessContractForNativeBootWhenRequested() async throws {
+        guard let path = ProcessInfo.processInfo.environment["ECOSYSTEM_HARNESS_CONTRACT_FIXTURE"] else { return }
+        guard path.hasPrefix("/private/tmp/ecosystem-harness-contract-"), !path.contains("/../") else {
+            XCTFail("Требуется собственный временный стенд"); return
+        }
+        let directory = URL(fileURLWithPath: path)
+        for domain in [HarnessAgentDomain.ares, .athena] {
+            let client = HarnessAdapter(configuration: .init(domain: domain,
+                patchURL: directory.appendingPathComponent("cordis.patch.yml"),
+                helperURL: directory.appendingPathComponent("mcp-fixture"),
+                installedVersion: "0.2.1-rc.2"))
+            _ = try await client.apply(client.preview(connected: true))
+        }
+    }
+
+    func testLegacyContractsRequireExplicitIndependentUpgradeWithoutStatusWrites() async throws {
+        let root = try fixture(), foreign = try bytes(root)
+        let oldAres = adapter(root), oldAthena = adapter(root, .athena)
+        _ = try await oldAres.apply(oldAres.preview(connected: true))
+        _ = try await oldAthena.apply(oldAthena.preview(connected: true))
+        let legacy = try bytes(root)
+        let ownership = root.appendingPathComponent(".ecosystem-harness/ownership.json")
+        let legacyOwnership = try Data(contentsOf: ownership)
+        let ares = HarnessAdapter(configuration: configuration(root, .ares, version: "0.2.1-rc.2"))
+        let athena = HarnessAdapter(configuration: configuration(root, .athena, version: "0.2.1-rc.2"))
+        for client in [ares, athena] {
+            let status = try await client.status()
+            XCTAssertFalse(status.connected)
+            XCTAssertEqual(status.state, "updateRequired")
+        }
+        XCTAssertEqual(try bytes(root), legacy)
+        XCTAssertEqual(try Data(contentsOf: ownership), legacyOwnership)
+        // Отмена плана — отсутствие apply. Даже повторный status не обновляет YAML.
+        let cancelled = try await ares.preview(connected: true)
+        XCTAssertFalse(cancelled.changes.isEmpty)
+        _ = try await ares.status()
+        XCTAssertEqual(try bytes(root), legacy)
+        XCTAssertEqual(try Data(contentsOf: ownership), legacyOwnership)
+        let upgradedAres = try await ares.apply(cancelled)
+        XCTAssertTrue(upgradedAres.connected)
+        let text = String(decoding: try bytes(root), as: UTF8.self)
+        XCTAssertTrue(text.hasPrefix(String(decoding: foreign, as: UTF8.self)))
+        let legacyAthena = HarnessPatch.block(configuration: configuration(root, .athena))
+        XCTAssertTrue(text.contains(legacyAthena))
+        let waitingAthena = try await athena.status()
+        XCTAssertFalse(waitingAthena.connected)
+        XCTAssertEqual(waitingAthena.state, "updateRequired")
+        let upgradedAthena = try await athena.apply(athena.preview(connected: true))
+        XCTAssertTrue(upgradedAthena.connected)
+        let currentAres = try await ares.status()
+        XCTAssertTrue(currentAres.connected)
+        // Обратный переход также требует отдельного preview вместо ложного
+        // connected: старый клиент не должен объявлять новый preset совместимым.
+        let reverse = try await oldAres.status()
+        XCTAssertFalse(reverse.connected)
+        XCTAssertEqual(reverse.state, "updateRequired")
+    }
+
+    func testLegacyContractTamperingRemainsConflictInsteadOfUpdateRequired() async throws {
+        let root = try fixture(), old = adapter(root)
+        _ = try await old.apply(old.preview(connected: true))
+        var changed = try bytes(root)
+        changed.append(Data("\n# foreign edit inside managed block\n".utf8))
+        var text = String(decoding: changed, as: UTF8.self)
+        text = text.replacingOccurrences(of: "providerName: ecosystem_ares", with: "providerName: changed")
+        changed = Data(text.utf8)
+        try changed.write(to: root.appendingPathComponent("cordis.patch.yml"))
+        let current = HarnessAdapter(configuration: configuration(root, version: "0.2.1-rc.2"))
+        let status = try await current.status()
+        XCTAssertFalse(status.connected)
+        XCTAssertEqual(status.state, "conflict")
+        do { _ = try await current.preview(connected: true); XCTFail("Изменённый legacy блок принят") }
+        catch HarnessAdapterError.conflict { }
+        XCTAssertEqual(try bytes(root), changed)
+    }
+
+    func testUnverifiedHarnessPatchVersionsRemainRejected() async throws {
+        for version in ["0.2.1", "0.2.1-rc.1", "0.2.1-rc.3", "0.2.2-rc.2", "0.2.0-rc.3"] {
+            let root = try fixture(), original = try bytes(root)
+            let client = HarnessAdapter(configuration: configuration(root, version: version))
+            do { _ = try await client.preview(connected: true); XCTFail("Непроверенная версия принята") }
+            catch HarnessAdapterError.unsupportedVersion { }
+            XCTAssertEqual(try bytes(root), original)
+        }
+    }
+
+    func testPresetIdentityConflictIsNotOverwritten() async throws {
+        for source in ["- insert: [{id: ecosystem-ares-preset, name: foreign}]\n",
+                       "- insert: [{id: foreign, name: foreign, config: {id: ecosystem_ares}}]\n"] {
+            let root = try fixture(source), client = HarnessAdapter(configuration: configuration(root, version: "0.2.1-rc.2"))
+            do { _ = try await client.preview(connected: true); XCTFail("Чужой preset перезаписан") }
+            catch HarnessAdapterError.conflict { }
+            XCTAssertEqual(try bytes(root), Data(source.utf8))
+        }
+    }
+
     func testEmptyListRestoresExactlyForBothDisconnectOrders() async throws {
         for order: [HarnessAgentDomain] in [[.ares, .athena], [.athena, .ares]] {
             let root = try fixture("# comment [] must stay\n [ ] # tail\n"), original = try bytes(root)

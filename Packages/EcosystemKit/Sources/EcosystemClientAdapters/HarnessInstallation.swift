@@ -1,7 +1,7 @@
 import Foundation
 
 /// Обнаружение не запускает Harness и не читает его ключи или пользовательские
-/// выражения YAML. Формат desktop-профиля проверен на установленном 0.2.0-rc.2.
+/// выражения YAML. Формат desktop-профиля проверен для 0.2.0-rc.2 и установленного 0.2.1-rc.2.
 public enum HarnessInstallation {
     public static func detectedVersion(applicationURL: URL? = nil) -> String? {
         let candidates = applicationURL.map { [$0] } ?? [

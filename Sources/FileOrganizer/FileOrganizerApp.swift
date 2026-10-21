@@ -1,4 +1,6 @@
 import SwiftUI
+import EcosystemLocalIPC
+import EcosystemUI
 import AppKit
 import FileOrganizerCore
 
@@ -8,7 +10,24 @@ import FileOrganizerCore
 struct FileOrganizerApp: App {
     @NSApplicationDelegateAdaptor(OrganizerAppDelegate.self) private var appDelegate
     @AppStorage(AppTheme.storageKey) private var storedTheme = AppTheme.system.rawValue
-    @StateObject private var overviewViewModel = OverviewViewModel()
+    @StateObject private var overviewViewModel: OverviewViewModel
+
+    private let startupError: String?
+
+    init() {
+        do {
+            try InstalledRuntimeBootstrap.configureEnvironment(domain: "ares")
+            startupError = nil
+            _overviewViewModel = StateObject(wrappedValue: OverviewViewModel())
+        } catch {
+            startupError = error.localizedDescription
+            // Ошибочный IPC-клиент не открывает legacy БД. Экран ошибки не
+            // запускает ни load, ни миграции; /dev/null служит неиспользуемым URL.
+            let container = AppContainer(databaseURL: URL(fileURLWithPath: "/dev/null"),
+                localClientOverride: .failure(error))
+            _overviewViewModel = StateObject(wrappedValue: OverviewViewModel(container: container))
+        }
+    }
 
     private var selectedTheme: AppTheme {
         AppTheme(rawValue: storedTheme) ?? .system
@@ -16,8 +35,12 @@ struct FileOrganizerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: overviewViewModel)
-                .preferredColorScheme(selectedTheme.preferredColorScheme)
+            if let startupError {
+                InstalledRuntimeFailureView(message: startupError)
+            } else {
+                ContentView(viewModel: overviewViewModel)
+                    .preferredColorScheme(selectedTheme.preferredColorScheme)
+            }
         }
         // Начальный размер — только предпочтение для нового окна, не предел
         // уменьшения. Сохранённый пользователем размер macOS восстанавливает.

@@ -198,7 +198,7 @@ public actor SQLiteFileRepository: FileRepository {
             try bind(rootID.uuidString, to: removal, at: 1); try stepDone(removal, database: database); sqlite3_finalize(removal)
             var published: FileIndexSnapshot?
             if let summary {
-                guard records.count <= 50_000, records.allSatisfy({ $0.rootID == rootID && $0.version != nil }),
+                guard records.count <= FileAnalysisLimits.maximumFiles, records.allSatisfy({ $0.rootID == rootID && $0.version != nil }),
                       summary.indexedFileCount == records.count else { throw AresFileFailure.snapshotRequired }
                 let header = FileSnapshotHeader(id: UUID(), rootID: rootID, generation: generation + 1, indexedAt: Date(),
                     fileCount: records.count, totalByteSize: summary.totalByteSize, skippedCount: summary.skippedItemCount, hashesComputed: false, hashesVerifiedAt: nil)
@@ -239,7 +239,7 @@ public actor SQLiteFileRepository: FileRepository {
         defer { sqlite3_finalize(rows) }; try bind(rootID.uuidString, to: rows, at: 1)
         var records: [FileRecord] = []
         while sqlite3_step(rows) == SQLITE_ROW {
-            guard records.count < 50_000, let pointer = sqlite3_column_blob(rows, 0) else { throw AresFileFailure.capacityExceeded }
+            guard records.count < FileAnalysisLimits.maximumFiles, let pointer = sqlite3_column_blob(rows, 0) else { throw AresFileFailure.capacityExceeded }
             records.append(try JSONDecoder().decode(FileRecord.self, from: Data(bytes: pointer, count: Int(sqlite3_column_bytes(rows, 0)))))
         }
         guard header.rootID == rootID, header.fileCount == records.count else { throw AresFileFailure.staleSnapshot }
@@ -472,7 +472,12 @@ public actor SQLiteFileRepository: FileRepository {
     public enum RuleTable: String, Codable, Sendable { case plans = "rule_plans", permissions = "rule_permissions", rules = "automation_rules", observations = "rule_observations", runs = "rule_runs", receipts = "rule_receipts" }
     public func saveRuleObject<T: Encodable & Sendable>(_ object: T, id: String, table: RuleTable) throws {
         let database = try openDatabase(); defer { sqlite3_close(database) }
-        let statement = try prepare("INSERT OR REPLACE INTO \(table.rawValue)(id, payload) VALUES (?, ?)", database: database)
+        // REPLACE меняет rowid даже при обновлении прежнего run. Для history anchor
+        // сохраняем идентичность строки через UPSERT; остальные таблицы прежние.
+        let sql = table == .runs
+            ? "INSERT INTO rule_runs(id, payload) VALUES (?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload"
+            : "INSERT OR REPLACE INTO \(table.rawValue)(id, payload) VALUES (?, ?)"
+        let statement = try prepare(sql, database: database)
         defer { sqlite3_finalize(statement) }
         try bind(id, to: statement, at: 1)
         try bind(JSONEncoder().encode(object), to: statement, at: 2)
@@ -497,6 +502,122 @@ public actor SQLiteFileRepository: FileRepository {
         guard sqlite3_step(statement) == SQLITE_ROW, let pointer = sqlite3_column_blob(statement, 0) else { return nil }
         return try JSONDecoder().decode(type, from: Data(bytes: pointer, count: Int(sqlite3_column_bytes(statement, 0))))
     }
+    /// Индекс фиксированных JSON-выражений ограничивает cursor lookup нужными
+    /// runs. JSON1 не поддержан/повреждён — queryFailed, без full-load fallback.
+    public func ruleHistoryPage(ruleID: UUID, runID: UUID?, offset: Int = 0, cursor: String? = nil) throws -> RuleHistoryPage {
+        guard (0...100_000).contains(offset), !(cursor != nil && (offset != 0 || runID != nil)) else { throw RuleHistoryFailure.invalidRequest }
+        let saved: HistoryCursor?
+        if let cursor {
+            guard !cursor.isEmpty, cursor.utf8.count <= 2048, let data = Data(base64Encoded: cursor),
+                  let decoded = try? JSONDecoder().decode(HistoryCursor.self, from: data), decoded.version == 1,
+                  decoded.ruleID == ruleID, decoded.anchor >= 0, decoded.created.isFinite,
+                  UUID(uuidString: decoded.runID) != nil, decoded.resultIndex >= 0, decoded.resultCount >= 0,
+                  (0...1_000_000_000).contains(decoded.position) else { throw RuleHistoryFailure.invalidRequest }
+            saved = decoded
+        } else { saved = nil }
+        let database = try openDatabase(); defer { sqlite3_close(database) }
+        let ruleExpression = "json_extract(CAST(payload AS TEXT),'$.ruleID')"
+        let dateExpression = "json_extract(CAST(payload AS TEXT),'$.createdAt')"
+        try execute("CREATE INDEX IF NOT EXISTS rule_runs_history_v1 ON rule_runs(\(ruleExpression), \(dateExpression) DESC, id DESC)", database: database)
+        try execute("BEGIN", database: database); defer { _ = try? execute("ROLLBACK", database: database) }
+        let anchor: Int64
+        if let saved { anchor = saved.anchor }
+        else {
+            let statement = try prepare("SELECT COALESCE(MAX(rowid),0) FROM rule_runs WHERE \(ruleExpression)=?", database: database)
+            defer { sqlite3_finalize(statement) }; try bind(ruleID.uuidString, to: statement, at: 1)
+            guard sqlite3_step(statement) == SQLITE_ROW else { throw SQLiteFileRepositoryError.queryFailed }
+            anchor = sqlite3_column_int64(statement, 0)
+        }
+        let columns = "id,json_extract(CAST(payload AS TEXT),'$.taskID'),json_extract(CAST(payload AS TEXT),'$.status'),\(dateExpression),json_array_length(CAST(payload AS TEXT),'$.results')"
+        func metadata(id: String? = nil, before: HistoryRun? = nil) throws -> HistoryRun? {
+            var sql = "SELECT \(columns) FROM rule_runs WHERE \(ruleExpression)=? AND rowid<=?"
+            if id != nil { sql += " AND id=?" }
+            if before != nil { sql += " AND (\(dateExpression),id)<(?,?)" }
+            sql += " ORDER BY \(dateExpression) DESC,id DESC LIMIT 1"
+            let statement = try prepare(sql, database: database); defer { sqlite3_finalize(statement) }
+            try bind(ruleID.uuidString, to: statement, at: 1); try bind(anchor, to: statement, at: 2)
+            if let id { try bind(id, to: statement, at: 3) }
+            if let before { try bind(before.created, to: statement, at: 3); try bind(before.id.uuidString, to: statement, at: 4) }
+            let step = sqlite3_step(statement)
+            if step == SQLITE_DONE { return nil }
+            guard step == SQLITE_ROW, let text = columnText(statement, at: 0), let id = UUID(uuidString: text),
+                  let status = columnText(statement, at: 2), [SQLITE_INTEGER, SQLITE_FLOAT].contains(sqlite3_column_type(statement, 3)),
+                  sqlite3_column_type(statement, 4) == SQLITE_INTEGER else { throw SQLiteFileRepositoryError.queryFailed }
+            let created = sqlite3_column_double(statement, 3), count = sqlite3_column_int64(statement, 4)
+            guard created.isFinite, count >= 0, count <= Int64(Int.max) else { throw SQLiteFileRepositoryError.queryFailed }
+            let taskText = columnText(statement, at: 1)
+            let task = taskText.flatMap(UUID.init(uuidString:))
+            guard taskText == nil || task != nil else { throw SQLiteFileRepositoryError.queryFailed }
+            return HistoryRun(id: id, taskID: task, status: status, created: created, resultCount: Int(count))
+        }
+        var current: HistoryRun?, firstIndex = 0
+        if let saved {
+            current = try metadata(id: saved.runID)
+            guard let current, current.created == saved.created, current.resultCount == saved.resultCount,
+                  saved.resultIndex < max(1,current.resultCount) else { throw RuleHistoryFailure.invalidRequest }
+            firstIndex = saved.resultIndex + 1
+        } else if let runID {
+            current = try metadata(id: runID.uuidString)
+            guard current != nil else { throw RuleHistoryFailure.missingRun }
+            firstIndex = offset
+        } else if offset > 0 {
+            // Совместимый offset дороже keyset: SQLite находит только стартовую
+            // строку, не передавая/не декодируя всю историю в Swift. Новые clients
+            // продолжают nextCursor и не повторяют эту работу.
+            let sql = "SELECT r.id,COALESCE(CAST(e.key AS INTEGER),0) FROM rule_runs r LEFT JOIN json_each(CAST(r.payload AS TEXT),'$.results') e ON 1 WHERE json_extract(CAST(r.payload AS TEXT),'$.ruleID')=? AND r.rowid<=? ORDER BY json_extract(CAST(r.payload AS TEXT),'$.createdAt') DESC,r.id DESC,CAST(e.key AS INTEGER) ASC LIMIT 1 OFFSET ?"
+            let statement = try prepare(sql, database: database); defer { sqlite3_finalize(statement) }
+            try bind(ruleID.uuidString, to: statement, at: 1); try bind(anchor, to: statement, at: 2); try bind(Int64(offset), to: statement, at: 3)
+            let step = sqlite3_step(statement)
+            if step == SQLITE_ROW, let id = columnText(statement, at: 0) {
+                current = try metadata(id: id); firstIndex = Int(sqlite3_column_int64(statement, 1))
+            } else if step != SQLITE_DONE { throw SQLiteFileRepositoryError.queryFailed }
+        } else { current = try metadata() }
+        let selectedTask = current?.taskID
+        var rows: [(RuleHistoryItem, HistoryCursor)] = []
+        var visited = 0
+        while let run = current, rows.count < 101, visited < 102 {
+            visited += 1
+            if run.resultCount == 0, firstIndex == 0, runID == nil {
+                let row = RuleHistoryItem(runID: run.id, taskID: run.taskID, runStatus: run.status,
+                    createdAt: Date(timeIntervalSinceReferenceDate: run.created), actionID: nil, kind: nil, relativePath: "", status: run.status)
+                rows.append((row, HistoryCursor(ruleID: ruleID, anchor: anchor, runID: run.id.uuidString, created: run.created, resultIndex: 0, resultCount: 0, position: 0)))
+            } else if firstIndex < run.resultCount {
+                let remaining = 101 - rows.count
+                let (upperIndex, overflow) = firstIndex.addingReportingOverflow(remaining)
+                guard !overflow else { throw RuleHistoryFailure.invalidRequest }
+                // json_each может разобрать весь JSON выбранного run, но range
+                // допускает в ORDER BY не более101 строки, не весь results array.
+                let sql = "SELECT CAST(e.key AS INTEGER),json_extract(e.value,'$.actionID'),json_extract(e.value,'$.kind'),json_extract(e.value,'$.relativePath'),json_extract(e.value,'$.status') FROM rule_runs r,json_each(CAST(r.payload AS TEXT),'$.results') e WHERE r.id=? AND json_extract(CAST(r.payload AS TEXT),'$.ruleID')=? AND CAST(e.key AS INTEGER)>=? AND CAST(e.key AS INTEGER)<? ORDER BY CAST(e.key AS INTEGER) LIMIT ?"
+                let statement = try prepare(sql, database: database); defer { sqlite3_finalize(statement) }
+                try bind(run.id.uuidString, to: statement, at: 1); try bind(ruleID.uuidString, to: statement, at: 2)
+                try bind(Int64(firstIndex), to: statement, at: 3); try bind(Int64(upperIndex), to: statement, at: 4); try bind(Int64(remaining), to: statement, at: 5)
+                var step = sqlite3_step(statement)
+                while step == SQLITE_ROW {
+                    guard let actionText = columnText(statement, at: 1), let actionID = UUID(uuidString: actionText),
+                          let kindText = columnText(statement, at: 2), let kind = RuleActionKind(rawValue: kindText),
+                          let path = columnText(statement, at: 3), let status = columnText(statement, at: 4) else { throw SQLiteFileRepositoryError.queryFailed }
+                    let index = Int(sqlite3_column_int64(statement, 0))
+                    let row = RuleHistoryItem(runID: run.id, taskID: run.taskID, runStatus: run.status,
+                        createdAt: Date(timeIntervalSinceReferenceDate: run.created), actionID: actionID, kind: kind, relativePath: path, status: status)
+                    rows.append((row, HistoryCursor(ruleID: ruleID, anchor: anchor, runID: run.id.uuidString, created: run.created, resultIndex: index, resultCount: run.resultCount, position: 0)))
+                    step = sqlite3_step(statement)
+                }
+                guard step == SQLITE_DONE else { throw SQLiteFileRepositoryError.queryFailed }
+            }
+            if runID != nil { break }
+            current = try metadata(before: run); firstIndex = 0
+        }
+        let visible = Array(rows.prefix(100)), hasMore = rows.count > 100
+        let position = saved?.position ?? offset
+        var next: String?
+        if hasMore, runID == nil, var last = visible.last?.1 {
+            last.position = position + visible.count
+            next = try JSONEncoder().encode(last).base64EncodedString()
+        }
+        return RuleHistoryPage(items: visible.map(\.0), nextOffset: hasMore ? position + visible.count : nil,
+            nextCursor: next, runTaskID: selectedTask)
+    }
+
     public func deleteRule(id: UUID) throws {
         let database = try openDatabase(); defer { sqlite3_close(database) }
         let statement = try prepare("DELETE FROM automation_rules WHERE id = ?", database: database)
@@ -586,4 +707,22 @@ public enum SQLiteFileRepositoryError: Error, LocalizedError, Sendable {
         case .queryFailed: "Не удалось обновить локальный индекс файлов."
         }
     }
+}
+
+private struct HistoryRun {
+    let id: UUID
+    let taskID: UUID?
+    let status: String
+    let created: Double
+    let resultCount: Int
+}
+private struct HistoryCursor: Codable {
+    var version = 1
+    let ruleID: UUID
+    let anchor: Int64
+    let runID: String
+    let created: Double
+    let resultIndex: Int
+    let resultCount: Int
+    var position: Int
 }

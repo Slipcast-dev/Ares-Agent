@@ -158,9 +158,12 @@ final class FileSnapshotTests: XCTestCase {
     func testRevocationRemovesSnapshotsAndDeniesOldMCPTaskResults() async throws {
         let f = try await fixture(); defer { try? FileManager.default.removeItem(at: f.base) }
         let scan = try await run(f, "file.scan")
+        _ = try page(await run(f, "file.search")) // Прогреваем cache до revoke.
         try await f.container.fileRepository.removeRoot(withID: f.root.id)
         let snapshot = try await f.container.fileRepository.currentSnapshot(rootID: f.root.id)
         XCTAssertNil(snapshot)
+        do { _ = try await run(f, "file.search"); XCTFail("Revoked root returned cached page") }
+        catch { XCTAssertTrue([LocalRuntimeFailure.invalidRequest, .denied].contains(error as? LocalRuntimeFailure ?? .operationFailed)) }
         do { _ = try await f.work.authorizedTask(scan.id, role: .mcp); XCTFail("Revoked root disclosed result") }
         catch { XCTAssertEqual(error as? LocalRuntimeFailure, .denied) }
         XCTAssertTrue(FileManager.default.fileExists(atPath: f.folder.appendingPathComponent("000.txt").path))

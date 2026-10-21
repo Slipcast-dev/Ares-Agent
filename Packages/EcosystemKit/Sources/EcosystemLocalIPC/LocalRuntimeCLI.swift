@@ -40,10 +40,13 @@ public enum LocalRuntimeCLI {
               value["testProfile"] as? Bool == true else { throw LocalRuntimeFailure.invalidConfiguration }
         return { actual in if actual == point { _exit(70) } }
     }
-    public static func configurationFile() throws -> URL {
-        let args = Array(CommandLine.arguments.dropFirst())
+    public static func configurationFile(arguments args: [String] = Array(CommandLine.arguments.dropFirst())) throws -> URL {
         guard args.count == 2, args[0] == "--config", args[1].hasPrefix("/") else { throw LocalRuntimeFailure.invalidConfiguration }
-        return URL(fileURLWithPath: args[1])
+        let file = URL(fileURLWithPath: args[1])
+        // LaunchAgents запускает runtime напрямую, минуя GUI bootstrap. После
+        // crash незавершённой замены этот вход также обязан отказать до recover.
+        try InstalledRuntimeMaintenance.requireNoInterruptedTransaction(profile: file.deletingLastPathComponent())
+        return file
     }
 }
 private final class CLIResult: @unchecked Sendable {

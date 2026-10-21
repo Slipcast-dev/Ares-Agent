@@ -95,10 +95,31 @@ public actor LocalAutomationService {
             var next = document; next.notified.append(id); next.notified = Array(next.notified.suffix(4096)); try persist(next)
         }
     }
+    /// При пустом inbox/выключенном opt-in таймер не нужен. Только свежая
+    /// недоставленная запись даёт retry/cooldown; системное согласие не меняется.
+    public func notificationRetryDelay(now: Date = Date()) async -> TimeInterval? {
+        guard document.settings.notificationsEnabled else { return nil }
+        do {
+            let events = try await inbox.events(now: now)
+            let notified = Set(document.notified)
+            let pending = events.filter { $0.notificationEligible != false && !notified.contains($0.id) && now.timeIntervalSince($0.createdAt) <= 3600 }
+            guard !pending.isEmpty else { return nil }
+            // После перевода часов назад сохранённое событие может стать
+            // будущим. Не теряем его: ждём createdAt, а не засыпаем навсегда.
+            if pending.allSatisfy({ $0.createdAt > now }) {
+                return pending.map { $0.createdAt.timeIntervalSince(now) }.min()
+            }
+            if let next = document.nextNotificationAt, next > now { return max(1, next.timeIntervalSince(now)) }
+            return 60 // Отказ ОС/ошибка доставки не создают частый цикл пробуждений.
+        } catch { return 60 }
+    }
     public func flushNotifications(now: Date = Date()) async {
         guard !flushing, document.settings.notificationsEnabled, document.nextNotificationAt.map({ now >= $0 }) ?? true else { return }
         flushing = true; defer { flushing = false }
-        guard await notifications.authorization() == "authorized" else { return }
+        // Тихая provisional-доставка остаётся разрешённой, но её отдельное
+        // состояние в GUI не должно выдаваться за разрешение видимых баннеров.
+        let authorization = await notifications.authorization()
+        guard authorization == "authorized" || authorization == "provisional" else { return }
         do {
             // Не догоняем баннерами старые события после недели запрета. AI inbox
             // хранит их до TTL независимо от состояния системных уведомлений.

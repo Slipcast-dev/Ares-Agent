@@ -1,0 +1,1213 @@
+{
+  "version": "0.28.0",
+  "upstreamProject": "FileOrganizer",
+  "upstreamCommit": "347f4bf54b57354e512327495c66c807a1c24424",
+  "sourceFiles": [
+    {
+      "path": ".editorconfig",
+      "sha256": "6820181f45a17cc6d9a7dd59f05827e48eba35c1defceb48f4543f6e66b8c1c4",
+      "bytes": 177
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "b1ee246308829ea41ea2c1f92f6c7d265bb52efc57b3354e412a402462ef301c",
+      "bytes": 111
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "sha256": "3967050a1987758335ba3d9f31cf35680d70b37d5faf1e56c530222afdd5c562",
+      "bytes": 16
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+      "sha256": "7da797f121721643404a2f7fb6c834c3837384aa3a4c08b37a701de173d2de3c",
+      "bytes": 247
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "fca091d30e5ee4d8dd17de5f7d237ef73aac9cbab54e6e6e313d452c99f50e28",
+      "bytes": 269
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "sha256": "e14bb480547df1d329b341db140117040aaf37ab0ade2ac1123df9fb26ea3511",
+      "bytes": 430
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "sha256": "789b407a80edaa740236de60ce179a042335f0c37a4c74e6d7c3f7a9d5b8f867",
+      "bytes": 174
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "ffe5a1484ff35965aaf43eb843f91e044b471eb5ca45bdc144ba4062d0d77525",
+      "bytes": 555
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "f7e0e50170a01570f11d375dbd3093820b4456d4b2364e25f1c3fdcf95eb0c89",
+      "bytes": 154
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "9bbbc2f9e4e6ad64b65ef1c37371edbcf6515ab0c648502b117146fb10772fa5",
+      "bytes": 397
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "sha256": "3515be636cdeba59dcb981b11cb7cafe25731560dddc7798caf399214ebc478a",
+      "bytes": 441
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "b9ce865e53573e8981da43db5ffabb35266134f4271df6e615c288e5e6e9296f",
+      "bytes": 466
+    },
+    {
+      "path": "EcosystemKit.lock.json",
+      "sha256": "3173cd7fbcb3e9a02bf4856caa52ba805ad65eacf046d05494bcc01afafe1e0e",
+      "bytes": 17365
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "47d2935a60dcccf1d8e948917ef696f14df788bbe532bdf8630f5f1acfa30263",
+      "bytes": 4805
+    },
+    {
+      "path": "LICENSE.en.md",
+      "sha256": "53fdfcf207565438c10f648c1dca9f3074b3a3852890dea1cd2778631c2eb42b",
+      "bytes": 2324
+    },
+    {
+      "path": "Package.resolved",
+      "sha256": "c8a49423d28bf3b5355fb3b86d2a5006de13cd5bce3ed860d5257cf9b9449171",
+      "bytes": 290
+    },
+    {
+      "path": "Package.swift",
+      "sha256": "1fb72d07a93aa395776e84bd76df31c413b597dcda06b1d127883b1f68f2d818",
+      "bytes": 2670
+    },
+    {
+      "path": "Packages/EcosystemKit/.gitignore",
+      "sha256": "8c2f0c0df3f40dc288a11188380307132fb7fbb76c4e12f651e61d288277f2e0",
+      "bytes": 32
+    },
+    {
+      "path": "Packages/EcosystemKit/LICENSE",
+      "sha256": "4a30dd86777a8060e0c44b356218f91b5f00dbf39cb12657de3e02be72222150",
+      "bytes": 4815
+    },
+    {
+      "path": "Packages/EcosystemKit/LOCAL_RUNTIME.md",
+      "sha256": "6d174a14189de12f02e47610c87813ab9eb64b0fc7dcc103030f9dd74f58e9ae",
+      "bytes": 222
+    },
+    {
+      "path": "Packages/EcosystemKit/Package.resolved",
+      "sha256": "c8a49423d28bf3b5355fb3b86d2a5006de13cd5bce3ed860d5257cf9b9449171",
+      "bytes": 290
+    },
+    {
+      "path": "Packages/EcosystemKit/Package.swift",
+      "sha256": "6200393d031521301a9f1a6679ea717a22ac0dd691e290577f999b5b5c0db033",
+      "bytes": 2082
+    },
+    {
+      "path": "Packages/EcosystemKit/README.md",
+      "sha256": "6968bf565d67c2b9291916d0605e2e1522c82a88109d971c3c4cc26476773a91",
+      "bytes": 246
+    },
+    {
+      "path": "Packages/EcosystemKit/RUNTIME.md",
+      "sha256": "3cac2a21d9c5036cceae79446e72525f537f74e49364e18303bfa49995100754",
+      "bytes": 367
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/ClientIntegration.swift",
+      "sha256": "ee8ee3031ba9bb99aa2bfa597e6d706da3b98b2f7775143a34d6ee583efa233d",
+      "bytes": 7255
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/CodexAdapter.swift",
+      "sha256": "1ef288260e09e112e1e1217b059054b076bcf850cbc33b5237cc668e65a4ec3d",
+      "bytes": 33193
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/CodexModels.swift",
+      "sha256": "dcf9f8064add15e4f32c2f18526a8aeba71c4285818c424719837744565361bb",
+      "bytes": 2708
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/CodexProcess.swift",
+      "sha256": "cb91d7dec763dc46936035e525c0fa18a26aa900afc56cec2f4304733d52d505",
+      "bytes": 3665
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/HarnessAdapter.swift",
+      "sha256": "a5bbe4026783e2708cdb9a6a8fe03e4c013f4bd821d629c0910a9c2f511b7dac",
+      "bytes": 24840
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/HarnessInstallation.swift",
+      "sha256": "0c339fe0c8ede1f27af64a3d776049805ab0dc3859ec648bd78ee6638ec667a8",
+      "bytes": 1994
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/HarnessModels.swift",
+      "sha256": "2d85dadd7b0accf358f3efa262947fc676cb791a90e2a9bd47678691a8a2c602",
+      "bytes": 3111
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/HarnessPatch.swift",
+      "sha256": "cd3ecab252bdf2b59faf2c48ac573e09073270b96b606c45bf4398e435dc820c",
+      "bytes": 16512
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/HermesReadinessAdapter.swift",
+      "sha256": "8a32c0b6de1d10d0830a9834bf903686556b389f09fc2e9743b99a45953cae56",
+      "bytes": 3334
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemClientAdapters/InstalledClientIntegrationAdapter.swift",
+      "sha256": "2f52c940f988eb62e07585b90463285292f604026e45efdf3f7a97c46f2f46f0",
+      "bytes": 5529
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/ContractCodec.swift",
+      "sha256": "c5440cb569098e58c465041a654baf7dec551a7963c8b348a0fcdd0d0f885ce1",
+      "bytes": 8421
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/ContractResources.swift",
+      "sha256": "b45314a972096566c382fd1980ead6a6dbba1879bcc3d952d85f0c577699ff1e",
+      "bytes": 898
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/KnownErrorCode.swift",
+      "sha256": "b2b5d44837d66335ab6ee818ad52f9dbe13b7e814fac2c4b1bc1c1c62dbd751a",
+      "bytes": 1117
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Models.swift",
+      "sha256": "c82a699a3368e187ff72a9ef3577e0bcd4ff84112a8987094d1058d3f3c15b4f",
+      "bytes": 39858
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Roles/ares.json",
+      "sha256": "db8ee7b8c07a3b6d45d04301c81cd0cd896006df2797f35b77c15ac6633de948",
+      "bytes": 777
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Roles/ares.md",
+      "sha256": "db2b2fd3881766152eda6096bdb8f0424835c9d10f169a99c0d1f9821a23142a",
+      "bytes": 964
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Roles/athena.json",
+      "sha256": "12f8831afc41d9aef6778a9c069c1abb5a9afd177870482671bdf4d65c86e541",
+      "bytes": 721
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Roles/athena.md",
+      "sha256": "e4e00b547be6cecd68628465493667a22e57bcc98bab8abb79e8c2f79c6fcff6",
+      "bytes": 951
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Roles/coordinator.json",
+      "sha256": "3f6598939a67c093a5e386e66fc8c56c7cea92754fae50b8cf743b577f43cd2a",
+      "bytes": 315
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Roles/coordinator.md",
+      "sha256": "f7163cd614d6637b2392a003c6d365d0f7bf9fe31080212ae7a7589976e40896",
+      "bytes": 1052
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Schemas/client-adapter.schema.json",
+      "sha256": "75e8002ed2b9fe12444303fa5309a8ccde30200356022f0908571c19c644a28b",
+      "bytes": 1158
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Schemas/contracts.schema.json",
+      "sha256": "2b42e60c90ce3d0719265701e593395cc27756f5c4c964415ab3cbd9def07364",
+      "bytes": 25330
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Schemas/registry.schema.json",
+      "sha256": "152ce087b9159893020c0a0144e0366e9c7f75b564d10773b10780b1391aab10",
+      "bytes": 481
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/Schemas/role.schema.json",
+      "sha256": "f2118011ff93a5fd8db8c5afb61e80c0e4bce936a05d9b92c4c4db3d280e7558",
+      "bytes": 1358
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/Resources/capability-registry.json",
+      "sha256": "d7ca58cff5f66432adc67c5071cb66f949e773037cce3171cc22d9f326d4fcb2",
+      "bytes": 25216
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemContracts/TaskState.swift",
+      "sha256": "8a699b2e6b93f6fb9530659668ebac0b7829d8b3f71697a67e88d7ae55cd3884",
+      "bytes": 2078
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemInstalledProbe/main.swift",
+      "sha256": "976c1f574bb0a9a4dcfe0cbf98dde37a26fc235a4ba25035c4818d182fdaa3b7",
+      "bytes": 2987
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/BoundedMCPInput.swift",
+      "sha256": "bd5c5e4aeace240a795a32142169ff9afd99036ac5a6340459bb0af74e703adb",
+      "bytes": 2448
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/InstalledMaintenanceCommand.swift",
+      "sha256": "9bc6f5d0538b57de2eb86539e69514c950a454df862a57b7909b4d370a3d50fa",
+      "bytes": 2767
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/InstalledRuntimeBootstrap.swift",
+      "sha256": "1f5a1647072d35209e853bdcde6a7fd9d5ff50632be69c9552c60047517f04a0",
+      "bytes": 20702
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/InstalledRuntimeMaintenance.swift",
+      "sha256": "e902817587975cd648b8cc3c380ba9f881a9723a673366ab1ea8f74e648989a6",
+      "bytes": 24954
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalAccessControl.swift",
+      "sha256": "8a9629e19168def303be87504fc11fecfcaf1c91a2b1ad274a7835e465b90e61",
+      "bytes": 2912
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalAccessMCP.swift",
+      "sha256": "d4bff8805fab0693a33e13848f2a80a70c218f9fb1f462b3c595c8b1102b3365",
+      "bytes": 3394
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalAccessPolicy.swift",
+      "sha256": "ea2bb7928c56956be47e09d698289bef3f5e9459a1afc3a907894d46efe0bf55",
+      "bytes": 15593
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalAutomationControl.swift",
+      "sha256": "896c02def6c3c870469f877a39a93ef573821cef084337f14982b3802c86ae4b",
+      "bytes": 7921
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalAutomationSchedule.swift",
+      "sha256": "f75e9eb274c29fb14d31f86b40299ee32f27944222a7cc13c99ec7ca1bf3599f",
+      "bytes": 18289
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalAutomationService.swift",
+      "sha256": "f04696b77c6f8d27ff8c12c1b5d4c440d65df760f477a99fe9d791bc3fed4780",
+      "bytes": 9466
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalCommonMCP.swift",
+      "sha256": "09c9f685c4b47090c40a955c98eb9805d6411e884e67ec038277d610b9ca4456",
+      "bytes": 6609
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalContracts.swift",
+      "sha256": "2b0c5f23947a41223023e30fe1e51b676a349995ec67881ab0a9f507c091919e",
+      "bytes": 8824
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalDirectoryWatcher.swift",
+      "sha256": "7bb0a2e081cdf2e0a21593329c3946cf8f5cd06685820f2f27fef8e0ab9513f3",
+      "bytes": 2149
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalEventInbox.swift",
+      "sha256": "d4b29452b291bc4ae237704c18cca55b20df8eb53e9ae20144b786725dd3569c",
+      "bytes": 21416
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalLoginRegistration.swift",
+      "sha256": "6fb2201115bfd86d08c14ebc642a08100e16fb782bd171fc843d2e3c18ab8dfc",
+      "bytes": 12988
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalMCPHistory.swift",
+      "sha256": "644a6b3876af4814fef70dab9d0eef97cff424c73690841f2b87da27bbf3658b",
+      "bytes": 13635
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalNotifications.swift",
+      "sha256": "b99c6bd79ab84a62590f30bcf7d854a774ec7632b0174ceaa78fca589c4e8cf7",
+      "bytes": 3473
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalOperationalTask.swift",
+      "sha256": "07e662fd2f7794ecef5317166aaa0c761cc538bd6363f101854af4802f0d1c35",
+      "bytes": 545
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalRecovery.swift",
+      "sha256": "4567c7d4f3e09f5cfd79d79b787ff17f7b5e86b5bfd6e3985bbeaa8ee4fbe87e",
+      "bytes": 6990
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalRuntimeCLI.swift",
+      "sha256": "ae614c5e9434566d06707f6f08662dbea63a42ab5e3ff4aeb2af1395f4482ff1",
+      "bytes": 4708
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalStableEventID.swift",
+      "sha256": "f60c87c4c517fb8217bf2d4aba8e49b93d316a72c8a66832c6e50597c3b1e4c0",
+      "bytes": 475
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalTasks.swift",
+      "sha256": "5f43563e8d05bd8e690e225ccb301cd1590e90c8a1b87af496afaa2c6beece31",
+      "bytes": 3007
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalWakeObserver.swift",
+      "sha256": "ed6a44a1dfcc66e881e776781383ba09668a0634076f83f3c3d080e822d01043",
+      "bytes": 1421
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/LocalXPC.swift",
+      "sha256": "6d65f81003aa5090c363fb31c2e4c427e18f77c7c6cd273fca0a61da7ded986b",
+      "bytes": 8345
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/MCPInputSchemaValidator.swift",
+      "sha256": "c3df8c278f18cf901ededa492c5ecf77189574d7046a6e8a294f82dd35c8f4f5",
+      "bytes": 13499
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/MCPProtocolSession.swift",
+      "sha256": "7cfa56e1d3ef6054095e15afb37f1153b991667aaac8edb3693a44c106256ff8",
+      "bytes": 14320
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemLocalIPC/MCPStdioTransport.swift",
+      "sha256": "0cd47e5f91c3721ff78f7334a437f4b879ccecd810ebbfa4665ed24ee295f5dd",
+      "bytes": 2481
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemQueueProbe/main.swift",
+      "sha256": "acbb2e5dca5eb76ddaee899521b1a1daf21b1ee93632b63001dc51b0f414dd43",
+      "bytes": 6612
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemRuntimeSupport/DurableTaskExecutor.swift",
+      "sha256": "d2947aad8de81ae8ce8b3a08fab6816b0f309c3cbe9559b9f6728cb858178e89",
+      "bytes": 19925
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemRuntimeSupport/DurableTaskQueue.swift",
+      "sha256": "743c750fadd234d660d4ff868945c76f6724a2cbb3d76b2a059c45be86a2b45b",
+      "bytes": 33672
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemRuntimeSupport/QueueDatabase.swift",
+      "sha256": "ba72cef7af5bfbc52d0de53b849bb1655c4c270ac73d6d9cd0fabfadd361be26",
+      "bytes": 7182
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemRuntimeSupport/QueueModels.swift",
+      "sha256": "af5d0b112bb5adf095500892033275a08a6a81b0556fbb4c5eeccefec5d63c09",
+      "bytes": 7012
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemRuntimeSupport/QueuePowerPolicy.swift",
+      "sha256": "7b277d6973c8a686be3c2a9cdd02cd63f14a04aa64fc2b51a913599291be3faa",
+      "bytes": 2347
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemRuntimeSupport/RuntimeOwnershipLease.swift",
+      "sha256": "197f4f57cb262b800a4d3b3f8fe56623eefa3b245dcc3f4c1817001ca3f4443b",
+      "bytes": 1651
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/EcosystemSidebar.swift",
+      "sha256": "857be38fe27d151cbf97d962a235985639be13ba1033df2ac37710647ce79924",
+      "bytes": 5223
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/InstalledRuntimeFailureView.swift",
+      "sha256": "d02efe15bd7f52d50340dfb0e1c67e437639b697c4cb2f21b9c5a3a3b80fe9af",
+      "bytes": 1363
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/LocalAccessSection.swift",
+      "sha256": "b8ca4ffec7fd42cf9a07618df0aed4038fd96e8cb615ac363b4acc2eec90b597",
+      "bytes": 11513
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/LocalAutomationSection.swift",
+      "sha256": "5153d50ce1d76570ac5ea42aed97b92af0fa30e715e213c22b04f9869fa6da99",
+      "bytes": 13166
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/LocalOperationsModel.swift",
+      "sha256": "191c896c87f6516ff3a001e9329aba72b13c00dc55d47126f27f105cf711afff",
+      "bytes": 10558
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/LocalOperationsSection.swift",
+      "sha256": "3e3d35ab8ad98187e4355a44d7a4cc5feef58dfaf4b61e26f0376900c18fbbb7",
+      "bytes": 12121
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/LocalRecoverySection.swift",
+      "sha256": "ea87e064193146e5f3d2a0a0d7a8e3b6c63c1af96706ce129724ddb2a15abd83",
+      "bytes": 4813
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/LocalRecoveryViewModel.swift",
+      "sha256": "05dcf44f65262ffd5a866179079efe94378e55cc7b59381b42fca5aef56d9e0d",
+      "bytes": 3889
+    },
+    {
+      "path": "Packages/EcosystemKit/Sources/EcosystemUI/PlannedHermesConnection.swift",
+      "sha256": "857d81dafd494f5b8828fa6baa89ff19f8855730f220fc104193633920405e24",
+      "bytes": 721
+    },
+    {
+      "path": "Packages/EcosystemKit/THIRD_PARTY_NOTICES.md",
+      "sha256": "b9f46419866d05cda1b7bc4f695c3d5b022f73ba45a0e2cff74af8c08046f9df",
+      "bytes": 1552
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemClientAdaptersTests/CodexAdapterTests.swift",
+      "sha256": "e15597227332406902d3f8915b5955eaddf35f5be3040c4f2349627d8d331da8",
+      "bytes": 19870
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemClientAdaptersTests/HarnessAdapterTests.swift",
+      "sha256": "b4467b88536d987ece1a3c7311619f5bf35b64e14afb7f1927a6fcd1bb6000dc",
+      "bytes": 25226
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemClientAdaptersTests/IntegrationRegistryTests.swift",
+      "sha256": "0c65f34d6cbf6bb510cf071201fae604014a1ccff59003f54ac39b41b083e54f",
+      "bytes": 14667
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemContractsTests/ContractTests.swift",
+      "sha256": "f79a6d94cc7a957213d9807068d7f107085545748bd1e8c0ef852299e9fb9700",
+      "bytes": 14794
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemContractsTests/Fixtures/result-v1.json",
+      "sha256": "073f7930236148014aa0bd158aa119c2f499a7961d350640d22b3da211dd305d",
+      "bytes": 392
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/InstalledRuntimeBootstrapTests.swift",
+      "sha256": "0e57cbefd979819d8f68194bd61f0501bf4fd0fbe11a3d6325e6c12ccb251fa8",
+      "bytes": 6198
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/InstalledRuntimeMaintenanceTests.swift",
+      "sha256": "51c42500f8610627f8b218485ec6987e44f3eb5d580d68e5cded171b26a6f6c4",
+      "bytes": 20978
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalAccessPolicyTests.swift",
+      "sha256": "e5c4aee317d0b53f121f557478928f30028cb07636caf1ee2e8163c16e7949ba",
+      "bytes": 14926
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalAutomationScheduleTests.swift",
+      "sha256": "0c86e1b661004b4580537ce53396e4ba6877945613b186525e103fbc566a41da",
+      "bytes": 11351
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalAutomationServiceTests.swift",
+      "sha256": "9bc7606421d3c3798a386c6569bbcdb93ea8029734e682c6e3b040ce4cb9c390",
+      "bytes": 12600
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalEventInboxTests.swift",
+      "sha256": "41545c64d9434b992fe554e845ff8a215c9ed790c87a93408f21e8afd4d50127",
+      "bytes": 13383
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalEventProcessingTests.swift",
+      "sha256": "6b652d9b6f20c16e549eb03b505d4b46d68b6a17dcbc7d064d9b6c8aee6d81bc",
+      "bytes": 10705
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalIPCTests.swift",
+      "sha256": "8d6dda6cb3da178efa2e5af24e44194bbc4c962529cc01cba6b124280ea09833",
+      "bytes": 3118
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalMCPHistoryTests.swift",
+      "sha256": "5cf519062cf3941926f9ec6fe1cd39cf85ed9f95b5f997de45be222771f914ee",
+      "bytes": 14753
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/MCPInputSchemaValidatorTests.swift",
+      "sha256": "0e44be6c09fb25fc5499ab52aa88ba64c5b208d8a3283b55059c2d4e57fe40c9",
+      "bytes": 4904
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/MCPProtocolSessionTests.swift",
+      "sha256": "6c1902ace3462452d5cd3d8d3d8a47a7bcc0b5c6115456b5ec40e185e7271c45",
+      "bytes": 12055
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/NativeLifecycleTests.swift",
+      "sha256": "acf445aa5debc058eac66176fd3024be9cb5e17d2a8500905130f5252f67907c",
+      "bytes": 9576
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/NativeNotificationAuthorizationTests.swift",
+      "sha256": "1e116fcb51103ec568177e54e368f52caab957f678b9b12f23245eb979ad2d95",
+      "bytes": 1571
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/RecoveryTests.swift",
+      "sha256": "f84db578ad0aa4fd8d4466b12abd1a44ab87e57260a5d8e162c92cf778b177ea",
+      "bytes": 4878
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemRuntimeSupportTests/QueuePhysicalFullTests.swift",
+      "sha256": "6005fcb14f1fd9f9cdf4c3631215b5d2000e580798d3f0e583c51a70df7c57fa",
+      "bytes": 5135
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemRuntimeSupportTests/QueuePowerPolicyTests.swift",
+      "sha256": "bce6c8efadd15fec8e725809b76c41cd922b99cb63db6ab3c11941a3f3519dfa",
+      "bytes": 9668
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemRuntimeSupportTests/QueueTests.swift",
+      "sha256": "92c960ade64ff80066ec352e07d62f375a474375dbb473dc29d89726b51a3b50",
+      "bytes": 43973
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemUITests/OperationsTests.swift",
+      "sha256": "f2fc8d2d2b26289a9749c4027a368a7c03f8a950cfbd77948fc8fea5409c3c96",
+      "bytes": 9590
+    },
+    {
+      "path": "Packages/EcosystemKit/Tests/EcosystemUITests/SidebarTests.swift",
+      "sha256": "3acafece3f6d266cd223b81817886ea3f7c556524811b78a9e9c259e8e251e2f",
+      "bytes": 6214
+    },
+    {
+      "path": "Packages/EcosystemKit/VERSION",
+      "sha256": "d1994e4942b06ec398ed7d9fa91ecce4079cd3f85ffe9e04588866291263149c",
+      "bytes": 7
+    },
+    {
+      "path": "Packages/EcosystemKit/script/crash_smoke.py",
+      "sha256": "71cc628f8fab8076cede9a6758784f78fd36372bc8bc6c3291df969a486dec38",
+      "bytes": 7417
+    },
+    {
+      "path": "Packages/EcosystemKit/script/requirements-verification.txt",
+      "sha256": "2b5c45d08c05ed38d6d528775304996f47eb42668f4c32e845d0af447eaf72c1",
+      "bytes": 143
+    },
+    {
+      "path": "Packages/EcosystemKit/script/verify_schemas.py",
+      "sha256": "8541159acd4a8e769d84ba2b9c63a57cae3f0b430073995bf3e9ac67e6cf25cc",
+      "bytes": 4240
+    },
+    {
+      "path": "README.en.md",
+      "sha256": "0f7855157f4c9f37414685556732189168c3ac3b7b5cd75745e7779613b42760",
+      "bytes": 2638
+    },
+    {
+      "path": "README.md",
+      "sha256": "bc5a9345cbdd8bc2d13db06d614c5ed5085d9f682731a00329e1614c8ad21e11",
+      "bytes": 3886
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "26747343b8dd736e38e02a9172f2628af0cc1dfc13ee7a1b80d785aa3211dc6c",
+      "bytes": 1170
+    },
+    {
+      "path": "SUPPORT.md",
+      "sha256": "7576296c1bf8ee5abb48645121aeec5651f5fca827d972c2b3876e4be3b12ea8",
+      "bytes": 405
+    },
+    {
+      "path": "Sources/AresMaintenance/main.swift",
+      "sha256": "88294afc47df9df47fb2634b5d38c986b9ac04cb8cdb6b7aba52feb05f4c6450",
+      "bytes": 217
+    },
+    {
+      "path": "Sources/AresRuntime/main.swift",
+      "sha256": "75c3a951b4e9984b1de43aaf3a20700b89438b1f34bdf2790bdb7b1ac926951c",
+      "bytes": 3901
+    },
+    {
+      "path": "Sources/AresStoreTool/main.swift",
+      "sha256": "7fc80d280b3eb293d5d55d03e7a2a42b94441a199821047a949fc8ceb467740e",
+      "bytes": 3325
+    },
+    {
+      "path": "Sources/FileOrganizer/FileOrganizerApp.swift",
+      "sha256": "9df5b83a2c951b70a3ed569c36e2c3a28d4f36130ae71b9c4b2d84cb11781b45",
+      "bytes": 2751
+    },
+    {
+      "path": "Sources/FileOrganizer/Models/AppSection.swift",
+      "sha256": "924696725a214c4bc754da5bd799af174bbddffcc83db03fffaeddcb6bd2485f",
+      "bytes": 1165
+    },
+    {
+      "path": "Sources/FileOrganizer/Models/AppTheme.swift",
+      "sha256": "d38e318e34296d9112fda9d2e5ae16d185ebc875eab45223296996ecad04e960",
+      "bytes": 907
+    },
+    {
+      "path": "Sources/FileOrganizer/Resources/AresAppIcon.png",
+      "sha256": "ebb03a7371700dadcdeb9d5d1a86631012585b5e1dd3dcfb0cb9dc56f60a3467",
+      "bytes": 2337091
+    },
+    {
+      "path": "Sources/FileOrganizer/Services/MCPHealthCheck.swift",
+      "sha256": "a6cd6276ee5dcc1b24cdabd042062cb2f83ad787e1f02748c713e51d29a14921",
+      "bytes": 2998
+    },
+    {
+      "path": "Sources/FileOrganizer/Services/RuleDirectoryMonitor.swift",
+      "sha256": "754a4aa2f01d1f135d11d9a95a297276226780e75df96412711521b3b42ab2bf",
+      "bytes": 2082
+    },
+    {
+      "path": "Sources/FileOrganizer/ViewModels/AgentConnectionsViewModel.swift",
+      "sha256": "929887c0c23b58952178398977662c3d06cf37e1c76b9f642b330c2aacd90ff6",
+      "bytes": 6105
+    },
+    {
+      "path": "Sources/FileOrganizer/ViewModels/FilesViewModel.swift",
+      "sha256": "fd24a9eff001c4adae17ab70c7aaef048956aab7199d5e5ad5d0e02bfc20e214",
+      "bytes": 6297
+    },
+    {
+      "path": "Sources/FileOrganizer/ViewModels/MigratedRootAccessViewModel.swift",
+      "sha256": "34170ab5d5da755197bd5274306a119c6de045ecf7737e322ecbc44d48292a07",
+      "bytes": 2105
+    },
+    {
+      "path": "Sources/FileOrganizer/ViewModels/OverviewViewModel.swift",
+      "sha256": "6d790091b593892083f4755ff431292105badeac8fe9e3d41c94b024acd56dee",
+      "bytes": 7852
+    },
+    {
+      "path": "Sources/FileOrganizer/ViewModels/RulesViewModel.swift",
+      "sha256": "b062abc50e4f910a51ebaf6b66a7b5971bad51c999449eb40b3c7b156461ce27",
+      "bytes": 9578
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/AgentSettingsSections.swift",
+      "sha256": "a08fb2870861786dab116a4ebcc521227a66bfc17e5e6c589fa68426ac103265",
+      "bytes": 5731
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/AresInputRow.swift",
+      "sha256": "a6cac4d807808639fcaa1a3f4c4821e9b24d6fc605de27c90ff3c02e216769b8",
+      "bytes": 1187
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/ContentView.swift",
+      "sha256": "5f39ebc15ac16559fa55f48810432f7bec8a0fcc11b84ca400d53d0c3334754f",
+      "bytes": 4096
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/DuplicatesView.swift",
+      "sha256": "58b2990c2f9250256ed003ec53673c2c72cfef9f465b9cd073548b460593c175",
+      "bytes": 6177
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/FeaturePlaceholderView.swift",
+      "sha256": "19175a798c0394330c3ac7a73138a597a8eb7c1a7a09753034ffbe86852832ab",
+      "bytes": 818
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/FilesView.swift",
+      "sha256": "d1b1e3352a4d28dde28f9cace6081cbd9a39dfe3976f6dd4c87df2f089a10810",
+      "bytes": 5588
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/MigratedRootAccessSection.swift",
+      "sha256": "66086195c5a18fe2f783cafba7e4902ae55e6dfc09da42359c6cdb0563c6b90b",
+      "bytes": 1439
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/OverviewView.swift",
+      "sha256": "837affb8f4f71791e0e0124d9cc15acb0b4dbe55a6c7af50e9a75eb68acb004f",
+      "bytes": 4811
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/RuleHistoryView.swift",
+      "sha256": "7ac2ca437945f1b57812a2a1c17abcf8c9fecfa0e416a5d5f0a1a1152985beda",
+      "bytes": 2384
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/RulesView.swift",
+      "sha256": "a903c1c1bc79fe0adef5b9d21cd507670a32d6863d93cac78886ca42ae5473e5",
+      "bytes": 19006
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/SettingsOverviewView.swift",
+      "sha256": "344f7b9d0d6af75208582d66146f7ef43a32a581ae0891d4344404c8c7044208",
+      "bytes": 1737
+    },
+    {
+      "path": "Sources/FileOrganizer/Views/SidebarView.swift",
+      "sha256": "beee28dbea2ee4ad45aa32b5cee3e7b678f68b97c7c707974781e0fe0781d033",
+      "bytes": 1121
+    },
+    {
+      "path": "Sources/FileOrganizerCore/App/AppContainer.swift",
+      "sha256": "0815c291dc4d669c70e41c78c58cae96f7d8ec99b9021dfadf050884739b6e74",
+      "bytes": 4676
+    },
+    {
+      "path": "Sources/FileOrganizerCore/EcosystemIntegration.swift",
+      "sha256": "49ac6a30507353f1e0ffef8b80b54ea1d36fdfcb707b8e21c845420734d0b837",
+      "bytes": 552
+    },
+    {
+      "path": "Sources/FileOrganizerCore/FileOrganizerProduct.swift",
+      "sha256": "414c1ca40106f12c9cd1301f7bb06c8ea8d7ac375a93d3606faa2fc216f0623e",
+      "bytes": 1099
+    },
+    {
+      "path": "Sources/FileOrganizerCore/LocalRuntime/AresJob.swift",
+      "sha256": "4bcc6e9c67853b10b73b541ff76311353106843de72f8553b00934a6f817efcb",
+      "bytes": 1237
+    },
+    {
+      "path": "Sources/FileOrganizerCore/LocalRuntime/AresQueuedWork.swift",
+      "sha256": "924c0dd91d67aad084d2365c7e2dedef8806e1f9e5bfc5d8368714291c7148cb",
+      "bytes": 20209
+    },
+    {
+      "path": "Sources/FileOrganizerCore/LocalRuntime/AresRuntimeService.swift",
+      "sha256": "8d54101f4f51cb6e712b983edb7d6b06b64fd8e1b8e81eddc60f90600d810ca6",
+      "bytes": 24826
+    },
+    {
+      "path": "Sources/FileOrganizerCore/LocalRuntime/RemoteFileRepository.swift",
+      "sha256": "03b81c1d66a7e70c7b835f11124ccb0901da2fbc648e511076ebc0c693a31bdb",
+      "bytes": 5380
+    },
+    {
+      "path": "Sources/FileOrganizerCore/LocalRuntime/RuleControlService.swift",
+      "sha256": "33712671defe0a07406f3c8e9cc20847b7c09de17ae5a20074360a31ee1bafaa",
+      "bytes": 14364
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/AIProviderProfile.swift",
+      "sha256": "2056b4f381169d96dd5a6e33bfce77d9328283271758e6dee3364dc9b8b4bc9b",
+      "bytes": 2707
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/AgentIntegrationMessage.swift",
+      "sha256": "d3724f602f4dcf6672b45c3f98dddfe7026c3d7b148361d4108e2d7d749432e8",
+      "bytes": 1979
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/AgentTask.swift",
+      "sha256": "60d01ad2a52b98b197dccee10cb44c557dc16c524eee202916278bb4e08c5238",
+      "bytes": 2034
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/AuditEvent.swift",
+      "sha256": "1d57f0d039fc706cf1ca6e7bcc0ea644cd7f1d93328c6ac63731f7c27cf9db9a",
+      "bytes": 963
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/AuthorizedRoot.swift",
+      "sha256": "794f1111223c4cc7fb31118be9860d22a94a2576a78ac27271d4c6f3bf90c7e7",
+      "bytes": 1183
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/AutomationRule.swift",
+      "sha256": "e1cf3d2da65829c26916ee2a9d52df60a904bba3279bfe5476c771492c0058e0",
+      "bytes": 8975
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/FileIndexSnapshot.swift",
+      "sha256": "884fcbb0b1b85be4d37bfb74e7d2ac2b15c70dc835662de78ac3ebf38da852dc",
+      "bytes": 1418
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/FileLocationAssessment.swift",
+      "sha256": "76b8b8a6d10ab4e12d39380782c68df509eb7d1a8c12bb0eba00343d38960450",
+      "bytes": 1439
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/FileRecord.swift",
+      "sha256": "b82c2c4d447fda09560f513c4d26de1291fa568e0e83fd14bcb3a0cea448839b",
+      "bytes": 3719
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Models/RulePlan.swift",
+      "sha256": "1e13acd6022c212255a609b45301d00c6483de0e84abb8ea9f1662448865f770",
+      "bytes": 6228
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Persistence/DatabaseMigration.swift",
+      "sha256": "ac560b67ef78fc7d808bee74beb508d9bf130660c1f1fb4730d19816e2276746",
+      "bytes": 7639
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Persistence/FileRepository.swift",
+      "sha256": "0cbc6a072445a4383b6bcacf04c52cf271d3bd327f79a8dbf7f9d8835d5f9e51",
+      "bytes": 3345
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Persistence/ManagedStoreGuard.swift",
+      "sha256": "5d1762ec52911db89480597d0a6155a0ef982aa646e3b92e66bdfb135c2131a1",
+      "bytes": 1333
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Persistence/SQLiteFileRepository.swift",
+      "sha256": "89a6144041b7aa852cc6191ab2645310ae696a8086755aa77f89d3f11c59febb",
+      "bytes": 48765
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Persistence/SQLiteMigrator.swift",
+      "sha256": "65094f3cd6c3d0a7bea998f020c9b3be08e5fdd55d61f0434cdf50ae4835bba4",
+      "bytes": 6653
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/AgentRegistrationService.swift",
+      "sha256": "3a3733616530718ee59bc3205837f0369ea13b853d7689fcf02af1fb8bc5f663",
+      "bytes": 5949
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/AuditStore.swift",
+      "sha256": "2a95ec2e5fa705ac43f9858a52f65ef4e504fbc35c8a1f5c7d9e9aae37a228e3",
+      "bytes": 651
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/AuthorizedRootAccessService.swift",
+      "sha256": "a2beb50a0c3fb7cd611579f9311c9bdd2998d6b3ede9a43786d6dfea06254076",
+      "bytes": 5077
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/DuplicateDetectionService.swift",
+      "sha256": "658cbbb8753dc1ffd333d610491e213179cb103b0cfc1bc2c1dbbef57807a85b",
+      "bytes": 3307
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/FileIndexingService.swift",
+      "sha256": "0cfe552a50f2332a48918206eec4e9811d5c981500f0564c56185c7db7fe9f80",
+      "bytes": 6723
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/FileSnapshotOperations.swift",
+      "sha256": "76c6e894a09941f204ea37dbe5e46c6677c9a0538ec675f60d7e62c1286c573e",
+      "bytes": 7737
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/FileSnapshotViewCache.swift",
+      "sha256": "a55d669c464824ace5fce0b4e2c45f44f68cfee0712d3cea68c9e7b4801d1af7",
+      "bytes": 3191
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/KeychainSecretStore.swift",
+      "sha256": "7212de144fb63cb0597f1335683c93b9c8a71a75b8b4cb122089f218ca7578b5",
+      "bytes": 2325
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/RuleContentAnalyzer.swift",
+      "sha256": "55a7460b24c307008201a2685ce714499b38cac0e37b14474f873191551c5b10",
+      "bytes": 3662
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/RuleCoordinator.swift",
+      "sha256": "fd5aa61edeb42bda668098f0b0aabb5e41d849e5ac76405bbd72a770cb7d2919",
+      "bytes": 41629
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/RuleExecutionLock.swift",
+      "sha256": "c84d5c57aee4370390192272af23a2689165f721310856e55e9cccae124fe889",
+      "bytes": 864
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/RuleFileActions.swift",
+      "sha256": "1a893e53f44a1e321d225c8dfa111d98b5f6b6dd890dfc7b38644ba8f7d7851d",
+      "bytes": 10335
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/RuleGovernance.swift",
+      "sha256": "641a1b54d5ca8434889427b3c521f784ee7602d99984c622a72e938d32b8ee16",
+      "bytes": 15999
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/RuleMatching.swift",
+      "sha256": "4df4761c845d2b71180c5010ba218c4b83de36df5600ac45537dcedba1d9017e",
+      "bytes": 3836
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/SecureRuleIO.swift",
+      "sha256": "424a8a2af237489b255c5226831cb2d69b203e88566f9cb96ccc6a40dfcdb942",
+      "bytes": 9727
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/ServiceProtocols.swift",
+      "sha256": "b27bdbc2841b220aed9aaa4d129ffd8024f48e3394325562abdd7a7f5a32c4ed",
+      "bytes": 1401
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/TaskCoordinator.swift",
+      "sha256": "3e0d7d21453dc5a3238ad4527152fef9b10a25a6d618f75c15b16ac80c282514",
+      "bytes": 8238
+    },
+    {
+      "path": "Sources/FileOrganizerCore/Services/VerifiedFileReader.swift",
+      "sha256": "8a5746bb59060dfe42acda3acbfb7df64587aa2a11e6e9220635e81e27382a89",
+      "bytes": 7959
+    },
+    {
+      "path": "Sources/FileOrganizerMCP/RuleMCP.swift",
+      "sha256": "759f90dc0ca33d70ff54a8f2f70a89d5e513350bc957fcaffbdf4576e5edfe44",
+      "bytes": 13646
+    },
+    {
+      "path": "Sources/FileOrganizerMCP/SnapshotMCP.swift",
+      "sha256": "90ceb66b19a11f99551bcc51b3d19b3f8032651381945c1786adadcb978f3d1d",
+      "bytes": 6706
+    },
+    {
+      "path": "Sources/FileOrganizerMCP/main.swift",
+      "sha256": "b05a6db7f04922b72336d1324ec772e95e217b4faf4ffcd090e930833a049801",
+      "bytes": 11822
+    },
+    {
+      "path": "Sources/FileOrganizerRulesWorker/main.swift",
+      "sha256": "b5339f220e8cc2df18061a5ea6ff32472c383a9ab13ac3eae413c950b8be2d0a",
+      "bytes": 1501
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "b9f46419866d05cda1b7bc4f695c3d5b022f73ba45a0e2cff74af8c08046f9df",
+      "bytes": 1552
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AIProviderProfileTests.swift",
+      "sha256": "019949b35c6c9befcf7688857f16fb973cb7f63e672fc74376eba09f38ef8953",
+      "bytes": 464
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AccessPolicyAresTests.swift",
+      "sha256": "311ed39ab98e90cdf70795adb98ce69a716dc4d09644ab70720f166343807a21",
+      "bytes": 10243
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AgentIntegrationMessageTests.swift",
+      "sha256": "eb29e32568d057ea22b1ab0191653d14093d7e92020e0363b80b5c5181ffcf69",
+      "bytes": 342
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AgentRegistrationTests.swift",
+      "sha256": "9943667b0e53de25b066a488995471820bbcccf3f72e2f45724d05dc52be31b8",
+      "bytes": 8975
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AuditStoreTests.swift",
+      "sha256": "dbffaf6e0e37df69d8c2c3cf789827de596642c28aa2ab7fd171b48d05eb24f2",
+      "bytes": 520
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AutomationRuleRuntimeTests.swift",
+      "sha256": "8b605a97491b18736fbbced33e6e02bb79761f9b56be3dbf0021e87b64da23d4",
+      "bytes": 5688
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/AutomationRuleTests.swift",
+      "sha256": "0f45b4fcdb4784fb4400c096e3277296605062f0053a65d62ea88308ff9fde16",
+      "bytes": 15857
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/DuplicateDetectionServiceTests.swift",
+      "sha256": "7af915e694f058ea86a47f59af4406eb2e64f7d8f7bd4be39be36c84e7252a12",
+      "bytes": 5833
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/EcosystemIntegrationTests.swift",
+      "sha256": "c168518acf69ce3b0196bdf45ab114612b997a72c909eb301ad885feab241472",
+      "bytes": 472
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/EventBoundRuleTests.swift",
+      "sha256": "55797598b7fe9ed37c7e0c9c02c815eb16029e59e07e08e6d9dca30a68ea183a",
+      "bytes": 5793
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/ExtendedIndexLoadTests.swift",
+      "sha256": "e65ae32598b432bbacb1301f5321c654f3f85f375cd189a864d4ea3038cba24e",
+      "bytes": 19542
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/FileIndexingServiceTests.swift",
+      "sha256": "01c61991d2aee62b3ace338bd17a9c5cf32a6d371d7803408be0e414bfac6bb8",
+      "bytes": 3887
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/FileLocationAssessmentTests.swift",
+      "sha256": "e8eb51fd1b4784fefb2441cb319b64e23f4301f6640761216826623e39b0830e",
+      "bytes": 741
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/FileOrganizerProductTests.swift",
+      "sha256": "d86abc92482146a0671153f741242e1e32f7ce7cc466d62ac9c66f73a17450e3",
+      "bytes": 561
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/FileSnapshotTests.swift",
+      "sha256": "cce68d27fccf4e0ddccbd7bba2b71052a0374b6f586901ca513d307982fc3f43",
+      "bytes": 12605
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/FileSnapshotViewCacheTests.swift",
+      "sha256": "e554928b9bea0164f82b2e120e8fcef41a92b2849834c941937d243ab872b5a3",
+      "bytes": 2589
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/ManagedStoreTests.swift",
+      "sha256": "cd606a08c112c29eaeffe2374934087e4788d92845edcb86867d6ea2fd8b8e12",
+      "bytes": 5656
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/QueuedAresTests.swift",
+      "sha256": "8142c057e36acf24217c96667a97d0d23e354380d88a5ab7ae5ea8d8c62eaefe",
+      "bytes": 9116
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/RootRemovalTests.swift",
+      "sha256": "a93a2fcf85fcadecf55f250f7d8f7e24d646f735dc285188855e9713c3abd6f3",
+      "bytes": 1300
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/RuleHistoryPagingTests.swift",
+      "sha256": "76156955b4ab455f42fcc2d74d1dcbe960bcff8576f9f1112ff639981cae9411",
+      "bytes": 12015
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/RulePlanTests.swift",
+      "sha256": "1082a55b401ba7b9e396995601504236799f36d0f2a3708af5c4fe1b57d0c0a2",
+      "bytes": 21323
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/SQLiteMigratorTests.swift",
+      "sha256": "9aa24817e1d2882cbd4c76ddab4ca15e42fbe0392f9452f7ac582f081219fdf4",
+      "bytes": 1682
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/SnapshotPagingPerformanceTests.swift",
+      "sha256": "64fe310f83764eb68cd9628e5a5e3eec43cea9d66d8ccef2705954f8b990d7fe",
+      "bytes": 3279
+    },
+    {
+      "path": "Tests/FileOrganizerCoreTests/StorageFailureTests.swift",
+      "sha256": "689787b257a8c40ddf12dd05f976527d067080991d40155fd16f1e0409b8f378",
+      "bytes": 8645
+    },
+    {
+      "path": "assets/ares-banner.png",
+      "sha256": "7f583accc3c30f0e5d5cf45934026ae17aa44fdaab6c873404055f0a310dcf5c",
+      "bytes": 2199384
+    },
+    {
+      "path": "distribution/FileOrganizer.entitlements",
+      "sha256": "f1638b0b695fc7ebf57d84be25ddb20c15fe2a73552a31cb64ba9cdb1a39da34",
+      "bytes": 446
+    },
+    {
+      "path": "distribution/Info.plist",
+      "sha256": "7f083d367142428831458f314e5d1293502778acc019a7cdee76ba70e3c18450",
+      "bytes": 1144
+    },
+    {
+      "path": "distribution/dev.slipcast.fileorganizer.rules.plist.template",
+      "sha256": "ff3f716e4fcc1fd4807db193e705aa36898b410919cd748251c4fe267fb99740",
+      "bytes": 464
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "c8b27d2c8968beccfe0f8b63afbfd50285ab24873ddbabfa1f4aa4b3649ff702",
+      "bytes": 620
+    },
+    {
+      "path": "docs/DEVELOPMENT.en.md",
+      "sha256": "707a3e6fa1b32dca445baa90564778f6dfba4bbcbfe62cb98b40736f784a41b4",
+      "bytes": 469
+    },
+    {
+      "path": "docs/DEVELOPMENT.ru.md",
+      "sha256": "9ab0b0f55ca87768c9a22872d80ceacb38d53c1a72a99bff94c5fe234671814c",
+      "bytes": 543
+    },
+    {
+      "path": "docs/INSTALL.en.md",
+      "sha256": "b1b31e7cf340bdb17cb8aec3b70485a20829b64ba323dc0595922f34841a04c2",
+      "bytes": 556
+    },
+    {
+      "path": "docs/INSTALL.ru.md",
+      "sha256": "7cffdfcd80d4f7d6fbb80a3f99de2d13ed715b34a58691f4961728aca34a94af",
+      "bytes": 1712
+    },
+    {
+      "path": "docs/LIFECYCLE.md",
+      "sha256": "fbe098801363e32f9d97ccf1f273d69887238500e9184904f091305de8130778",
+      "bytes": 576
+    },
+    {
+      "path": "docs/MAINTENANCE.md",
+      "sha256": "d6f2fe0da6706bbe1bd137c5644db2ae4037b8a623cc14dca6b09a6361a6fa7c",
+      "bytes": 590
+    },
+    {
+      "path": "docs/OPERATIONS.md",
+      "sha256": "266ce6afcb4681083852be2bded6a10431e2bafcf5d2821a41d5f70799c9fe3c",
+      "bytes": 798
+    },
+    {
+      "path": "docs/PERFORMANCE.md",
+      "sha256": "ed75c76ea9bf109a52ba9d195dc244b2b52e3e062d3c1a33ddf4092ccfdf9c1d",
+      "bytes": 1543
+    },
+    {
+      "path": "docs/assets/ares-icon.png",
+      "sha256": "ebb03a7371700dadcdeb9d5d1a86631012585b5e1dd3dcfb0cb9dc56f60a3467",
+      "bytes": 2337091
+    },
+    {
+      "path": "docs/assets/banner.svg",
+      "sha256": "ee1d29bc7c02221c0c77a9f352f8ef7c3d956293bdfc1e0542264126da032974",
+      "bytes": 562
+    },
+    {
+      "path": "scripts/package_app.zsh",
+      "sha256": "0ce42de871e123fdbbf92fc0994addf923172e3511c95cad6e6152ac36271042",
+      "bytes": 8288
+    },
+    {
+      "path": "scripts/verify_ecosystem_dependency.py",
+      "sha256": "33e022878fdb45e5e3b8d1bf3675b259e2cfe6e561855195171cee84e037e4b6",
+      "bytes": 1319
+    }
+  ],
+  "privateProfilesIncluded": false,
+  "implementationPromptsIncluded": false,
+  "internalWorkspaceDocumentationIncluded": false,
+  "vendoredCodeMatchesReviewedSource": true,
+  "publicDocumentationWrittenSeparately": true,
+  "scope": "published tracked files excluding SOURCE_MANIFEST.json"
+}

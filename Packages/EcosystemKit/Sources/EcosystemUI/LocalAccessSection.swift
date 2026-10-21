@@ -7,31 +7,45 @@ import EcosystemLocalIPC
     @Published var pending: [LocalAccessPlan] = []
     @Published var reviewing: LocalAccessPlan?
     @Published var error: String?
+    @Published var busy = false
     let client: Result<LocalRPCClient, Error>
     init(client: Result<LocalRPCClient, Error>) { self.client = client }
     func refresh() async {
+        guard !busy else { return }
+        busy = true; defer { busy = false }
+        await readSnapshot()
+    }
+    private func readSnapshot() async {
+        // Недоступный источник не должен оставлять действующими старые строки.
+        scope = LocalAccessScope(roots: [], capabilities: []); grants = []; pending = []
         do {
             scope = try await client.get().call("access.scope", LocalAccessRequest())
             let state: LocalAccessState = try await client.get().call("access.status", LocalAccessRequest())
             grants = state.grants; pending = state.pending; error = nil
-        } catch { self.error = error.localizedDescription }
+        } catch { self.error = LocalRuntimeFailure.safe(error).localizedDescription }
     }
     func request(_ draft: LocalAccessDraft) async {
-        do { reviewing = try await client.get().call("access.request", LocalAccessRequest(draft: draft)); await refresh() }
-        catch { self.error = error.localizedDescription }
+        guard !busy else { return }
+        busy = true; defer { busy = false }
+        do { reviewing = try await client.get().call("access.request", LocalAccessRequest(draft: draft)); await readSnapshot() }
+        catch { self.error = LocalRuntimeFailure.safe(error).localizedDescription }
     }
     func approve(_ plan: LocalAccessPlan) async {
+        guard !busy else { return }
+        busy = true; defer { busy = false }
         do {
             let _: LocalAccessGrant = try await client.get().call("access.approve", LocalAccessRequest(planID: plan.id, fingerprint: plan.fingerprint))
-            reviewing = nil; await refresh()
-        } catch { self.error = error.localizedDescription }
+            reviewing = nil; await readSnapshot()
+        } catch { self.error = LocalRuntimeFailure.safe(error).localizedDescription }
     }
     func revoke(_ grant: LocalAccessGrant) async {
+        guard !busy else { return }
+        busy = true; defer { busy = false }
         do {
             struct Reply: Decodable, Sendable { let client: LocalMCPClient; let revoked: Bool }
             let _: Reply = try await client.get().call("access.revoke", LocalAccessRequest(grantID: grant.id))
-            await refresh()
-        } catch { self.error = error.localizedDescription }
+            await readSnapshot()
+        } catch { self.error = LocalRuntimeFailure.safe(error).localizedDescription }
     }
 }
 
@@ -71,13 +85,13 @@ public struct LocalAccessSection: View {
                 var draft = LocalAccessDraft(); draft.client = selectedClient; draft.roots = Array(roots)
                 draft.capabilities = Array(operations); draft.dataClass = metadata ? .fileMetadata : .aggregate; draft.lifetimeSeconds = hours * 3600
                 Task { await model.request(draft) }
-            }.disabled(operations.isEmpty)
-            Button("Обновить разрешения") { Task { await model.refresh() } }
+            }.disabled(model.busy || operations.isEmpty)
+            Button("Обновить разрешения") { Task { await model.refresh() } }.disabled(model.busy)
             if let error = model.error { Text(error).foregroundStyle(.red) }
             ForEach(model.grants) { grant in
                 HStack {
                     VStack(alignment: .leading) { Text(title(grant.draft.client)); Text("До \(grant.expiresAt.formatted()) · \(grant.draft.dataClass == .aggregate ? "Сводки" : "Метаданные файлов")").font(.caption) }
-                    Spacer(); Button("Отозвать доступ") { Task { await model.revoke(grant) } }
+                    Spacer(); Button("Отозвать доступ") { Task { await model.revoke(grant) } }.disabled(model.busy)
                 }
             }
             ForEach(model.pending) { plan in
@@ -87,7 +101,7 @@ public struct LocalAccessSection: View {
         } header: { Label("Разрешения внешних клиентов", systemImage: "person.badge.key") }
         .task { await model.refresh(); resetOperations() }
         .sheet(item: $model.reviewing) { plan in
-            VStack(alignment: .leading, spacing: 12) {
+            ScrollView { VStack(alignment: .leading, spacing: 12) {
                 Text("Подтвердить доступ: " + title(plan.draft.client)).font(.title2)
                 Text(plan.draft.dataClass == .aggregate ? "Только сводки: без имён и путей файлов." : "Имена и относительные пути — личные данные. Клиент может передать их выбранному облачному провайдеру модели.")
                 Text("Папки: " + plan.draft.roots.map { id in model.scope.roots.first(where: { $0.id == id })?.name ?? "Недоступная папка" }.joined(separator: ", "))
@@ -98,12 +112,15 @@ public struct LocalAccessSection: View {
                 if let error = model.error { Text(error).foregroundStyle(.red) }
                 HStack {
                     Button("Отмена") { model.reviewing = nil }
-                    Button("Подтвердить доступ") { Task { await model.approve(plan) } }.accessibilityIdentifier("access.approve")
+                    Button("Подтвердить доступ") { Task { await model.approve(plan) } }.accessibilityIdentifier("access.approve").disabled(model.busy)
                 }
-            }.padding(24).frame(width: 560)
+            }.padding(24).frame(maxWidth: .infinity, alignment: .leading) }
+            .frame(minWidth: 400, idealWidth: 560, minHeight: 340, idealHeight: 560)
         }
     }
-    private func resetOperations() { operations = Set(model.scope.capabilities.filter { metadata || !requiresMetadata($0) }) }
+    // Выключение metadata убирает несовместимые операции. Новые операции не
+    // выбираются автоматически: пользователь явно задаёт минимальный доступ.
+    private func resetOperations() { operations.formIntersection(model.scope.capabilities.filter { metadata || !requiresMetadata($0) }) }
     private func requiresMetadata(_ value: String) -> Bool { (try? model.client.get().configuration.domain) == "ares" && (value.hasPrefix("rule.") || ["file.search", "file.compute_duplicates", "file.find_duplicates"].contains(value)) }
     private func title(_ client: LocalMCPClient) -> String { switch client { case .codex: "Codex"; case .deepseekHarness: "DeepSeek Harness"; case .legacy: "Общий MCP (совместимость)" } }
     private func operationTitle(_ value: String) -> String {

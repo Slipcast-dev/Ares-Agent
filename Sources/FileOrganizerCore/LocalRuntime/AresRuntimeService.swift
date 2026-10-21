@@ -77,6 +77,16 @@ public actor AresRuntimeService {
     }
     public func stopObservation() { watcher?.stop(); watcher = nil }
     public func handle(role: LocalRole, clientID: LocalMCPClient? = nil, request: LocalRPCRequest) async throws -> Data {
+        if request.operation.hasPrefix("operations.emergency_") {
+            guard role == .gui else { throw LocalRuntimeFailure.denied }
+            _ = try LocalWire.decode(LocalEmpty.self, request.payload, keys: [])
+            switch request.operation {
+            case "operations.emergency_status": return try LocalWire.encode(await work.emergencyStatus())
+            case "operations.emergency_stop": return try LocalWire.encode(await work.emergencyStop())
+            case "operations.emergency_resume": return try LocalWire.encode(await work.resumeAdmission())
+            default: throw LocalRuntimeFailure.denied
+            }
+        }
         if request.operation.hasPrefix("mcp.") {
             guard role == .mcp, let history else { throw LocalRuntimeFailure.denied }
             return try await history.handle(operation: request.operation, payload: request.payload, client: clientID ?? .legacy)
@@ -154,6 +164,15 @@ public actor AresRuntimeService {
             if request.operation == "rule.approve" { lastTick = .distantPast }
             return result
         }
+        // Отдельный GUI endpoint не расширяет доступ MCP или worker. Список
+        // ограничен последними 100 записями; интерфейс явно сообщает эту границу.
+        if request.operation == "operations.tasks" {
+            guard role == .gui else { throw LocalRuntimeFailure.denied }
+            _ = try LocalWire.decode(LocalEmpty.self, request.payload, keys: [])
+            return try LocalWire.encode(try await work.queue.tasks(limit: 100).map {
+                LocalOperationalTask(id: $0.id, status: $0.status)
+            })
+        }
         switch request.operation {
         case "runtime.status":
             _ = try LocalWire.decode(LocalEmpty.self, request.payload, keys: [])
@@ -221,6 +240,7 @@ public actor AresRuntimeService {
         case "repo.count", "repo.records": keys = ["rootID"]
         case "repo.search": keys = ["rootID", "query", "limit"]
         case "repo.events", "repo.tasks": keys = ["limit"]
+        case "repo.ruleHistory": keys = ["id", "runID", "offset", "cursor"]
         case "repo.ruleObjects": keys = ["table"]
         case "repo.ruleObject": keys = ["table", "objectID"]
         case "repo.saveRule": keys = ["table", "object", "objectID"]
@@ -270,6 +290,12 @@ public actor AresRuntimeService {
             for task in tasks { if let value = try await work.agentTask(task) { result.append(value) } }
             return try LocalWire.encode(result)
         case "repo.profiles": return try LocalWire.encode(try await repository.fetchProviderProfiles())
+        case "repo.ruleHistory":
+            guard role == .gui, let ruleID = payload.id else { throw LocalRuntimeFailure.denied }
+            _ = try await work.governance.saved(ruleID)
+            do { return try LocalWire.encode(try await repository.ruleHistoryPage(ruleID: ruleID, runID: payload.runID, offset: payload.offset ?? 0, cursor: payload.cursor)) }
+            catch RuleHistoryFailure.invalidRequest { throw LocalRuntimeFailure.invalidRequest }
+            catch RuleHistoryFailure.missingRun { throw LocalRuntimeFailure.denied }
         case "repo.ruleObjects", "repo.ruleObject":
             guard let table = payload.table, [.rules, .runs].contains(table) else { throw LocalRuntimeFailure.denied }
             if request.operation == "repo.ruleObjects" {

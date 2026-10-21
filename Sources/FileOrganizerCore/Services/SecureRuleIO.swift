@@ -57,7 +57,7 @@ struct SecureRuleIO: Sendable {
     /// Открытый source сверяется повторно вместе с актуальным именем. Даже
     /// одинаковые bytes после замены inode не считаются прежней версией плана.
     static func copy(root: URL, relative: String, version: FileVersion, destinationRoot: URL,
-                     folder: String = "Ares Results", name: String, beforePublish: (() throws -> Void)? = nil) throws {
+                     folder: String = "Ares Results", name: String, beforeTransfer: (() throws -> Void)? = nil, beforePublish: (() throws -> Void)? = nil) throws {
         guard !name.isEmpty, !name.contains("/"), !name.contains("\0"), name != ".", name != "..", name.utf8.count <= 255 else { throw RuleExecutionError.unsafePath }
         let source = try VerifiedFileReader.openFile(root: root, relative: relative, content: true)
         guard try VerifiedFileReader.version(source) == version else { throw RulePolicyError.stale }
@@ -67,6 +67,10 @@ struct SecureRuleIO: Sendable {
         let temporary = ".ares-" + UUID().uuidString
         let output = try FileDescriptor(openat(parent.value, temporary, O_RDWR | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o600))
         defer { unlinkat(parent.value, temporary, 0) }
+        // Внутренний seam позволяет XCTest заполнить ограниченный том именно
+        // после проверки свободного места. Production callers его не задают;
+        // проверки fsync/hash/rename и запрет перезаписи продолжают действовать.
+        try beforeTransfer?()
         let hash = try transfer(source, to: output)
         guard fsync(output.value) == 0, lseek(output.value, 0, SEEK_SET) == 0 else { throw RuleExecutionError.verificationFailed }
         try beforePublish?()

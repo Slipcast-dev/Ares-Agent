@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key><string>Ares</string>
+    <key>CFBundleExecutable</key><string>FileOrganizer</string>
+    <key>CFBundleIdentifier</key><string>dev.slipcast.fileorganizer</string>
+    <key>CFBundleIconFile</key><string>FileOrganizerAres.icns</string>
+    <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+    <key>CFBundleName</key><string>Ares</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>0.1.0</string>
+    <key>CFBundleVersion</key><string>2</string>
+    <key>LSMinimumSystemVersion</key><string>14.0</string>
+    <key>NSHighResolutionCapable</key><true/>
+    <!-- Явно выбираем AppKit principal class для стабильной обработки событий
+         мыши и клавиатуры в SwiftUI-приложении, собранном через SwiftPM. -->
+    <key>NSPrincipalClass</key><string>NSApplication</string>
+</dict>
+</plist>

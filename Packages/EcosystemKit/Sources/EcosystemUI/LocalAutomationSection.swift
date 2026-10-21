@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import EcosystemLocalIPC
 
@@ -17,16 +18,23 @@ import EcosystemLocalIPC
     func refresh() async {
         guard !busy else { return }
         busy = true; defer { busy = false }
-        do { try await readStatus(); error = nil }
-        catch { self.error = "Не удалось обновить состояние. Проверьте, запущен ли локальный агент." }
+        // Отказ одного компонента не оставляет устаревшие значения других.
+        status = nil; login = nil; events = []; error = nil
+        await readStatus()
     }
 
-    private func readStatus() async throws {
-        status = try await client.get().call("automation.status", LocalAutomationRequest())
-        login = try await client.get().call("automation.login_status", LocalEmpty())
-        var request = LocalAutomationRequest(); request.limit = 20
-        let rows: [LocalInboxDelivery] = try await client.get().call("events.list", request)
-        events = rows.sorted { $0.event.createdAt > $1.event.createdAt }
+    private func readStatus() async {
+        var failed = false
+        do { status = try await client.get().call("automation.status", LocalAutomationRequest()) }
+        catch { failed = true }
+        do { login = try await client.get().call("automation.login_status", LocalEmpty()) }
+        catch { failed = true }
+        do {
+            var request = LocalAutomationRequest(); request.limit = 20
+            let rows: [LocalInboxDelivery] = try await client.get().call("events.list", request)
+            events = rows.sorted { $0.event.createdAt > $1.event.createdAt }
+        } catch { failed = true }
+        if failed { error = "Часть данных недоступна. Проверьте сводку состояния и обновите её." }
     }
 
     func configure(paused: Bool? = nil, notificationsEnabled: Bool? = nil) async {
@@ -48,6 +56,16 @@ import EcosystemLocalIPC
             status = try await client.get().call("automation.request_notifications", LocalAutomationRequest())
             error = nil
         } catch { self.error = "Не удалось запросить разрешение на уведомления. События доступны в приложении." }
+    }
+
+    func openNotificationSettings() {
+        // Открываем штатную панель, не меняя согласие или стиль показа.
+        // Разрешение принадлежит runtime bundle, а не окну основного приложения.
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension"),
+              NSWorkspace.shared.open(url) else {
+            error = "Откройте «Системные настройки → Уведомления» вручную."
+            return
+        }
     }
 
     func configureLogin(enabled: Bool) async {
@@ -100,6 +118,13 @@ public struct LocalAutomationSection: View {
                 .disabled(model.busy || status.notificationAuthorization == "authorized")
                 Text("Переключатель включает уведомления этого агента. Разрешение macOS запрашивается отдельной кнопкой. Без него события сохраняются в приложении.")
                     .font(.caption).foregroundStyle(.secondary)
+                if let domain = try? model.client.get().configuration.domain,
+                   domain == "ares" || domain == "athena" {
+                    Text("В системных настройках выберите «\(domain == "ares" ? "Ares Background" : "Athena Background")». Разрешение выдаётся этой фоновой службе.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+                Button("Открыть уведомления macOS") { model.openNotificationSettings() }
+                    .accessibilityIdentifier("automation.notifications.settings")
                 if let failure = status.lastFailure { Text(failure).font(.caption).foregroundStyle(.orange) }
             } else {
                 Text("Состояние фоновой работы пока недоступно.").foregroundStyle(.secondary)
@@ -116,7 +141,7 @@ public struct LocalAutomationSection: View {
                         .accessibilityIdentifier("automation.login.enable")
                         .disabled(model.busy || login.disabledBySystem)
                 }
-                Text(login.registered ? "Локальная служба работает сейчас." : "Локальная служба сейчас не зарегистрирована.")
+                Text(login.registered ? "Служба зарегистрирована в macOS; доступность проверяется в сводке." : "Локальная служба сейчас не зарегистрирована.")
                     .font(.caption).foregroundStyle(.secondary)
                 Text("Отключение автозапуска действует на следующий вход и не останавливает работающую службу.")
                     .font(.caption).foregroundStyle(.secondary)
@@ -126,7 +151,7 @@ public struct LocalAutomationSection: View {
 
             DisclosureGroup {
                 if model.events.isEmpty {
-                    Text("Сохранённых событий пока нет.").foregroundStyle(.secondary)
+                    Text("В выборке нет событий или источник недоступен — проверьте сводку состояния.").foregroundStyle(.secondary)
                 }
                 ForEach(model.events, id: \.event.id) { row in
                     VStack(alignment: .leading, spacing: 4) {

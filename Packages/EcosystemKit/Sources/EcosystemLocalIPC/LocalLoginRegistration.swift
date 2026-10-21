@@ -14,7 +14,14 @@ public struct LocalLoginRegistration: Sendable {
     private let destination: URL
     public init(profile: URL, domain: String, launchAgentsDirectory: URL? = nil) {
         self.profile = profile; self.domain = domain
-        destination = launchAgentsDirectory ?? FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents")
+        // Нормализуем только домашнюю папку, которую выбрала ОС. Foundation
+        // сокращает /private/tmp до /tmp в изолированных home; проверка всей
+        // цепочки далее должна видеть фактический каталог, а не системный alias.
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        let pointer = realpath(home.path, nil)
+        let canonical = pointer.map { URL(fileURLWithPath: String(cString: $0)) } ?? home
+        if let pointer { free(pointer) }
+        destination = launchAgentsDirectory ?? canonical.appendingPathComponent("Library/LaunchAgents")
     }
     private func read(_ file: URL, privateOnly: Bool = true) throws -> Data {
         // Читаем проверенный дескриптор, а не имя после отдельного lstat.
@@ -145,6 +152,11 @@ public struct LocalLoginRegistration: Sendable {
         guard fstat(lock, &lockInfo) == 0, lockInfo.st_mode & S_IFMT == S_IFREG, lockInfo.st_uid == geteuid(), lockInfo.st_nlink == 1, lockInfo.st_mode & 0o077 == 0 else { throw LocalRuntimeFailure.invalidConfiguration }
         guard flock(lock, LOCK_EX | LOCK_NB) == 0 else { throw LocalRuntimeFailure.busy }
         defer { flock(lock, LOCK_UN) }
+        return try setEnabledWithPersistenceLockHeld(enabled)
+    }
+    /// Внутренний вариант нужен cold maintenance: он уже держит тот же flock.
+    /// Повторное открытие lock-файла здесь заблокировало бы собственную операцию.
+    func setEnabledWithPersistenceLockHeld(_ enabled: Bool) throws -> LocalLoginStatus {
         var (marker, label, bytes) = try inputs()
         let target = destination.appendingPathComponent(label + ".plist")
         // Перед изменением проверяем чужой файл. Системный запрет не снимается.

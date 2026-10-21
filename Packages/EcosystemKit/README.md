@@ -1,6 +1,6 @@
-# EcosystemKit 0.12.0 — локальная копия
+# EcosystemKit
 
-Общий пакет включён в этот репозиторий целиком в необходимом для сборки объёме.
-Sources/Tests и ресурсы сохранены из E10; соседний проект не требуется.
-Yams закреплён в Package.resolved. [Сторонние лицензии](THIRD_PARTY_NOTICES.md).
-Происхождение и контрольные суммы — в корневом snapshot.json.
+Vendored shared runtime, IPC, contracts and client adapters.
+
+Build/test: `swift test --package-path Packages/EcosystemKit` from repository root.
+See [license](LICENSE). The parent repository locks every vendored file by SHA-256.

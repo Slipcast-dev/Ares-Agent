@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ecosystem:client-capabilities:1",
+  "type": "object",
+  "required": [
+    "localMCP",
+    "nativeDelegation",
+    "namedRoles",
+    "toolFiltering",
+    "hotReload",
+    "headlessRunner",
+    "resumableSessions"
+  ],
+  "properties": {
+    "localMCP": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    },
+    "nativeDelegation": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    },
+    "namedRoles": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    },
+    "toolFiltering": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    },
+    "hotReload": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    },
+    "headlessRunner": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    },
+    "resumableSessions": {
+      "enum": [
+        "supported",
+        "unsupported",
+        "unknown"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

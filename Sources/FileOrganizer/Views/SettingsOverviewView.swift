@@ -22,6 +22,7 @@ struct SettingsOverviewView: View {
                 }
             } header: { Label("Оформление", systemImage: "paintpalette") }
             if let client = container.localRuntimeClient {
+                LocalOperationsSection(client: client)
                 LocalRecoverySection(client: client)
                 LocalAccessSection(client: client)
                 LocalAutomationSection(client: client)

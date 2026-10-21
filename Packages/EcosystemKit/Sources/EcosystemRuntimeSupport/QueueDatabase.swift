@@ -39,7 +39,7 @@ final class QueueDatabase: @unchecked Sendable {
         let size = (attributes[.size] as? NSNumber)?.int64Value ?? 0
         if size > 0 {
             guard try query("PRAGMA application_id").first?.integer("application_id") == 0x45435131,
-                  try query("PRAGMA user_version").first?.integer("user_version") == 1 else {
+                  [1, 2].contains(try query("PRAGMA user_version").first?.integer("user_version") ?? -1) else {
                 throw QueueFailure.incompatibleStorage
             }
         } else {

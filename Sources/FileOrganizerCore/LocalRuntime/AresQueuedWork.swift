@@ -18,6 +18,7 @@ public actor AresQueuedWork {
         let governance = RuleGovernance(repository: repository, access: access, coordinator: rules, policy: policy)
         self.governance = governance
         let indexing = FileIndexingService()
+        let snapshotViews = FileSnapshotViewCache()
         var operations: [String: RegisteredQueueOperation] = [:]
         operations["file.scan"] = RegisteredQueueOperation(mutating: false) { data, context in
             let job = try ContractCodec.decode(TaskRequest<AresJob>.self, from: data).parameters
@@ -34,11 +35,12 @@ public actor AresQueuedWork {
             try await context.checkpoint()
             guard try await repository.root(withID: id) != nil else { throw LocalRuntimeFailure.denied }
             let snapshot = try await repository.publishSnapshot(records: result.records, summary: result.summary)
+            snapshotViews.invalidate()
             return try LocalWire.encode(ScanSummary(rootID: id, indexedFileCount: result.summary.indexedFileCount,
                 skippedItemCount: result.summary.skippedItemCount, totalByteSize: result.summary.totalByteSize,
                 snapshotID: snapshot.header.id, indexGeneration: snapshot.header.generation))
         }
-        let snapshots = FileSnapshotOperations(repository: repository, access: access)
+        let snapshots = FileSnapshotOperations(repository: repository, access: access, views: snapshotViews)
         for capability in ["file.search", "file.analyze_storage", "file.compute_duplicates", "file.find_duplicates"] {
             operations[capability] = RegisteredQueueOperation(mutating: false) { data, context in
                 let job = try ContractCodec.decode(TaskRequest<AresJob>.self, from: data).parameters
@@ -74,9 +76,16 @@ public actor AresQueuedWork {
             try await rules.poll(appLaunch: job.appLaunch ?? false, context: context)
             return try LocalWire.encode(LocalEmpty())
         }
+        // Тяжёлыми считаются операции с обходом ФС/хешированием/правилами,
+        // а не быстрые metrics/info. Метка сохраняется при обёртке авторизации.
+        let heavyCapabilities: Set<String> = ["file.scan", "file.search", "file.analyze_storage", "file.compute_duplicates", "file.find_duplicates", "rule.preview", "rule.run", "rule.poll"]
+        operations = Dictionary(uniqueKeysWithValues: operations.map { capability, operation in
+            (capability, RegisteredQueueOperation(mutating: operation.mutating,
+                workload: heavyCapabilities.contains(capability) ? .heavy : .light, perform: operation.perform))
+        })
         if let policy {
             operations = operations.mapValues { operation in
-                RegisteredQueueOperation(mutating: operation.mutating) { data, context in
+                RegisteredQueueOperation(mutating: operation.mutating, workload: operation.workload) { data, context in
                     let job = try ContractCodec.decode(TaskRequest<AresJob>.self, from: data).parameters
                     guard job.requesterRole == .mcp else { return try await operation.perform(data, context) }
                     guard let ticket = job.accessTicket, ticket.client == job.requesterClientID else { throw LocalRuntimeFailure.denied }
@@ -108,6 +117,9 @@ public actor AresQueuedWork {
             }
         }
     }
+    public func emergencyStatus() async throws -> QueueEmergencyStatus { try await executor.emergencyStatus() }
+    public func emergencyStop() async throws -> QueueEmergencyStatus { try await executor.emergencyStop() }
+    public func resumeAdmission() async throws -> QueueEmergencyStatus { try await executor.resumeAdmission() }
     public func shutdown() async { _ = try? await executor.drain() }
     public func isHealthy() async -> Bool { await executor.isHealthy() }
     public func resume() async throws { await executor.startSupervision(); try await executor.resumeQueuedTasks() }

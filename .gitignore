@@ -1,27 +1,15 @@
-# Исходники и манифесты публикуются отдельно от установщиков и личного состояния.
 .build/
 .swiftpm/
 dist/
+installers/
 .artifacts/
-.local-runtime/
-*.pkg
-*.dmg
-*.dSYM/
-*.sqlite*
-.env
-.env.*
 .DS_Store
 __pycache__/
 *.py[cod]
+.env
+.env.*
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.xcuserstate
 xcuserdata/
-
-# Local-only planning material and private pre-publication history.
-AGENTS.md
-ПРОМПТ_И_ДОКУМЕНТАЦИЯ.md
-ПРОВЕРКА.md
-ПРАВА_НА_КОД.md
-ПУБЛИКАЦИЯ_ЛОКАЛЬНО.md
-verification.json
-distribution-verification.json
-publication-verification.json
-.private-history/

@@ -1,0 +1,2 @@
+# Только независимая проверка JSON Schema; runtime Swift зависимостей не имеет.
+jsonschema==4.26.0

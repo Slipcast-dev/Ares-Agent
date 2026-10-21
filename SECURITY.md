@@ -1,20 +1,16 @@
 # Security / Безопасность
 
-## Русский
+Ares 0.28.0 is a local source-available agent. Access starts denied.
+Production secrets belong in Keychain. Do not commit keys, profiles, databases,
+bookmarks, grants, task payloads or personal paths. Operations use fixed handlers.
+Cancellation, leases, fencing and receipts prevent blind replay; ambiguous
+changes require recovery review. File access retains no-follow/version checks.
 
-Поддерживаемая экспериментальная линия — 0.12.x (intermediate). Исправления
-предоставляются по мере возможностей, без обещания срока реакции.
-Для уязвимости используйте [Report a vulnerability](https://github.com/Slipcast-dev/Ares-Agent/security/advisories/new).
-Не размещайте exploit, секреты, личные пути, bookmarks или отчёты пользователя
-в публичном issue. Передайте версию/архитектуру, минимальные шаги, влияние и
-обезличенную проверку. Если форма недоступна, создайте issue только с запросом
-приватного канала связи, без деталей уязвимости.
+Сообщайте об уязвимостях через GitHub private vulnerability reporting, если оно
+включено владельцем. Иначе откройте issue без деталей эксплуатации, секретов и
+личных данных с просьбой предоставить приватный канал. Не предполагается, что
+приватный reporting уже включён: это настройка владельца на GitHub.
 
-## English
-
-The supported experimental line is 0.12.x (intermediate). Fixes are best effort,
-without a promised response deadline. Use [Report a vulnerability](https://github.com/Slipcast-dev/Ares-Agent/security/advisories/new).
-Do not post exploits, secrets, private paths, bookmarks or user reports in public
-issues. Include version/architecture, minimal reproduction, impact and sanitized
-evidence. If the private form is unavailable, open an issue requesting a private
-contact channel without vulnerability details.
+Developer ID/notarization, macOS14/Intel runtime, full VoiceOver, real sleep/login
+and long-duration hardware acceptance remain release gates. These builds have
+local ad-hoc signatures only. No guarantee of absolute security is made.

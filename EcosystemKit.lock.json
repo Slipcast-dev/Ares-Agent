@@ -1,0 +1,431 @@
+{
+  "lockVersion": 1,
+  "packageVersion": "0.23.0",
+  "relativePackagePath": "Packages/EcosystemKit",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "8c2f0c0df3f40dc288a11188380307132fb7fbb76c4e12f651e61d288277f2e0"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "4a30dd86777a8060e0c44b356218f91b5f00dbf39cb12657de3e02be72222150"
+    },
+    {
+      "path": "LOCAL_RUNTIME.md",
+      "sha256": "6d174a14189de12f02e47610c87813ab9eb64b0fc7dcc103030f9dd74f58e9ae"
+    },
+    {
+      "path": "Package.resolved",
+      "sha256": "c8a49423d28bf3b5355fb3b86d2a5006de13cd5bce3ed860d5257cf9b9449171"
+    },
+    {
+      "path": "Package.swift",
+      "sha256": "6200393d031521301a9f1a6679ea717a22ac0dd691e290577f999b5b5c0db033"
+    },
+    {
+      "path": "README.md",
+      "sha256": "6968bf565d67c2b9291916d0605e2e1522c82a88109d971c3c4cc26476773a91"
+    },
+    {
+      "path": "RUNTIME.md",
+      "sha256": "3cac2a21d9c5036cceae79446e72525f537f74e49364e18303bfa49995100754"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/ClientIntegration.swift",
+      "sha256": "ee8ee3031ba9bb99aa2bfa597e6d706da3b98b2f7775143a34d6ee583efa233d"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/CodexAdapter.swift",
+      "sha256": "1ef288260e09e112e1e1217b059054b076bcf850cbc33b5237cc668e65a4ec3d"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/CodexModels.swift",
+      "sha256": "dcf9f8064add15e4f32c2f18526a8aeba71c4285818c424719837744565361bb"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/CodexProcess.swift",
+      "sha256": "cb91d7dec763dc46936035e525c0fa18a26aa900afc56cec2f4304733d52d505"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/HarnessAdapter.swift",
+      "sha256": "a5bbe4026783e2708cdb9a6a8fe03e4c013f4bd821d629c0910a9c2f511b7dac"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/HarnessInstallation.swift",
+      "sha256": "0c339fe0c8ede1f27af64a3d776049805ab0dc3859ec648bd78ee6638ec667a8"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/HarnessModels.swift",
+      "sha256": "2d85dadd7b0accf358f3efa262947fc676cb791a90e2a9bd47678691a8a2c602"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/HarnessPatch.swift",
+      "sha256": "cd3ecab252bdf2b59faf2c48ac573e09073270b96b606c45bf4398e435dc820c"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/HermesReadinessAdapter.swift",
+      "sha256": "8a32c0b6de1d10d0830a9834bf903686556b389f09fc2e9743b99a45953cae56"
+    },
+    {
+      "path": "Sources/EcosystemClientAdapters/InstalledClientIntegrationAdapter.swift",
+      "sha256": "2f52c940f988eb62e07585b90463285292f604026e45efdf3f7a97c46f2f46f0"
+    },
+    {
+      "path": "Sources/EcosystemContracts/ContractCodec.swift",
+      "sha256": "c5440cb569098e58c465041a654baf7dec551a7963c8b348a0fcdd0d0f885ce1"
+    },
+    {
+      "path": "Sources/EcosystemContracts/ContractResources.swift",
+      "sha256": "b45314a972096566c382fd1980ead6a6dbba1879bcc3d952d85f0c577699ff1e"
+    },
+    {
+      "path": "Sources/EcosystemContracts/KnownErrorCode.swift",
+      "sha256": "b2b5d44837d66335ab6ee818ad52f9dbe13b7e814fac2c4b1bc1c1c62dbd751a"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Models.swift",
+      "sha256": "c82a699a3368e187ff72a9ef3577e0bcd4ff84112a8987094d1058d3f3c15b4f"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Roles/ares.json",
+      "sha256": "db8ee7b8c07a3b6d45d04301c81cd0cd896006df2797f35b77c15ac6633de948"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Roles/ares.md",
+      "sha256": "db2b2fd3881766152eda6096bdb8f0424835c9d10f169a99c0d1f9821a23142a"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Roles/athena.json",
+      "sha256": "12f8831afc41d9aef6778a9c069c1abb5a9afd177870482671bdf4d65c86e541"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Roles/athena.md",
+      "sha256": "e4e00b547be6cecd68628465493667a22e57bcc98bab8abb79e8c2f79c6fcff6"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Roles/coordinator.json",
+      "sha256": "3f6598939a67c093a5e386e66fc8c56c7cea92754fae50b8cf743b577f43cd2a"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Roles/coordinator.md",
+      "sha256": "f7163cd614d6637b2392a003c6d365d0f7bf9fe31080212ae7a7589976e40896"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Schemas/client-adapter.schema.json",
+      "sha256": "75e8002ed2b9fe12444303fa5309a8ccde30200356022f0908571c19c644a28b"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Schemas/contracts.schema.json",
+      "sha256": "2b42e60c90ce3d0719265701e593395cc27756f5c4c964415ab3cbd9def07364"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Schemas/registry.schema.json",
+      "sha256": "152ce087b9159893020c0a0144e0366e9c7f75b564d10773b10780b1391aab10"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/Schemas/role.schema.json",
+      "sha256": "f2118011ff93a5fd8db8c5afb61e80c0e4bce936a05d9b92c4c4db3d280e7558"
+    },
+    {
+      "path": "Sources/EcosystemContracts/Resources/capability-registry.json",
+      "sha256": "d7ca58cff5f66432adc67c5071cb66f949e773037cce3171cc22d9f326d4fcb2"
+    },
+    {
+      "path": "Sources/EcosystemContracts/TaskState.swift",
+      "sha256": "8a699b2e6b93f6fb9530659668ebac0b7829d8b3f71697a67e88d7ae55cd3884"
+    },
+    {
+      "path": "Sources/EcosystemInstalledProbe/main.swift",
+      "sha256": "976c1f574bb0a9a4dcfe0cbf98dde37a26fc235a4ba25035c4818d182fdaa3b7"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/BoundedMCPInput.swift",
+      "sha256": "bd5c5e4aeace240a795a32142169ff9afd99036ac5a6340459bb0af74e703adb"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/InstalledMaintenanceCommand.swift",
+      "sha256": "9bc6f5d0538b57de2eb86539e69514c950a454df862a57b7909b4d370a3d50fa"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/InstalledRuntimeBootstrap.swift",
+      "sha256": "1f5a1647072d35209e853bdcde6a7fd9d5ff50632be69c9552c60047517f04a0"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/InstalledRuntimeMaintenance.swift",
+      "sha256": "e902817587975cd648b8cc3c380ba9f881a9723a673366ab1ea8f74e648989a6"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalAccessControl.swift",
+      "sha256": "8a9629e19168def303be87504fc11fecfcaf1c91a2b1ad274a7835e465b90e61"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalAccessMCP.swift",
+      "sha256": "d4bff8805fab0693a33e13848f2a80a70c218f9fb1f462b3c595c8b1102b3365"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalAccessPolicy.swift",
+      "sha256": "ea2bb7928c56956be47e09d698289bef3f5e9459a1afc3a907894d46efe0bf55"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalAutomationControl.swift",
+      "sha256": "896c02def6c3c870469f877a39a93ef573821cef084337f14982b3802c86ae4b"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalAutomationSchedule.swift",
+      "sha256": "f75e9eb274c29fb14d31f86b40299ee32f27944222a7cc13c99ec7ca1bf3599f"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalAutomationService.swift",
+      "sha256": "f04696b77c6f8d27ff8c12c1b5d4c440d65df760f477a99fe9d791bc3fed4780"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalCommonMCP.swift",
+      "sha256": "09c9f685c4b47090c40a955c98eb9805d6411e884e67ec038277d610b9ca4456"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalContracts.swift",
+      "sha256": "2b0c5f23947a41223023e30fe1e51b676a349995ec67881ab0a9f507c091919e"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalDirectoryWatcher.swift",
+      "sha256": "7bb0a2e081cdf2e0a21593329c3946cf8f5cd06685820f2f27fef8e0ab9513f3"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalEventInbox.swift",
+      "sha256": "d4b29452b291bc4ae237704c18cca55b20df8eb53e9ae20144b786725dd3569c"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalLoginRegistration.swift",
+      "sha256": "6fb2201115bfd86d08c14ebc642a08100e16fb782bd171fc843d2e3c18ab8dfc"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalMCPHistory.swift",
+      "sha256": "644a6b3876af4814fef70dab9d0eef97cff424c73690841f2b87da27bbf3658b"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalNotifications.swift",
+      "sha256": "b99c6bd79ab84a62590f30bcf7d854a774ec7632b0174ceaa78fca589c4e8cf7"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalOperationalTask.swift",
+      "sha256": "07e662fd2f7794ecef5317166aaa0c761cc538bd6363f101854af4802f0d1c35"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalRecovery.swift",
+      "sha256": "4567c7d4f3e09f5cfd79d79b787ff17f7b5e86b5bfd6e3985bbeaa8ee4fbe87e"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalRuntimeCLI.swift",
+      "sha256": "ae614c5e9434566d06707f6f08662dbea63a42ab5e3ff4aeb2af1395f4482ff1"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalStableEventID.swift",
+      "sha256": "f60c87c4c517fb8217bf2d4aba8e49b93d316a72c8a66832c6e50597c3b1e4c0"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalTasks.swift",
+      "sha256": "5f43563e8d05bd8e690e225ccb301cd1590e90c8a1b87af496afaa2c6beece31"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalWakeObserver.swift",
+      "sha256": "ed6a44a1dfcc66e881e776781383ba09668a0634076f83f3c3d080e822d01043"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/LocalXPC.swift",
+      "sha256": "6d65f81003aa5090c363fb31c2e4c427e18f77c7c6cd273fca0a61da7ded986b"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/MCPInputSchemaValidator.swift",
+      "sha256": "c3df8c278f18cf901ededa492c5ecf77189574d7046a6e8a294f82dd35c8f4f5"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/MCPProtocolSession.swift",
+      "sha256": "7cfa56e1d3ef6054095e15afb37f1153b991667aaac8edb3693a44c106256ff8"
+    },
+    {
+      "path": "Sources/EcosystemLocalIPC/MCPStdioTransport.swift",
+      "sha256": "0cd47e5f91c3721ff78f7334a437f4b879ccecd810ebbfa4665ed24ee295f5dd"
+    },
+    {
+      "path": "Sources/EcosystemQueueProbe/main.swift",
+      "sha256": "acbb2e5dca5eb76ddaee899521b1a1daf21b1ee93632b63001dc51b0f414dd43"
+    },
+    {
+      "path": "Sources/EcosystemRuntimeSupport/DurableTaskExecutor.swift",
+      "sha256": "d2947aad8de81ae8ce8b3a08fab6816b0f309c3cbe9559b9f6728cb858178e89"
+    },
+    {
+      "path": "Sources/EcosystemRuntimeSupport/DurableTaskQueue.swift",
+      "sha256": "743c750fadd234d660d4ff868945c76f6724a2cbb3d76b2a059c45be86a2b45b"
+    },
+    {
+      "path": "Sources/EcosystemRuntimeSupport/QueueDatabase.swift",
+      "sha256": "ba72cef7af5bfbc52d0de53b849bb1655c4c270ac73d6d9cd0fabfadd361be26"
+    },
+    {
+      "path": "Sources/EcosystemRuntimeSupport/QueueModels.swift",
+      "sha256": "af5d0b112bb5adf095500892033275a08a6a81b0556fbb4c5eeccefec5d63c09"
+    },
+    {
+      "path": "Sources/EcosystemRuntimeSupport/QueuePowerPolicy.swift",
+      "sha256": "7b277d6973c8a686be3c2a9cdd02cd63f14a04aa64fc2b51a913599291be3faa"
+    },
+    {
+      "path": "Sources/EcosystemRuntimeSupport/RuntimeOwnershipLease.swift",
+      "sha256": "197f4f57cb262b800a4d3b3f8fe56623eefa3b245dcc3f4c1817001ca3f4443b"
+    },
+    {
+      "path": "Sources/EcosystemUI/EcosystemSidebar.swift",
+      "sha256": "857be38fe27d151cbf97d962a235985639be13ba1033df2ac37710647ce79924"
+    },
+    {
+      "path": "Sources/EcosystemUI/InstalledRuntimeFailureView.swift",
+      "sha256": "d02efe15bd7f52d50340dfb0e1c67e437639b697c4cb2f21b9c5a3a3b80fe9af"
+    },
+    {
+      "path": "Sources/EcosystemUI/LocalAccessSection.swift",
+      "sha256": "b8ca4ffec7fd42cf9a07618df0aed4038fd96e8cb615ac363b4acc2eec90b597"
+    },
+    {
+      "path": "Sources/EcosystemUI/LocalAutomationSection.swift",
+      "sha256": "5153d50ce1d76570ac5ea42aed97b92af0fa30e715e213c22b04f9869fa6da99"
+    },
+    {
+      "path": "Sources/EcosystemUI/LocalOperationsModel.swift",
+      "sha256": "191c896c87f6516ff3a001e9329aba72b13c00dc55d47126f27f105cf711afff"
+    },
+    {
+      "path": "Sources/EcosystemUI/LocalOperationsSection.swift",
+      "sha256": "3e3d35ab8ad98187e4355a44d7a4cc5feef58dfaf4b61e26f0376900c18fbbb7"
+    },
+    {
+      "path": "Sources/EcosystemUI/LocalRecoverySection.swift",
+      "sha256": "ea87e064193146e5f3d2a0a0d7a8e3b6c63c1af96706ce129724ddb2a15abd83"
+    },
+    {
+      "path": "Sources/EcosystemUI/LocalRecoveryViewModel.swift",
+      "sha256": "05dcf44f65262ffd5a866179079efe94378e55cc7b59381b42fca5aef56d9e0d"
+    },
+    {
+      "path": "Sources/EcosystemUI/PlannedHermesConnection.swift",
+      "sha256": "857d81dafd494f5b8828fa6baa89ff19f8855730f220fc104193633920405e24"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "b9f46419866d05cda1b7bc4f695c3d5b022f73ba45a0e2cff74af8c08046f9df"
+    },
+    {
+      "path": "Tests/EcosystemClientAdaptersTests/CodexAdapterTests.swift",
+      "sha256": "e15597227332406902d3f8915b5955eaddf35f5be3040c4f2349627d8d331da8"
+    },
+    {
+      "path": "Tests/EcosystemClientAdaptersTests/HarnessAdapterTests.swift",
+      "sha256": "b4467b88536d987ece1a3c7311619f5bf35b64e14afb7f1927a6fcd1bb6000dc"
+    },
+    {
+      "path": "Tests/EcosystemClientAdaptersTests/IntegrationRegistryTests.swift",
+      "sha256": "0c65f34d6cbf6bb510cf071201fae604014a1ccff59003f54ac39b41b083e54f"
+    },
+    {
+      "path": "Tests/EcosystemContractsTests/ContractTests.swift",
+      "sha256": "f79a6d94cc7a957213d9807068d7f107085545748bd1e8c0ef852299e9fb9700"
+    },
+    {
+      "path": "Tests/EcosystemContractsTests/Fixtures/result-v1.json",
+      "sha256": "073f7930236148014aa0bd158aa119c2f499a7961d350640d22b3da211dd305d"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/InstalledRuntimeBootstrapTests.swift",
+      "sha256": "0e57cbefd979819d8f68194bd61f0501bf4fd0fbe11a3d6325e6c12ccb251fa8"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/InstalledRuntimeMaintenanceTests.swift",
+      "sha256": "51c42500f8610627f8b218485ec6987e44f3eb5d580d68e5cded171b26a6f6c4"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalAccessPolicyTests.swift",
+      "sha256": "e5c4aee317d0b53f121f557478928f30028cb07636caf1ee2e8163c16e7949ba"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalAutomationScheduleTests.swift",
+      "sha256": "0c86e1b661004b4580537ce53396e4ba6877945613b186525e103fbc566a41da"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalAutomationServiceTests.swift",
+      "sha256": "9bc7606421d3c3798a386c6569bbcdb93ea8029734e682c6e3b040ce4cb9c390"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalEventInboxTests.swift",
+      "sha256": "41545c64d9434b992fe554e845ff8a215c9ed790c87a93408f21e8afd4d50127"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalEventProcessingTests.swift",
+      "sha256": "6b652d9b6f20c16e549eb03b505d4b46d68b6a17dcbc7d064d9b6c8aee6d81bc"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalIPCTests.swift",
+      "sha256": "8d6dda6cb3da178efa2e5af24e44194bbc4c962529cc01cba6b124280ea09833"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/LocalMCPHistoryTests.swift",
+      "sha256": "5cf519062cf3941926f9ec6fe1cd39cf85ed9f95b5f997de45be222771f914ee"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/MCPInputSchemaValidatorTests.swift",
+      "sha256": "0e44be6c09fb25fc5499ab52aa88ba64c5b208d8a3283b55059c2d4e57fe40c9"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/MCPProtocolSessionTests.swift",
+      "sha256": "6c1902ace3462452d5cd3d8d3d8a47a7bcc0b5c6115456b5ec40e185e7271c45"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/NativeLifecycleTests.swift",
+      "sha256": "acf445aa5debc058eac66176fd3024be9cb5e17d2a8500905130f5252f67907c"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/NativeNotificationAuthorizationTests.swift",
+      "sha256": "1e116fcb51103ec568177e54e368f52caab957f678b9b12f23245eb979ad2d95"
+    },
+    {
+      "path": "Tests/EcosystemLocalIPCTests/RecoveryTests.swift",
+      "sha256": "f84db578ad0aa4fd8d4466b12abd1a44ab87e57260a5d8e162c92cf778b177ea"
+    },
+    {
+      "path": "Tests/EcosystemRuntimeSupportTests/QueuePhysicalFullTests.swift",
+      "sha256": "6005fcb14f1fd9f9cdf4c3631215b5d2000e580798d3f0e583c51a70df7c57fa"
+    },
+    {
+      "path": "Tests/EcosystemRuntimeSupportTests/QueuePowerPolicyTests.swift",
+      "sha256": "bce6c8efadd15fec8e725809b76c41cd922b99cb63db6ab3c11941a3f3519dfa"
+    },
+    {
+      "path": "Tests/EcosystemRuntimeSupportTests/QueueTests.swift",
+      "sha256": "92c960ade64ff80066ec352e07d62f375a474375dbb473dc29d89726b51a3b50"
+    },
+    {
+      "path": "Tests/EcosystemUITests/OperationsTests.swift",
+      "sha256": "f2fc8d2d2b26289a9749c4027a368a7c03f8a950cfbd77948fc8fea5409c3c96"
+    },
+    {
+      "path": "Tests/EcosystemUITests/SidebarTests.swift",
+      "sha256": "3acafece3f6d266cd223b81817886ea3f7c556524811b78a9e9c259e8e251e2f"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "d1994e4942b06ec398ed7d9fa91ecce4079cd3f85ffe9e04588866291263149c"
+    },
+    {
+      "path": "script/crash_smoke.py",
+      "sha256": "71cc628f8fab8076cede9a6758784f78fd36372bc8bc6c3291df969a486dec38"
+    },
+    {
+      "path": "script/requirements-verification.txt",
+      "sha256": "2b5c45d08c05ed38d6d528775304996f47eb42668f4c32e845d0af447eaf72c1"
+    },
+    {
+      "path": "script/verify_schemas.py",
+      "sha256": "8541159acd4a8e769d84ba2b9c63a57cae3f0b430073995bf3e9ac67e6cf25cc"
+    }
+  ]
+}

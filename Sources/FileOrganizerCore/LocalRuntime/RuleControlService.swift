@@ -12,7 +12,7 @@ struct RuleControlService {
         let keys: Set<String>
         switch request.operation {
         case "rule.list": keys = ["offset"]
-        case "rule.history": keys = ["ruleID", "runID", "offset"]
+        case "rule.history": keys = ["ruleID", "runID", "offset", "cursor"]
         case "rule.get", "rule.preview", "rule.request_enable", "rule.disable": keys = ["ruleID"]
         case "rule.validate", "rule.propose": keys = ["rule"]
         case "rule.run": keys = ["ruleID", "planID", "key", "eventID", "processingToken"]
@@ -131,33 +131,46 @@ struct RuleControlService {
             guard let id = value.ruleID else { throw LocalRuntimeFailure.invalidRequest }
             _ = try await work.governance.saved(id)
             let offset = value.offset ?? 0; guard (0...100_000).contains(offset) else { throw LocalRuntimeFailure.invalidRequest }
-            let runs = try await repository.ruleObjects(RuleRun.self, table: .runs).filter { $0.ruleID == id }.sorted { $0.createdAt > $1.createdAt }
+            let history: RuleHistoryPage
+            do { history = try await repository.ruleHistoryPage(ruleID: id, runID: value.runID, offset: offset, cursor: value.cursor) }
+            catch RuleHistoryFailure.invalidRequest { throw LocalRuntimeFailure.invalidRequest }
+            catch RuleHistoryFailure.missingRun { throw LocalRuntimeFailure.denied }
+            // Повторная проверка после await не позволяет отзыву grant/root
+            // между выборкой и выдачей страницы раскрыть кэшированный результат.
+            let checkedRule = try await work.governance.saved(id)
+            try await scoped(checkedRule)
             if let runID = value.runID {
-                guard let run = runs.first(where: { $0.id == runID }) else { throw LocalRuntimeFailure.denied }
-                var receipts: [[String: Any]] = []
-                if let taskID = run.taskID {
-                    receipts = try await work.queue.receipts(taskID, limit: 100, offset: Int64(offset)).map { ["id": $0.id.uuidString, "state": $0.state.rawValue, "actionKey": $0.actionKey] }
+                var safeReceipts: [[String: String]] = []
+                if let taskID = history.runTaskID {
+                    safeReceipts = try await work.queue.receipts(taskID, limit: 100, offset: Int64(offset)).map {
+                        ["id": $0.id.uuidString, "state": $0.state.rawValue, "actionKey": $0.actionKey]
+                    }
                 }
-                let results = run.results.dropFirst(offset).prefix(100).map { ["kind": $0.kind.rawValue, "relativePath": $0.relativePath, "status": $0.status] }
-                return try JSONSerialization.data(withJSONObject: ["runId": runID.uuidString, "results": results, "receipts": receipts, "nextOffset": offset + results.count < run.results.count || receipts.count == 100 ? (offset + 100) as Any : NSNull()])
+                let results = history.items.compactMap { row -> [String: String]? in
+                    guard let kind = row.kind else { return nil }
+                    return ["kind": kind.rawValue, "relativePath": row.relativePath, "status": row.status]
+                }
+                let finalRule = try await work.governance.saved(id)
+                try await scoped(finalRule)
+                let nextOffset = history.nextOffset ?? (safeReceipts.count == 100 ? offset + 100 : nil)
+                return try JSONSerialization.data(withJSONObject: ["runId": runID.uuidString, "results": results,
+                    "receipts": safeReceipts, "nextOffset": nextOffset as Any? ?? NSNull()])
             }
-            // История пагинируется по действиям. Полные receipts конкретного run
-            // читаются отдельной страницей через runID; private summaries скрыты.
             var items: [[String: Any]] = []
-            for run in runs {
-                var status = run.status
-                if status == "running", let id = run.taskID, let task = try await work.queue.task(id), task.status.isTerminal { status = task.status.rawValue }
-                if run.results.isEmpty {
-                    items.append(["runId": run.id.uuidString, "taskId": run.taskID?.uuidString as Any? ?? NSNull(), "runStatus": status,
-                        "createdAt": ISO8601DateFormatter().string(from: run.createdAt), "kind": NSNull(), "relativePath": "", "status": status])
-                }
-                for result in run.results {
-                    items.append(["runId": run.id.uuidString, "taskId": run.taskID?.uuidString as Any? ?? NSNull(), "runStatus": status, "createdAt": ISO8601DateFormatter().string(from: run.createdAt),
-                        "actionId": result.actionID.uuidString, "kind": result.kind.rawValue, "relativePath": result.relativePath, "status": result.status])
-                }
+            let formatter = ISO8601DateFormatter()
+            for row in history.items {
+                var status = row.runStatus
+                if status == "running", let taskID = row.taskID, let task = try await work.queue.task(taskID), task.status.isTerminal { status = task.status.rawValue }
+                var item: [String: Any] = ["runId": row.runID.uuidString, "taskId": row.taskID?.uuidString as Any? ?? NSNull(),
+                    "runStatus": status, "createdAt": formatter.string(from: row.createdAt),
+                    "kind": row.kind?.rawValue as Any? ?? NSNull(), "relativePath": row.relativePath, "status": row.kind == nil ? status : row.status]
+                if let action = row.actionID { item["actionId"] = action.uuidString }
+                items.append(item)
             }
-            let page = Array(items.dropFirst(offset).prefix(100))
-            return try JSONSerialization.data(withJSONObject: ["items": page, "nextOffset": offset + page.count < items.count ? (offset + page.count) as Any : NSNull()])
+            let finalRule = try await work.governance.saved(id)
+            try await scoped(finalRule)
+            return try JSONSerialization.data(withJSONObject: ["items": items,
+                "nextOffset": history.nextOffset as Any? ?? NSNull(), "nextCursor": history.nextCursor as Any? ?? NSNull()])
         default: throw LocalRuntimeFailure.denied
         }
     }

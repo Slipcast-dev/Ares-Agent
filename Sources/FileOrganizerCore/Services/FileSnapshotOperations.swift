@@ -8,6 +8,10 @@ import EcosystemLocalIPC
 struct FileSnapshotOperations: Sendable {
     let repository: any FileRepository
     let access: AuthorizedRootAccessService
+    private let views: FileSnapshotViewCache
+    init(repository: any FileRepository, access: AuthorizedRootAccessService, views: FileSnapshotViewCache = FileSnapshotViewCache()) {
+        self.repository = repository; self.access = access; self.views = views
+    }
     func perform(capability: String, job: AresJob, context: QueueExecutionContext) async throws -> Data {
         guard let id = job.rootID, let root = try await repository.root(withID: id) else { throw LocalRuntimeFailure.denied }
         let url = try await access.resolveURL(for: root)
@@ -58,7 +62,7 @@ struct FileSnapshotOperations: Sendable {
         }
         guard try await repository.bookmarkData(forRootID: root.id)?.isEmpty == false else { throw LocalRuntimeFailure.denied }
     }
-    private func page(_ snapshot: FileIndexSnapshot, operation: String, job: AresJob) throws -> FileSnapshotPage {
+    func page(_ snapshot: FileIndexSnapshot, operation: String, job: AresJob) throws -> FileSnapshotPage {
         let size = job.pageSize ?? 100, query = job.query ?? ""
         guard (1...100).contains(size), query.count <= 120, !query.contains("\0") else { throw LocalRuntimeFailure.invalidRequest }
         var offset = 0
@@ -71,15 +75,13 @@ struct FileSnapshotOperations: Sendable {
             guard decoded.operation == operation, decoded.query == query, decoded.pageSize == size, decoded.offset >= 0 else { throw AresFileFailure.invalidCursor }
             offset = decoded.offset
         }
-        let allGroups = Dictionary(grouping: snapshot.records.filter { $0.contentHash != nil }, by: { $0.contentHash! }).values
-            .filter { $0.count > 1 }.sorted { $0[0].contentHash! < $1[0].contentHash! }
-        let groupCounts = Dictionary(uniqueKeysWithValues: allGroups.map { ($0[0].contentHash!, $0.count) })
-        let duplicateCount = allGroups.reduce(0) { $0 + $1.count }
+        let prepared = try views.prepare(snapshot)
+        let groupCounts = prepared.groupCounts
         let eligible: [FileRecord]
         switch operation {
-        case "file.search": eligible = snapshot.records.filter { query.isEmpty || $0.relativePath.range(of: query, options: .caseInsensitive, locale: Locale(identifier: "en_US_POSIX")) != nil }
-        case "file.analyze_storage": eligible = snapshot.records.sorted { $0.byteSize == $1.byteSize ? $0.relativePath < $1.relativePath : $0.byteSize > $1.byteSize }
-        case "file.find_duplicates": eligible = snapshot.header.hashesComputed ? allGroups.flatMap { $0.sorted { $0.relativePath < $1.relativePath } } : []
+        case "file.search": eligible = query.isEmpty ? snapshot.records : snapshot.records.filter { $0.relativePath.range(of: query, options: .caseInsensitive, locale: Locale(identifier: "en_US_POSIX")) != nil }
+        case "file.analyze_storage": eligible = prepared.storage
+        case "file.find_duplicates": eligible = snapshot.header.hashesComputed ? prepared.duplicates : []
         default: throw LocalRuntimeFailure.denied
         }
         guard offset <= eligible.count else { throw AresFileFailure.invalidCursor }
@@ -90,8 +92,8 @@ struct FileSnapshotOperations: Sendable {
         }.sorted { $0.id < $1.id } : []
         return FileSnapshotPage(snapshot: snapshot.header, freshness: snapshot.header.skippedCount == 0 ? "verified" : "partial",
             verifiedAt: Date(), records: rows, nextCursor: next, fileCount: snapshot.header.fileCount, totalByteSize: snapshot.header.totalByteSize,
-            groups: groups, totalDuplicateFileCount: snapshot.header.hashesComputed ? duplicateCount : nil,
-            totalGroupCount: snapshot.header.hashesComputed ? allGroups.count : nil, hashesAvailable: snapshot.header.hashesComputed,
-            largeFiles: Array(snapshot.records.sorted { $0.byteSize > $1.byteSize }.prefix(20)))
+            groups: groups, totalDuplicateFileCount: snapshot.header.hashesComputed ? prepared.duplicateCount : nil,
+            totalGroupCount: snapshot.header.hashesComputed ? prepared.groupCounts.count : nil, hashesAvailable: snapshot.header.hashesComputed,
+            largeFiles: prepared.largeFiles)
     }
 }

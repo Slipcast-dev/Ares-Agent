@@ -24,6 +24,9 @@ public actor DurableTaskQueue {
         try store.purgeExpiredReadHistory(retentionDays: retentionDays, limit: limit)
     }
     public func taskReserving(_ resource: String) throws -> DurableTask? { try store.taskReserving(resource) }
+    public func emergencyStatus() throws -> QueueEmergencyStatus { try store.emergencyStatus() }
+    public func emergencyStop() throws { try store.emergencyStop() }
+    public func resumeAdmission() throws { try store.resumeAdmission() }
     public func accept(_ submission: QueueSubmission, retrying previousTaskID: UUID? = nil) throws -> DurableTask { try store.accept(submission, retrying: previousTaskID) }
     /// Активные callbacks не теряются за страницами новых queued/terminal задач.
     public func executingTasks() throws -> [DurableTask] { try store.executingTasks() }
@@ -84,6 +87,16 @@ private final class QueueStore: @unchecked Sendable {
             try database.query("CREATE TABLE IF NOT EXISTS receipts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), action_key TEXT NOT NULL, state TEXT NOT NULL, document BLOB NOT NULL, UNIQUE(task_id, action_key))")
             try database.query("CREATE INDEX IF NOT EXISTS receipts_state ON receipts(task_id, state)")
             try database.query("CREATE INDEX IF NOT EXISTS tasks_deadline ON tasks(status, deadline)")
+            // В уже обновлённой БД пропавший latch — повреждение, а не
+            // основание заново открыть admission с настройкой по умолчанию.
+            if try database.query("PRAGMA user_version").first?.integer("user_version") == 2 {
+                _ = try emergencyStatus()
+            }
+            // Версия 2 не позволяет старому runtime проигнорировать остановку
+            // при downgrade. Схема и начальное состояние меняются атомарно.
+            try database.query("CREATE TABLE IF NOT EXISTS queue_control (id INTEGER PRIMARY KEY CHECK(id=1), stopped INTEGER NOT NULL CHECK(stopped IN (0,1)))")
+            try database.query("INSERT OR IGNORE INTO queue_control VALUES (1,0)")
+            try database.query("PRAGMA user_version=2")
             if let metadata = try database.query("SELECT * FROM queue_meta WHERE id=1").first {
                 guard try metadata.text("agent") == agentID.rawValue else { throw QueueFailure.wrongDomain }
                 let epoch = try metadata.integer("epoch")
@@ -196,10 +209,32 @@ private final class QueueStore: @unchecked Sendable {
     private func releaseResources(_ id: UUID) throws {
         try database.query("DELETE FROM resource_locks WHERE task_id=?", [.text(id.uuidString)])
     }
+    func emergencyStatus() throws -> QueueEmergencyStatus {
+        guard let control = try database.query("SELECT stopped FROM queue_control WHERE id=1").first else { throw QueueFailure.corruptStorage }
+        let stopped = try control.integer("stopped")
+        guard stopped == 0 || stopped == 1 else { throw QueueFailure.corruptStorage }
+        let pending = try database.query("SELECT COUNT(*) AS count FROM tasks WHERE status IN ('queued','running','cancelling')").first?.integer("count") ?? 0
+        let recovery = try database.query("SELECT COUNT(*) AS count FROM tasks WHERE status='recoveryRequired' AND EXISTS (SELECT 1 FROM resource_locks WHERE task_id=tasks.id)").first?.integer("count") ?? 0
+        return QueueEmergencyStatus(stopped: stopped == 1, pendingTasks: Int(pending), recoveryTasks: Int(recovery))
+    }
+    func resumeAdmission() throws {
+        try database.transaction { _ = try database.query("UPDATE queue_control SET stopped=0 WHERE id=1") }
+    }
+    func emergencyStop() throws {
+        try database.transaction {
+            try database.query("UPDATE queue_control SET stopped=1 WHERE id=1")
+            // Состояния всей очереди, без лимита GUI. Карантин не освобождается.
+            for row in try database.query("SELECT id FROM tasks WHERE status IN ('queued','running','cancelling')") {
+                guard let id = UUID(uuidString: try row.text("id")) else { throw QueueFailure.corruptStorage }
+                _ = try cancelInTransaction(id)
+            }
+        }
+    }
     func accept(_ submission: QueueSubmission, retrying previousTaskID: UUID?) throws -> DurableTask {
         guard submission.agentID == agentID else { throw QueueFailure.wrongDomain }
         let time = try now()
         let accepted = try database.transaction {
+            guard try !emergencyStatus().stopped else { throw QueueFailure.emergencyStopped }
             if let previousTaskID {
                 let previous = try requireTask(previousTaskID)
                 guard !submission.mutating, !previous.mutating,
@@ -239,6 +274,7 @@ private final class QueueStore: @unchecked Sendable {
         return accepted
     }
     func nextQueuedTask() throws -> DurableTask? {
+        guard try !emergencyStatus().stopped else { return nil }
         try expireQueued()
         guard let row = try database.query("SELECT id FROM tasks WHERE status='queued' ORDER BY rowid LIMIT 1").first,
               let id = UUID(uuidString: try row.text("id")) else { return nil }
@@ -261,6 +297,7 @@ private final class QueueStore: @unchecked Sendable {
         guard seconds.isFinite, (1...3600).contains(seconds) else { throw QueueFailure.invalidArgument }
         try recover(allActive: false); try expireQueued()
         return try database.transaction {
+            guard try !emergencyStatus().stopped else { throw QueueFailure.emergencyStopped }
             var value = try requireTask(id)
             guard value.status == .queued else { throw QueueFailure.invalidState }
             guard try database.query("SELECT id FROM tasks WHERE status IN ('running','cancelling')").count < maximumConcurrentTasks else {
@@ -309,16 +346,17 @@ private final class QueueStore: @unchecked Sendable {
         }
     }
     func cancel(_ id: UUID) throws -> DurableTask {
-        try database.transaction {
-            var value = try requireTask(id)
-            guard !value.status.isTerminal else { return value }
-            if value.cancellationRequestedAt == nil { value.cancellationRequestedAt = try now() }
-            if value.status == .queued {
-                value.status = .cancelled; value.errorCode = .cancelled; value.finishedAt = try now()
-                try releaseResources(id)
-            } else { value.status = .cancelling }
-            try save(&value); return value
-        }
+        try database.transaction { try cancelInTransaction(id) }
+    }
+    private func cancelInTransaction(_ id: UUID) throws -> DurableTask {
+        var value = try requireTask(id)
+        guard !value.status.isTerminal else { return value }
+        if value.cancellationRequestedAt == nil { value.cancellationRequestedAt = try now() }
+        if value.status == .queued {
+            value.status = .cancelled; value.errorCode = .cancelled; value.finishedAt = try now()
+            try releaseResources(id)
+        } else { value.status = .cancelling }
+        try save(&value); return value
     }
     func receipts(_ id: UUID, limit: Int = 100, offset: Int64 = 0) throws -> [ActionReceipt] {
         guard (1...500).contains(limit), offset >= 0 else { throw QueueFailure.invalidArgument }
