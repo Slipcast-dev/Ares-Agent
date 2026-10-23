@@ -27,6 +27,17 @@ final class InstalledRuntimeBootstrapTests: XCTestCase {
     }
     private var profile: URL { root.appendingPathComponent("private/Runtime") }
 
+    /// Проверяем расположение ресурсов именно для внешних MCP executable.
+    func testProvisionCopiesStandaloneLocalizationResources() throws {
+        let app = try application("athena")
+        let name = "EcosystemKit_EcosystemLocalization.bundle"
+        let resource = app.appendingPathComponent("Contents/Resources/" + name)
+        try FileManager.default.createDirectory(at: resource, withIntermediateDirectories: true)
+        try Data("localized-content".utf8).write(to: resource.appendingPathComponent("fixture.txt"))
+        try InstalledRuntimeBootstrap.prepare(domain: "athena", application: app, profile: profile)
+        XCTAssertEqual(try String(contentsOf: profile.appendingPathComponent(name + "/fixture.txt"), encoding: .utf8), "localized-content")
+    }
+
     func testProvisionSeparatesClientsAndDoesNotGrantDataAccess() throws {
         let app = try application()
         let file = try InstalledRuntimeBootstrap.prepare(domain: "ares", application: app, profile: profile)

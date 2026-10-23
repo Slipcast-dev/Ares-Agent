@@ -101,6 +101,14 @@ public enum InstalledRuntimeBootstrap {
         return file
     }
 
+    /// MCP запускается вне .app: SwiftPM ищет общие bundle рядом с executable.
+    /// Закрытый список исключает перенос GUI-ресурсов и произвольных файлов.
+    /// Старые приложения до локализации могут не содержать этих bundle.
+    static let standaloneResourceBundles = [
+        "EcosystemKit_EcosystemContracts.bundle",
+        "EcosystemKit_EcosystemLocalization.bundle",
+    ]
+
     /// Maintenance строит новое поколение с прежними абсолютными путями и
     /// MachServices. Конфигурации клиентов не требуют повторной записи.
     static func stage(domain: String, application: URL, profile: URL, staging: URL, identifier: String) throws {
@@ -113,6 +121,12 @@ public enum InstalledRuntimeBootstrap {
         let runtimeRelative = product.name + "Background.app"
         try fm.copyItem(at: contents.appendingPathComponent("Library/LoginItems/" + runtimeRelative),
                         to: staging.appendingPathComponent(runtimeRelative))
+        for name in standaloneResourceBundles {
+            let source = contents.appendingPathComponent("Resources/" + name)
+            if fm.fileExists(atPath: source.path) {
+                try fm.copyItem(at: source, to: staging.appendingPathComponent(name))
+            }
+        }
         let runtime = profile.appendingPathComponent(runtimeRelative + "/Contents/MacOS/" + product.runtime)
         let runtimePin = try requirement(staging.appendingPathComponent(runtimeRelative + "/Contents/MacOS/" + product.runtime))
         var pins = ["gui": guiPin, "worker": guiPin]

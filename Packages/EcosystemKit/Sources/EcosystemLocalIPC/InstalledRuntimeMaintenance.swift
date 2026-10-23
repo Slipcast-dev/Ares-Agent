@@ -51,7 +51,7 @@ public enum InstalledRuntimeMaintenance {
         }
         for client in ["legacy", "codex", "deepseekHarness"] { names.append(p.mcp + "-" + client) }
         if let worker = p.worker { names.append(worker) }
-        return Set(names)
+        return Set(names + InstalledRuntimeBootstrap.standaloneResourceBundles)
     }
     private static func journalURL(_ profile: URL) -> URL {
         profile.deletingLastPathComponent().appendingPathComponent(".maintenance-" + profile.lastPathComponent + ".json")
@@ -117,7 +117,13 @@ public enum InstalledRuntimeMaintenance {
             for name in try managed(domain) {
                 let destination = stage.appendingPathComponent(name)
                 if fm.fileExists(atPath: destination.path) { try fm.removeItem(at: destination) }
-                try fm.copyItem(at: code.appendingPathComponent(name), to: destination)
+                let source = code.appendingPathComponent(name)
+                // При обновлении со старого поколения bundle появляется как код,
+                // а при возврате к версии без локализации удаляется вместе с кодом.
+                // Состояние профиля и его проверка побайтно остаются независимыми.
+                if InstalledRuntimeBootstrap.standaloneResourceBundles.contains(name),
+                   !fm.fileExists(atPath: source.path) { continue }
+                try fm.copyItem(at: source, to: destination)
             }
             let after = try inventory(stage)
             guard try state(before, domain: domain) == state(after, domain: domain),

@@ -23,7 +23,7 @@ from typing import Any
 
 from localized_distribution import validate_metadata, write_installer_resources, verify_installer_resources
 
-WORKSPACE = Path(__file__).resolve().parents[2]
+WORKSPACE = Path(__file__).resolve().parents[1]
 PRODUCTS = {
     "Ares": (
         "FileOrganizer",
@@ -195,7 +195,7 @@ def main() -> None:
     """Новый output сохраняет прошлые сборки; finally отмонтирует только свой DMG."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", action="store_true")
-    parser.add_argument("--version", default="0.37.0")
+    parser.add_argument("--version", help="Default: current coordinated release 0.38.0")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--use-prepared-apps",
@@ -205,6 +205,9 @@ def main() -> None:
     parser.add_argument("--apps-dir", type=Path, help="Explicit prepared applications directory; never installed")
     parser.add_argument("--agent", choices=tuple(PRODUCTS), help="Package just one prepared standalone agent")
     args = parser.parse_args()
+    # Оба проекта согласованы в локальном комплекте 0.38.0. --agent по-прежнему
+    # ограничивает состав сборки; явный --version нужен для исторических выпусков.
+    args.version = args.version or "0.38.0"
     if not args.run or not re.fullmatch(
         r"[0-9]+\.[0-9]+\.[0-9]+", args.version
     ):
@@ -235,12 +238,13 @@ def main() -> None:
     }
     try:
         for name, (project, *_) in PRODUCTS.items():
+            if name != 'Ares':
+                continue
             if args.agent and name != args.agent:
                 continue
             if not args.use_prepared_apps:
                 script = (
                     WORKSPACE
-                    / project
                     / (
                         "scripts/package_app.zsh"
                         if name == "Ares"
@@ -251,12 +255,12 @@ def main() -> None:
                     ["--package"] if name == "Athena" else []
                 )
                 result = command(
-                    arguments, cwd=WORKSPACE / project, env=environment
+                    arguments, cwd=WORKSPACE, env=environment
                 )
                 (output / (name + "-build.log")).write_text(
                     result.stdout + result.stderr
                 )
-            source = (args.apps_dir.absolute() if args.apps_dir else WORKSPACE / "Приложения") / (name + ".app")
+            source = (args.apps_dir.absolute() if args.apps_dir else WORKSPACE / "dist") / (name + ".app")
             with tempfile.TemporaryDirectory(
                 prefix="e13-release-", dir="/private/tmp"
             ) as temporary:

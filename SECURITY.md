@@ -1,6 +1,6 @@
 # Security / Безопасность
 
-Ares 0.37.0 is a local source-available agent. Access starts denied.
+Ares 0.38.0 is a local source-available agent. Access starts denied.
 Production secrets belong in Keychain. Do not commit keys, profiles, databases,
 bookmarks, grants, task payloads or personal paths. Operations use fixed handlers.
 Cancellation, leases, fencing and receipts prevent blind replay; ambiguous

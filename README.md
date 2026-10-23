@@ -6,19 +6,15 @@
 
 [Русский](README.md) · [English](README.en.md)
 
-[0.37.0 · PKG / DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.37.0) · [Status / Статус](docs/STATUS.md) · [CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
-
 Арес — отдельный локальный агент macOS. Безопасная работа с файлами, правилами и индексом.
 
-Версия **0.37.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
+Версия **0.38.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
 Запуск на Intel и macOS14 отдельно ещё не принят. Проект с доступными исходниками
 использует собственную некоммерческую [лицензию](LICENSE), а не MIT/OSI-лицензию.
 
 ## Установка
 
-[PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/Ares-0.37.0-unsigned.pkg) · [DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/Ares-0.37.0-unsigned.dmg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/SHA256SUMS).
-
-Установщики находятся в предварительном релизе 0.37.0 отдельно от исходников. Выпуск **без подписи
+PKG/DMG прикладываются к релизу отдельно от исходников. Выпуск **без подписи
 Apple Developer ID и без notarization**. Перед использованием сверьте SHA256SUMS.
 Локальная ad-hoc подпись защищает целостность, но не подтверждает издателя.
 Не отключайте Gatekeeper глобально. Автоматическая установка не выполняется.
@@ -59,18 +55,16 @@ scripts/package_app.zsh
 
 ## RU/EN localization / Локализация
 
-Предварительный выпуск **0.37.0**. Выберите «Системный», «Русский» или «English»
-в настройках агента. Язык каждого приложения задаётся отдельно. Числа и даты
-следуют региону macOS; пользовательские имена, пути и свободный текст истории
-сохраняются. Системные настройки используют язык macOS.
-
-Полная ручная проверка VoiceOver/клавиатуры, macOS 14/Intel и установленных
-клиентов остаётся открытой. Этот предварительный выпуск не прошёл полную приёмку.
+Local candidate 0.38.0; not published by this export. Полная ручная приёмка
+VoiceOver/клавиатуры и аппаратные проверки остаются открытыми.
+Select System, Русский or English in this agent's settings. Each agent keeps its
+own language. Даты/числа следуют региону macOS. User names, paths and historical
+free text retain their original language. System Settings follows macOS language.
 
 ```sh
 python3 scripts/verify_localization_acceptance.py --ares-dir . --kit-dir Packages/EcosystemKit --require-reviewed-boundaries --output localization-acceptance.json
-ECOSYSTEM_SKIP_LSREGISTER=1 ECOSYSTEM_APP_VERSION=0.37.0 scripts/package_app.zsh
-python3 scripts/prepare_local_release.py --run --version 0.37.0 --agent Ares --use-prepared-apps --apps-dir dist --output installers/0.37.0
+ECOSYSTEM_SKIP_LSREGISTER=1 ECOSYSTEM_APP_VERSION=0.38.0 scripts/package_app.zsh
+python3 scripts/prepare_local_release.py --run --version 0.38.0 --agent Ares --use-prepared-apps --apps-dir dist --output installers/0.38.0
 ```
 
 Installer output is unsigned Developer ID and not notarized. These commands

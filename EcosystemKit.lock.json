@@ -153,11 +153,11 @@
     },
     {
       "path": "Sources/EcosystemLocalIPC/InstalledRuntimeBootstrap.swift",
-      "sha256": "1f5a1647072d35209e853bdcde6a7fd9d5ff50632be69c9552c60047517f04a0"
+      "sha256": "f2a57211c5869aec09d774688b5cd3bc907b77474597b9d2344b74d4e5d0a72c"
     },
     {
       "path": "Sources/EcosystemLocalIPC/InstalledRuntimeMaintenance.swift",
-      "sha256": "e902817587975cd648b8cc3c380ba9f881a9723a673366ab1ea8f74e648989a6"
+      "sha256": "d64489d77763457e99368b41dc639b65d2f009c1ae32f07969a7068b0d83f384"
     },
     {
       "path": "Sources/EcosystemLocalIPC/LocalAccessControl.swift",
@@ -409,11 +409,11 @@
     },
     {
       "path": "Tests/EcosystemLocalIPCTests/InstalledRuntimeBootstrapTests.swift",
-      "sha256": "0e57cbefd979819d8f68194bd61f0501bf4fd0fbe11a3d6325e6c12ccb251fa8"
+      "sha256": "b071e2ecdca2b74747a02f6c6a705445355a4e3eb2b44728165195df9102a9bc"
     },
     {
       "path": "Tests/EcosystemLocalIPCTests/InstalledRuntimeMaintenanceTests.swift",
-      "sha256": "c51a3381bef1e93e5fe8b34717b03d8679dd59fb811cd849b12517684e7b3b37"
+      "sha256": "8e8514d42e5114117664b7994218a92aa7d3075ffc2976cb6b6802dfc5cad5bc"
     },
     {
       "path": "Tests/EcosystemLocalIPCTests/LanguagePreferenceTests.swift",

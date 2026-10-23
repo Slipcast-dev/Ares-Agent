@@ -335,7 +335,7 @@ SCOPED_REVIEW = [{'path': 'EcosystemClientAdapters/CodexAdapter.swift',
   'callsiteSHA256': '00bf5cb93f3408e2d52213c61a4d79c036df2ec3e4a2939bedb4bbe09032c9a5',
   'category': 'typed-finite-enum',
   'reviewBasis': '$0 comes from AppSection.allCases; title exhaustive builtin enum switch.',
-  'producerSHA256': {'MacAssistant/Models/AppSection.swift': 'f5e1e4c81e4c9c5f54ab56dc63c20396d6e236c79227e7eb27896f4ca5c71ade'}},
+  'producerSHA256': {'MacAssistant/Models/AppSection.swift': 'd94a419918107adc4cad8f0c5d8129472326b0e556dfe9f78004598040de7e64'}},
  {'path': 'HarnessAgentTool/main.swift',
   'line': 1,
   'column': 1,
@@ -377,7 +377,27 @@ SCOPED_REVIEW = [{'path': 'EcosystemClientAdapters/CodexAdapter.swift',
                  'enum and severity. Only seven finite codes form prefix athena.finding.<code>, '
                  'three literal suffixes. Unknown/legacy codes return self verbatim. All21 runtime '
                  'keys verified.',
-  'producerSHA256': {}}]
+  'producerSHA256': {}},
+ {'path': 'MacAssistant/Views/Processor/ProcessorChart.swift',
+ 'line': 76,
+ 'column': 30,
+ 'sourceSHA256': 'e880799e006db770e9cb80c54083dedd85956953dc48a8159e160931e22a9837',
+ 'callsiteSHA256': 'ff928dfa02bfa38082349a1f6fa94b2a72d5bc23a7277534babe6d4dbf286a5d',
+ 'category': 'typed-finite-enum',
+ 'reviewBasis': 'series comes only from literal arrays ProcessorSeries.total/user/system or core '
+                'in ForEach; ProcessorSeries.title is an exhaustive finite enum switch. CPU names '
+                'and graph values are verbatim or numeric, never lookup keys.',
+ 'producerSHA256': {'MacAssistant/Views/Processor/ProcessorViewModel.swift': 'a1c1a3b01bbd576fa165dace303792d9161adf61985d8310cfe32e8c734c468b'}},
+ {'path': 'MacAssistant/Views/Processor/ProcessorView.swift',
+ 'line': 125,
+ 'column': 70,
+ 'sourceSHA256': '2bbceb7b917184e76c72dd48ff0c479e5d710266d5b78c69299fe4349308c0ce',
+ 'callsiteSHA256': 'adfaf41ce2e51ec11454bfb89ffbf0196195cd5b6590a58df494368840ae849e',
+ 'category': 'typed-finite-enum',
+ 'reviewBasis': 'value comes only from ProcessorHistoryWindow.allCases (60/300/900); title is an '
+                'exhaustive finite enum switch. External processor name is direct Text; core '
+                'numbers/time are template arguments, never lookup keys.',
+ 'producerSHA256': {'MacAssistant/Views/Processor/ProcessorViewModel.swift': 'a1c1a3b01bbd576fa165dace303792d9161adf61985d8310cfe32e8c734c468b'}}]
 
 def require(condition: bool, message: str) -> None:
     """Gate не зависит от python -O: проверку нельзя убрать отключением assert."""
@@ -591,7 +611,7 @@ def run(kit: Path, ares: Path | None, athena: Path | None) -> dict[str, Any]:
         if child.is_dir() and child.name != 'EcosystemUI' and any(child.rglob('*.swift')):
             report['sourceAudits'].append(source_audit(child, set(), runtime_keys, child.name, False, producer_hashes))
     for repo, product, table, count in [(ares, 'FileOrganizer', 'Ares', 296),
-                                       (athena, 'MacAssistant', 'Athena', 113)]:
+                                       (athena, 'MacAssistant', 'Athena', 297)]:
         if repo is None:
             continue
         own, result = check_catalogue(repo / 'Sources' / product / 'Resources', table, count)

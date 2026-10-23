@@ -101,6 +101,21 @@ final class InstalledRuntimeMaintenanceTests: XCTestCase {
         XCTAssertThrowsError(try InstalledRuntimeMaintenance.prepareUninstall(domain: "ares", profile: profile))
         XCTAssertEqual(try dataEntries(profile, "ares"), before)
     }
+    /// Ресурсы являются частью поколения кода, поэтому их появление не должно
+    /// ошибочно считаться изменением данных и блокировать безопасный rollback.
+    func testUpgradeFromLegacyAddsResourcesAndRollbackRemovesThem() throws {
+        let (_, profile) = try setup("athena")
+        let new = try app("athena", generation: "localized")
+        let name = "EcosystemKit_EcosystemLocalization.bundle"
+        let resource = new.appendingPathComponent("Contents/Resources/" + name)
+        try fm.createDirectory(at: resource, withIntermediateDirectories: true)
+        try Data("localized-content".utf8).write(to: resource.appendingPathComponent("fixture.txt"))
+        let checkpoint = try InstalledRuntimeMaintenance.upgrade(domain: "athena", application: new, profile: profile)
+        XCTAssertEqual(try String(contentsOf: profile.appendingPathComponent(name + "/fixture.txt"), encoding: .utf8), "localized-content")
+        try InstalledRuntimeMaintenance.rollback(domain: "athena", profile: profile, checkpoint: checkpoint)
+        XCTAssertFalse(fm.fileExists(atPath: profile.appendingPathComponent(name).path))
+    }
+
     func testBothDomainsUpgradeRollbackPreserveAll125TasksAndPrivateState() async throws {
         for domain in ["ares", "athena"] {
             let (old, profile) = try setup(domain)

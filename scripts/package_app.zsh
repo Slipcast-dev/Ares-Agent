@@ -89,7 +89,7 @@ mkdir -p "$BACKGROUND/Contents/MacOS" "$BACKGROUND/Contents/Resources"
 cp "$BUILD_DIR/AresRuntime" "$BACKGROUND/Contents/MacOS/AresRuntime"
 cp -R "$CONTRACT_BUNDLE" "$BACKGROUND/Contents/Resources/"
 cp -R "$LOCALIZATION_BUNDLE" "$BACKGROUND/Contents/Resources/"
-python3 - "$BACKGROUND/Contents/Info.plist" "${ECOSYSTEM_APP_VERSION:-0.37.0}" <<'PLIST'
+python3 - "$BACKGROUND/Contents/Info.plist" "${ECOSYSTEM_APP_VERSION:-0.38.0}" <<'PLIST'
 import plistlib
 import sys
 from pathlib import Path
@@ -111,7 +111,7 @@ for locale in ru en; do
   cp "$ROOT_DIR/distribution/Localization/GUI/$locale.lproj/InfoPlist.strings" "$CONTENTS/Resources/$locale.lproj/InfoPlist.strings"
   cp "$ROOT_DIR/distribution/Localization/Background/$locale.lproj/InfoPlist.strings" "$BACKGROUND/Contents/Resources/$locale.lproj/InfoPlist.strings"
 done
-/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ECOSYSTEM_APP_VERSION:-0.37.0}" "$CONTENTS/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ECOSYSTEM_APP_VERSION:-0.38.0}" "$CONTENTS/Info.plist"
 
 # `sips` создаёт обязательные размеры из исходного изображения Ареса; исходник
 # не меняется, поэтому приложение и репозиторий используют один визуальный образ.
