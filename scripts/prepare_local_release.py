@@ -195,7 +195,7 @@ def main() -> None:
     """Новый output сохраняет прошлые сборки; finally отмонтирует только свой DMG."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", action="store_true")
-    parser.add_argument("--version", default="0.29.0")
+    parser.add_argument("--version", default="0.37.0")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--use-prepared-apps",

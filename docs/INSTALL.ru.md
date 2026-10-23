@@ -5,7 +5,7 @@
 ## Совместимость
 
 Текущие PKG/DMG предназначены для Apple Silicon arm64. Целевая версия macOS14+;
-фактические проверки проведены на macOS27.0.1. Выполнение на Intel/macOS14 отдельно
+автоматические сборки и тесты проведены локально на macOS27.0.1 и в CI macOS15. Выполнение на Intel/macOS14 отдельно
 ещё не принято.
 
 ## Подпись и проверка файла
@@ -24,5 +24,9 @@ Gatekeeper глобально ради установки.
 
 [Эксплуатация](OPERATIONS.md) · [Обновление](MAINTENANCE.md) · [Удаление](LIFECYCLE.md).
 
-RU/EN: System, Русский, English — настройки каждого приложения независимы.
-Full manual accessibility and native macOS14/Intel acceptance remain open.
+Язык «Системный», «Русский» или «English» выбирается независимо в каждом агенте.
+Полная ручная приёмка интерфейса и запуск на macOS14/Intel остаются открытыми.
+
+[PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/Ares-0.37.0-unsigned.pkg) · [DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/Ares-0.37.0-unsigned.dmg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/SHA256SUMS).
+
+[Status / Статус](STATUS.md).

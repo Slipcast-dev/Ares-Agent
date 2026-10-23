@@ -621,11 +621,11 @@
     },
     {
       "path": "README.en.md",
-      "sha256": "863947f66e226ed1c1299fe81113459621c28fed184392be850cb9b46c019c79"
+      "sha256": "2dc1780e49e9189e0776ac26cab3cca36364062e252c199d69e3afba5b9178ec"
     },
     {
       "path": "README.md",
-      "sha256": "6816667e743b5c2b74a517a2fd5a13e86b77aa18c1effca82664c43b00b069b1"
+      "sha256": "3b69cc8ed9b3e4d0565f4a386ded0ea77c998eea153ee865e61086a6836175fd"
     },
     {
       "path": "SECURITY.md",
@@ -1101,11 +1101,11 @@
     },
     {
       "path": "docs/INSTALL.en.md",
-      "sha256": "aed6119637fcf69eed02d611c83d1072ef527167be55f3bc0f52d9a524d2aa7d"
+      "sha256": "bf83798e147b66b33e8ed706a8d319fe2cb65ecc93c53c40419874b1f2131ba3"
     },
     {
       "path": "docs/INSTALL.ru.md",
-      "sha256": "6a4c465e4343626ba3d84271c1a09ec3610f712c01d748dcc0e34d7c937edb90"
+      "sha256": "1978805d68bf0ee09f83ae1e1d8c2e70453097b646e165123e514a9c2381e2d0"
     },
     {
       "path": "docs/LIFECYCLE.md",
@@ -1117,11 +1117,15 @@
     },
     {
       "path": "docs/OPERATIONS.md",
-      "sha256": "266ce6afcb4681083852be2bded6a10431e2bafcf5d2821a41d5f70799c9fe3c"
+      "sha256": "262e8db18c673023ef7d2b33f58a77b8b849013d0e3d5398bd7c7b706ca08ead"
     },
     {
       "path": "docs/PERFORMANCE.md",
-      "sha256": "ed75c76ea9bf109a52ba9d195dc244b2b52e3e062d3c1a33ddf4092ccfdf9c1d"
+      "sha256": "ab720af617c8d2dbe8ad9fea4a705f48527c8189fdd4bc086eda4b70ea356368"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "sha256": "d75e12433cd426a07d869317f146993e11620e0b7caa0243540b6b2b0d6d9e73"
     },
     {
       "path": "docs/assets/ares-icon.png",
@@ -1141,7 +1145,7 @@
     },
     {
       "path": "scripts/prepare_local_release.py",
-      "sha256": "9f4e5ceefbae42275da3ea05ada1b9ff9469d7ce127ae0bb0b23bfd42b21042c"
+      "sha256": "cc80a950b547030df99427b89d49b1c1c87d05ec82f0501005409cb34c57f3ec"
     },
     {
       "path": "scripts/verify_ecosystem_dependency.py",
@@ -1152,5 +1156,7 @@
       "sha256": "febbe4cefab715c5eaab288a5749ace3c80fa7c46fb10084f6b89730f594fd75"
     }
   ],
-  "packagingDefaultVersion": "0.37.0"
+  "packagingDefaultVersion": "0.37.0",
+  "documentationReviewedAt": "2026-10-23",
+  "currentAppRelease": "0.37.0"
 }

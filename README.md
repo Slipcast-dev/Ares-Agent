@@ -6,6 +6,8 @@
 
 [Русский](README.md) · [English](README.en.md)
 
+[0.37.0 · PKG / DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.37.0) · [Status / Статус](docs/STATUS.md) · [CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
+
 Арес — отдельный локальный агент macOS. Безопасная работа с файлами, правилами и индексом.
 
 Версия **0.37.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
@@ -14,7 +16,9 @@
 
 ## Установка
 
-PKG/DMG прикладываются к релизу отдельно от исходников. Выпуск **без подписи
+[PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/Ares-0.37.0-unsigned.pkg) · [DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/Ares-0.37.0-unsigned.dmg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.37.0/SHA256SUMS).
+
+Установщики находятся в предварительном релизе 0.37.0 отдельно от исходников. Выпуск **без подписи
 Apple Developer ID и без notarization**. Перед использованием сверьте SHA256SUMS.
 Локальная ad-hoc подпись защищает целостность, но не подтверждает издателя.
 Не отключайте Gatekeeper глобально. Автоматическая установка не выполняется.
