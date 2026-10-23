@@ -12,6 +12,8 @@ Version **0.38.0** · macOS14+ target · current release **Apple Silicon arm64**
 Intel/macOS14 execution remains unverified. This is a source-available project
 under the custom non-commercial [LICENSE](LICENSE), not an MIT-licensed project.
 
+[Release 0.38.0](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.38.0) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.0/Ares-0.38.0-unsigned.pkg) · [DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.0/Ares-0.38.0-unsigned.dmg) · [SHA-256](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.0/SHA256SUMS) · [Validation and limits](docs/RELEASE.md)
+
 ## Installation
 
 PKG/DMG are release attachments, not Git source files. They are **unsigned by
@@ -50,8 +52,7 @@ Security reports should follow SECURITY.md; do not post personal data in issues.
 
 ## RU/EN localization / Локализация
 
-Local candidate 0.38.0; not published by this export. Полная ручная приёмка
-VoiceOver/клавиатуры и аппаратные проверки остаются открытыми.
+Pre-release 0.38.0. Full manual VoiceOver/keyboard and hardware acceptance remain open.
 Select System, Русский or English in this agent's settings. Each agent keeps its
 own language. Даты/числа следуют региону macOS. User names, paths and historical
 free text retain their original language. System Settings follows macOS language.
