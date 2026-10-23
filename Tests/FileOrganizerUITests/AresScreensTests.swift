@@ -18,13 +18,20 @@ import EcosystemUI
         window.isReleasedWhenClosed = false; window.contentView = host
         window.appearance = NSAppearance(named: theme == .light ? .aqua : .darkAqua)
         defer { window.close() }
+        // AppKit-backed List на macOS 15 требует показанного тестового окна:
+        // layout невидимого окна не гарантирует растеризацию строк.
+        // Здесь только синтетические данные, runtime и клиентские grants не запускаются.
+        window.orderFrontRegardless()
+        window.displayIfNeeded()
         try await Task.sleep(for: .milliseconds(150))
         host.layoutSubtreeIfNeeded()
         let bitmap = try XCTUnwrap(host.bitmapImageRepForCachingDisplay(in: host.bounds))
         host.cacheDisplay(in: host.bounds, to: bitmap)
+        // Плотная сетка не пропускает тонкий текст на плоской теме macOS 15;
+        // порог разнообразия остаётся прежним, пустые кадры не принимаются.
         var colors = Set<Int>()
-        for y in stride(from: 0, to: bitmap.pixelsHigh, by: 16) {
-            for x in stride(from: 0, to: bitmap.pixelsWide, by: 16) {
+        for y in stride(from: 0, to: bitmap.pixelsHigh, by: 4) {
+            for x in stride(from: 0, to: bitmap.pixelsWide, by: 4) {
                 if let color = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB) {
                     colors.insert(Int(color.redComponent * 255) << 16 | Int(color.greenComponent * 255) << 8 | Int(color.blueComponent * 255))
                 }
