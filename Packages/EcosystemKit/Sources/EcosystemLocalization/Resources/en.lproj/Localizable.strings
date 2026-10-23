@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>agent.ares</key>
+	<string>Ares</string>
+	<key>agent.athena</key>
+	<string>Athena</string>
+	<key>application.close</key>
+	<string>Quit application</string>
+	<key>automation.attention</key>
+	<string>Local agent: attention required. Details are available in the application.</string>
+	<key>automation.completed</key>
+	<string>The local agent completed an operation.</string>
+	<key>language.choice</key>
+	<string>Language of this agent</string>
+	<key>language.retry</key>
+	<string>Refresh service language</string>
+	<key>language.scope</key>
+	<string>This choice applies only to this agent. Other screens are being translated in stages.</string>
+	<key>language.title</key>
+	<string>Language / Язык</string>
+	<key>language.unavailable</key>
+	<string>Unable to read the service language. The saved preference has not been changed.</string>
+	<key>language.unconfirmed</key>
+	<string>Saving was not confirmed. Check the current service state.</string>
+	<key>notification.test.body</key>
+	<string>Notification language check. Operations and user data have not been changed.</string>
+	<key>notification.test.title</key>
+	<string>%@: test notification</string>
+	<key>runtime.failure.guide</key>
+	<string>Update and recovery instructions</string>
+	<key>runtime.failure.recovery</key>
+	<string>Your profile data has been preserved. Reopen the application after resolving the issue.</string>
+	<key>runtime.failure.title</key>
+	<string>Unable to start the service</string>
+</dict>
+</plist>

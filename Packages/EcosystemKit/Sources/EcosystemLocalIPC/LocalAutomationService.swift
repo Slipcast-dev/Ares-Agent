@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import EcosystemLocalization
 
 public struct LocalAutomationSettings: Codable, Sendable {
     public var paused = false
@@ -22,6 +23,7 @@ public actor LocalAutomationService {
         var notified: [UUID] = []
         var nextNotificationAt: Date? = nil
     }
+    public nonisolated let language: LocalLanguagePreferences
     public nonisolated let inbox: LocalEventInbox
     public let schedules: LocalAutomationScheduleStore
     private let file: URL
@@ -29,8 +31,8 @@ public actor LocalAutomationService {
     private let notifications: any LocalNotificationSending
     private var document: Document
     private var flushing = false
-    private var lastFailure: String?
-    private var inboxFailure: String?
+    private var lastFailure: RuntimeMessage?
+    private var inboxFailure: RuntimeMessage?
     public init(directory: URL, domain: String, notifications: any LocalNotificationSending = NativeLocalNotifications()) throws {
         guard ["ares", "athena"].contains(domain) else { throw LocalRuntimeFailure.invalidConfiguration }
         self.domain = domain; self.notifications = notifications
@@ -44,6 +46,7 @@ public actor LocalAutomationService {
         } else { guard errno == ENOENT else { throw LocalRuntimeFailure.invalidConfiguration }; document = Document() }
         inbox = try LocalEventInbox(directory: directory)
         schedules = try LocalAutomationScheduleStore(directory: directory)
+        language = try LocalLanguagePreferences(directory: directory, domain: domain)
         // Фиксируем cutoff до первого доменного события, чтобы после restart
         // не импортировать старую историю как новые уведомления.
         if !FileManager.default.fileExists(atPath: file.path) {
@@ -77,18 +80,20 @@ public actor LocalAutomationService {
     }
     public func requestNotifications() async throws -> String { try await notifications.requestAuthorization() }
     public func status() async throws -> LocalAutomationStatus {
-        LocalAutomationStatus(settings: document.settings, notificationAuthorization: await notifications.authorization(),
-                              pendingEvents: try await inbox.events().count, lastFailure: inboxFailure ?? lastFailure)
+        let localization = AgentLocalization(language: await language.status().effectiveLanguage)
+        return LocalAutomationStatus(settings: document.settings, notificationAuthorization: await notifications.authorization(),
+                              pendingEvents: try await inbox.events().count, lastFailure: (inboxFailure ?? lastFailure).map(localization.runtimeMessage))
     }
     public func record(id: UUID, kind: String, capability: String, roots: [UUID] = [], capturedAt: Date, significant: Bool) async throws {
         guard capturedAt >= document.settings.createdAt else { return }
         // Свободный текст правила/имя файла никогда не становится AI prompt.
-        let summary = significant ? "Локальный агент: требуется внимание. Подробности доступны в приложении." : "Локальный агент завершил операцию."
+        let localization = AgentLocalization(language: await language.status().effectiveLanguage)
+        let summary = localization.text(significant ? .automationAttention : .automationCompleted)
         do {
             _ = try await inbox.append(id: id, kind: kind, capability: capability, rootIDs: roots, summary: summary, notificationEligible: significant, now: capturedAt)
             inboxFailure = nil
         } catch {
-            inboxFailure = "Событие не добавлено во входящие. Исходная история доступна в приложении."
+            inboxFailure = RuntimeMessage("automation.inboxFailure")
             throw error
         }
         if !significant && !document.notified.contains(id) {
@@ -126,10 +131,15 @@ public actor LocalAutomationService {
             let events = try await inbox.events(now: now)
             for event in events.filter({  $0.notificationEligible != false && !document.notified.contains($0.id) && (0...3600).contains(now.timeIntervalSince($0.createdAt)) }).prefix(1) {
                 guard document.settings.notificationsEnabled else { return }
-                try await notifications.send(id: event.id, title: domain == "ares" ? "Арес" : "Афина", body: event.summary)
+                // Рендерим безопасный встроенный текст в актуальном языке, не
+                // переписывая исторический summary и не меняя UUID/receipts.
+                let localization = AgentLocalization(language: await language.status().effectiveLanguage)
+                try await notifications.send(id: event.id,
+                    title: localization.text(domain == "ares" ? .agentAres : .agentAthena),
+                    body: localization.text(.automationAttention))
                 var next = document; next.nextNotificationAt = now.addingTimeInterval(60); next.notified.append(event.id); next.notified = Array(next.notified.suffix(4096)); try persist(next)
             }
             lastFailure = nil
-        } catch { lastFailure = "Уведомление не доставлено; событие сохранено." }
+        } catch { lastFailure = RuntimeMessage("automation.deliveryFailure") }
     }
 }

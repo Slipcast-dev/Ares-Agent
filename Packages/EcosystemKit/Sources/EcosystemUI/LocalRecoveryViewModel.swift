@@ -1,16 +1,18 @@
 import Combine
 import Foundation
+import EcosystemLocalization
 import EcosystemLocalIPC
 
 /// Модель одинакового операторского раздела двух приложений. Она читает только
 /// разрешённые GUI-проекции; решение и проверка revision остаются на сервере.
 @MainActor public final class LocalRecoveryViewModel: ObservableObject {
+    @Published public private(set) var hasSnapshot = false
     @Published public private(set) var items: [RecoveryItem] = []
     @Published public private(set) var details: RecoveryDetails?
     @Published public private(set) var recorded: [RecoveryReceipt] = []
     @Published public private(set) var unresolved: [RecoveryReceipt] = []
     @Published public private(set) var busy = false
-    @Published public var message: String?
+    @Published public var message: SharedMessage?
     @Published public var notes: [UUID: String] = [:]
     @Published public var outcomes: [UUID: String] = [:]
     @Published public var factsChecked = false
@@ -23,7 +25,7 @@ import EcosystemLocalIPC
         }
     }
     public func refresh() async {
-        guard !busy else { return }; busy = true; defer { busy = false }
+        guard !busy else { return }; busy = true; hasSnapshot = false; defer { busy = false }
         do {
             let connection = try client.get(); var offset: Int64 = 0; var rows: [RecoveryItem] = []
             repeat {
@@ -32,8 +34,9 @@ import EcosystemLocalIPC
                 rows += page.items
                 guard let next = page.nextOffset else { break }; offset = next
             } while true
+            hasSnapshot = true
             items = rows; details = nil; recorded = []; unresolved = []; message = nil
-        } catch { message = LocalRuntimeFailure.safe(error).localizedDescription }
+        } catch { message = SharedMessage.failure(LocalRuntimeFailure.safe(error)) }
     }
     public func inspect(_ id: UUID) async {
         guard !busy else { return }; busy = true; defer { busy = false }
@@ -47,7 +50,7 @@ import EcosystemLocalIPC
                 guard let next = page.nextOffset else { break }; offset = next
             } while true
             details = selected; recorded = pending; unresolved = pending.filter { $0.state == .started }; notes = [:]; outcomes = [:]; factsChecked = false; message = nil
-        } catch { message = LocalRuntimeFailure.safe(error).localizedDescription }
+        } catch { message = SharedMessage.failure(LocalRuntimeFailure.safe(error)) }
     }
     public func confirm() async {
         guard !busy, readyToConfirm, let selected = details else { return }
@@ -58,7 +61,7 @@ import EcosystemLocalIPC
             let _: LocalEmpty = try await client.get().call("recovery.confirm",
                 RecoveryConfirmation(id: selected.item.id, revision: selected.item.revision, decisions: decisions))
             busy = false; await refresh()
-            message = "Сверка сохранена. Задание не повторялось. Приостановленные правила остаются выключенными."
-        } catch { busy = false; message = LocalRuntimeFailure.safe(error).localizedDescription }
+            message = SharedMessage(.recoverySaved)
+        } catch { busy = false; message = SharedMessage.failure(LocalRuntimeFailure.safe(error)) }
     }
 }

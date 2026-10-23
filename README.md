@@ -1,4 +1,4 @@
-![Ares](assets/ares-banner.png)
+![Ares](docs/assets/banner.svg)
 
 <p align="center"><img src="docs/assets/ares-icon.png" width="160" alt="Ares"></p>
 
@@ -8,13 +8,9 @@
 
 Арес — отдельный локальный агент macOS. Безопасная работа с файлами, правилами и индексом.
 
-Версия **0.29.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
+Версия **0.37.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
 Запуск на Intel и macOS14 отдельно ещё не принят. Проект с доступными исходниками
 использует собственную некоммерческую [лицензию](LICENSE), а не MIT/OSI-лицензию.
-
-[![Version 0.29.0](https://img.shields.io/badge/Version-0.29.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.29.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
-
-[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/SHA256SUMS)
 
 ## Установка
 
@@ -56,8 +52,22 @@ scripts/package_app.zsh
 и лицензию. Не публикуйте в issue личные файлы, профили и секреты. Сообщения об
 уязвимостях направляйте по правилам SECURITY.md.
 
-[Лицензия на русском](LICENSE) · [English license translation](LICENSE.en.md).
 
-## 0.29.0
+## RU/EN localization / Локализация
 
-Согласованный комплект0.29.0. Поведение runtime Ареса и EcosystemKit0.23.0 сохранено; исправление backlog мониторинга относится к Афине.
+Предварительный выпуск **0.37.0**. Выберите «Системный», «Русский» или «English»
+в настройках агента. Язык каждого приложения задаётся отдельно. Числа и даты
+следуют региону macOS; пользовательские имена, пути и свободный текст истории
+сохраняются. Системные настройки используют язык macOS.
+
+Полная ручная проверка VoiceOver/клавиатуры, macOS 14/Intel и установленных
+клиентов остаётся открытой. Этот предварительный выпуск не прошёл полную приёмку.
+
+```sh
+python3 scripts/verify_localization_acceptance.py --ares-dir . --kit-dir Packages/EcosystemKit --require-reviewed-boundaries --output localization-acceptance.json
+ECOSYSTEM_SKIP_LSREGISTER=1 ECOSYSTEM_APP_VERSION=0.37.0 scripts/package_app.zsh
+python3 scripts/prepare_local_release.py --run --version 0.37.0 --agent Ares --use-prepared-apps --apps-dir dist --output installers/0.37.0
+```
+
+Installer output is unsigned Developer ID and not notarized. These commands
+create and verify artifacts; they do not install applications or publish them.

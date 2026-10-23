@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>agent.ares</key>
+	<string>Арес</string>
+	<key>agent.athena</key>
+	<string>Афина</string>
+	<key>application.close</key>
+	<string>Закрыть приложение</string>
+	<key>automation.attention</key>
+	<string>Локальный агент: требуется внимание. Подробности доступны в приложении.</string>
+	<key>automation.completed</key>
+	<string>Локальный агент завершил операцию.</string>
+	<key>language.choice</key>
+	<string>Язык этого агента</string>
+	<key>language.retry</key>
+	<string>Обновить язык службы</string>
+	<key>language.scope</key>
+	<string>Выбор действует только для этого агента. Остальные экраны переводятся поэтапно.</string>
+	<key>language.title</key>
+	<string>Язык / Language</string>
+	<key>language.unavailable</key>
+	<string>Не удалось прочитать язык службы. Сохранённая настройка не изменена.</string>
+	<key>language.unconfirmed</key>
+	<string>Сохранение не подтверждено. Проверьте текущее состояние службы.</string>
+	<key>notification.test.body</key>
+	<string>Проверка языка уведомлений. Операции и пользовательские данные не изменялись.</string>
+	<key>notification.test.title</key>
+	<string>%@: тестовое уведомление</string>
+	<key>runtime.failure.guide</key>
+	<string>Инструкция по обновлению и восстановлению</string>
+	<key>runtime.failure.recovery</key>
+	<string>Данные профиля сохранены. После устранения причины повторно откройте приложение.</string>
+	<key>runtime.failure.title</key>
+	<string>Не удалось запустить службу</string>
+</dict>
+</plist>

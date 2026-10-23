@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>shared.accessBoundary</key>
+	<string>Это не разрешает передачу содержимого файлов, секретов или произвольных команд. Изменение файлов потребует отдельного согласованного плана или правила.</string>
+	<key>shared.accessDuration</key>
+	<string>Срок доступа</string>
+	<key>shared.accessExpiry</key>
+	<string>Доступ на %@ ч. План действует до %@.</string>
+	<key>shared.accessIntro</key>
+	<string>Подключение клиента не выдаёт разрешений. Доступ к папке, экспорт данных и подтверждение действий управляются отдельно.</string>
+	<key>shared.accessLimits</key>
+	<string>Лимит исходных объектов: %@; лимит объёма: %@ МиБ. Лимит объектов ответа: %@; лимит ответа: %@ КиБ. Лимит операций: %@ за %@ мин.</string>
+	<key>shared.actionRecorded</key>
+	<string>Действие уже подтверждено журналом.</string>
+	<key>shared.actionUnconfirmed</key>
+	<string>Действие не подтверждено. Обновите состояние; не считайте агент остановленным или возобновлённым.</string>
+	<key>shared.admissionClosed</key>
+	<string>Приём закрыт; незавершённых: %@; callbacks: %@; требуют сверки: %@</string>
+	<key>shared.admissionOpen</key>
+	<string>Приём задач открыт</string>
+	<key>shared.agentEvents</key>
+	<string>События локального агента</string>
+	<key>shared.aggregateDisclosure</key>
+	<string>Только сводки: без имён и путей файлов.</string>
+	<key>shared.aggregateType</key>
+	<string>Сводки</string>
+	<key>shared.allowNotifications</key>
+	<string>Разрешить системные уведомления</string>
+	<key>shared.allowedOperations</key>
+	<string>Разрешённые операции</string>
+	<key>shared.approveAccess</key>
+	<string>Подтвердить доступ</string>
+	<key>shared.approveAccessTitle</key>
+	<string>Подтвердить доступ: %@</string>
+	<key>shared.automationSaveFailed</key>
+	<string>Не удалось сохранить настройки фоновой работы.</string>
+	<key>shared.available</key>
+	<string>Доступна</string>
+	<key>shared.backgroundActivity</key>
+	<string>Фоновая работа</string>
+	<key>shared.backgroundBoundary</key>
+	<string>В фоне выполняются только локальные проверки и отдельно подтверждённые правила. Разрешения внешних клиентов управляются отдельно; модель ИИ автоматически не запускается.</string>
+	<key>shared.backgroundEnabled</key>
+	<string>Фоновая работа включена</string>
+	<key>shared.backgroundNotifications</key>
+	<string>Фоновая работа и уведомления</string>
+	<key>shared.backgroundOn</key>
+	<string>Включена</string>
+	<key>shared.backgroundPaused</key>
+	<string>Фоновая работа приостановлена</string>
+	<key>shared.backgroundUnavailable</key>
+	<string>Состояние фоновой работы пока недоступно.</string>
+	<key>shared.blockedByMacOS</key>
+	<string>Запрещён macOS</string>
+	<key>shared.cancel</key>
+	<string>Отмена</string>
+	<key>shared.cancelTaskAccessibility</key>
+	<string>Запросить отмену задачи %@</string>
+	<key>shared.cancellationFailed</key>
+	<string>Не удалось запросить отмену. Обновите состояние; не повторяйте изменяющую задачу вслепую.</string>
+	<key>shared.cancellationSent</key>
+	<string>Запрос отмены отправлен. Проверьте итоговое состояние; уже выполненные действия не откатываются.</string>
+	<key>shared.capAudit</key>
+	<string>Счётчики аудита</string>
+	<key>shared.capComputeDuplicates</key>
+	<string>Вычисление дубликатов</string>
+	<key>shared.capDiagnostics</key>
+	<string>Диагностика</string>
+	<key>shared.capDiagnosticsHistory</key>
+	<string>История диагностики</string>
+	<key>shared.capEvents</key>
+	<string>Входящие события для ИИ</string>
+	<key>shared.capFindDuplicates</key>
+	<string>Просмотр дубликатов</string>
+	<key>shared.capMonitorDisable</key>
+	<string>Отключение мониторинга</string>
+	<key>shared.capMonitorEnable</key>
+	<string>Запрос включения мониторинга</string>
+	<key>shared.capMonitorGet</key>
+	<string>Настройки проверки</string>
+	<key>shared.capMonitorHistory</key>
+	<string>История мониторинга</string>
+	<key>shared.capMonitorList</key>
+	<string>Список проверок</string>
+	<key>shared.capMonitorPreview</key>
+	<string>Предварительная проверка мониторинга</string>
+	<key>shared.capMonitorPropose</key>
+	<string>Проект мониторинга</string>
+	<key>shared.capRoots</key>
+	<string>Список разрешённых папок</string>
+	<key>shared.capRuleDisable</key>
+	<string>Отключение правила</string>
+	<key>shared.capRuleEnable</key>
+	<string>Запрос включения правила</string>
+	<key>shared.capRuleGet</key>
+	<string>Настройки правила</string>
+	<key>shared.capRuleHistory</key>
+	<string>История правил</string>
+	<key>shared.capRuleList</key>
+	<string>Список правил</string>
+	<key>shared.capRulePreview</key>
+	<string>Предварительный план</string>
+	<key>shared.capRulePropose</key>
+	<string>Проект правила</string>
+	<key>shared.capRuleRun</key>
+	<string>Запуск правила</string>
+	<key>shared.capRuleValidate</key>
+	<string>Проверка правила</string>
+	<key>shared.capScan</key>
+	<string>Сканирование</string>
+	<key>shared.capSearch</key>
+	<string>Поиск файлов</string>
+	<key>shared.capStorage</key>
+	<string>Сводка накопителя</string>
+	<key>shared.capSystemInfo</key>
+	<string>Сведения о Mac</string>
+	<key>shared.capSystemMetrics</key>
+	<string>Показатели системы</string>
+	<key>shared.capVolume</key>
+	<string>Сводка объёма</string>
+	<key>shared.chooseAresFolder</key>
+	<string>Сначала выберите папку в обзоре Ареса.</string>
+	<key>shared.client</key>
+	<string>Клиент</string>
+	<key>shared.clientPermissions</key>
+	<string>Разрешения клиентов</string>
+	<key>shared.close</key>
+	<string>Закрыть</string>
+	<key>shared.diagnosticReport</key>
+	<string>Диагностический отчёт</string>
+	<key>shared.disableLogin</key>
+	<string>Отключить запуск после входа</string>
+	<key>shared.disabled</key>
+	<string>Выключен</string>
+	<key>shared.emergencyScope</key>
+	<string>Аварийная остановка блокирует новые задачи всех клиентов и планировщиков этого агента и запрашивает отмену всей очереди. Состояние сохраняется после перезапуска. Второй агент управляется отдельно.</string>
+	<key>shared.emergencyStop</key>
+	<string>Аварийная остановка</string>
+	<key>shared.enable</key>
+	<string>Включить</string>
+	<key>shared.enableLogin</key>
+	<string>Включить запуск после входа</string>
+	<key>shared.enabled</key>
+	<string>Включён</string>
+	<key>shared.errorBusy</key>
+	<string>Ресурс уже занят задачей агента.</string>
+	<key>shared.errorCancelled</key>
+	<string>Операция отменена.</string>
+	<key>shared.errorConflict</key>
+	<string>Ключ запроса уже использован с другими параметрами.</string>
+	<key>shared.errorDeadlineExceeded</key>
+	<string>Время выполнения истекло.</string>
+	<key>shared.errorDenied</key>
+	<string>Операция не разрешена этому клиенту.</string>
+	<key>shared.errorInvalidConfiguration</key>
+	<string>Локальный режим настроен некорректно.</string>
+	<key>shared.errorInvalidRequest</key>
+	<string>Некорректные параметры операции.</string>
+	<key>shared.errorOperationFailed</key>
+	<string>Агент не смог завершить операцию.</string>
+	<key>shared.errorRecoveryRequired</key>
+	<string>Необходима проверка результата предыдущей операции.</string>
+	<key>shared.errorRequiresGUI</key>
+	<string>Это действие требует локального интерфейса и не выполнено фоновым агентом.</string>
+	<key>shared.errorStaleSnapshot</key>
+	<string>Файлы изменились. Обновите список файлов и повторите запрос.</string>
+	<key>shared.errorUnavailable</key>
+	<string>Локальный агент недоступен. Запустите свой локальный профиль.</string>
+	<key>shared.eventSample</key>
+	<string>В выборке: %@ (до 50)</string>
+	<key>shared.eventsEmpty</key>
+	<string>В выборке нет событий или источник недоступен — проверьте сводку состояния.</string>
+	<key>shared.eventsReadOnly</key>
+	<string>Просмотр не подтверждает получение события за Codex или DeepSeek Harness.</string>
+	<key>shared.executorActive</key>
+	<string>Исполнитель ещё не остановился. Дождитесь его завершения и обновите список.</string>
+	<key>shared.externalPermissions</key>
+	<string>Разрешения внешних клиентов</string>
+	<key>shared.firstConnection</key>
+	<string>Первое подключение и безопасная проверка</string>
+	<key>shared.firstConnectionStep1</key>
+	<string>1. Подключите Codex или DeepSeek Harness в разделе подключений и подтвердите план. Начните новый чат клиента.</string>
+	<key>shared.firstConnectionStep2</key>
+	<string>2. В разрешениях выберите этого клиента, минимальные операции чтения и короткий срок. Подготовьте и подтвердите план отдельно в каждом агенте.</string>
+	<key>shared.firstConnectionStep3</key>
+	<string>3. Поручите проверить статус и возможности, затем прочитать индекс тестовой папки Ареса и показатели Афины. Дождитесь итогов задач; файлы не изменять.</string>
+	<key>shared.folders</key>
+	<string>Папки: %@</string>
+	<key>shared.grantCounts</key>
+	<string>Разрешений: %@; ожидают согласия: %@</string>
+	<key>shared.grantExpires</key>
+	<string>До %@ · %@</string>
+	<key>shared.hermesDisclosure</key>
+	<string>Будущее подключение. Установка и доступ к данным пока недоступны.</string>
+	<key>shared.hermesPlanned</key>
+	<string>Hermes — запланировано</string>
+	<key>shared.importantNotifications</key>
+	<string>Показывать уведомления о важных событиях</string>
+	<key>shared.inboxEvents</key>
+	<string>Входящие события</string>
+	<key>shared.inspectRecovery</key>
+	<string>Проверить задание «%@» · %@</string>
+	<key>shared.latestTasks</key>
+	<string>Последние задачи (до 100)</string>
+	<key>shared.legacyMCP</key>
+	<string>Общий MCP (совместимость)</string>
+	<key>shared.loginComponent</key>
+	<string>Запуск после входа</string>
+	<key>shared.loginConfirmBody</key>
+	<string>Этот агент будет работать в фоне после входа в macOS, даже если окно приложения закрыто. Он сможет выполнять локальные проверки и ранее подтверждённые правила в разрешённых папках. Доступ к новым папкам и операциям по-прежнему требует подтверждения. Модель ИИ автоматически не запускается.</string>
+	<key>shared.loginConfirmTitle</key>
+	<string>Включить запуск после входа?</string>
+	<key>shared.loginDisableScope</key>
+	<string>Отключение автозапуска действует на следующий вход и не останавливает работающую службу.</string>
+	<key>shared.loginSaveFailed</key>
+	<string>Не удалось изменить автозапуск. Если macOS запретила его, проверьте настройки фоновых объектов системы.</string>
+	<key>shared.loginStartup</key>
+	<string>Запуск после входа в систему</string>
+	<key>shared.loginSystemDenied</key>
+	<string>Запрещён в настройках macOS</string>
+	<key>shared.metadataDisclosure</key>
+	<string>Имена и относительные пути — личные данные. Клиент может передать их выбранному облачному провайдеру модели.</string>
+	<key>shared.metadataType</key>
+	<string>Метаданные файлов</string>
+	<key>shared.needsAttention</key>
+	<string>Требует внимания</string>
+	<key>shared.noEffectRecorded</key>
+	<string>Отсутствие изменений уже подтверждено.</string>
+	<key>shared.notRefreshed</key>
+	<string>не обновлялся</string>
+	<key>shared.notificationConsent</key>
+	<string>Переключатель включает уведомления этого агента. Разрешение macOS запрашивается отдельной кнопкой. Без него события сохраняются в приложении.</string>
+	<key>shared.notificationRequestFailed</key>
+	<string>Не удалось запросить разрешение на уведомления. События доступны в приложении.</string>
+	<key>shared.notificationSender</key>
+	<string>В системных настройках выберите «%@». Разрешение выдаётся этой фоновой службе.</string>
+	<key>shared.notificationSettingsManual</key>
+	<string>Откройте «Системные настройки → Уведомления» вручную.</string>
+	<key>shared.notificationsAuthorized</key>
+	<string>macOS разрешила системные уведомления.</string>
+	<key>shared.notificationsDenied</key>
+	<string>macOS запретила уведомления. Изменить разрешение можно в системных настройках.</string>
+	<key>shared.notificationsProvisional</key>
+	<string>macOS разрешила тихие уведомления.</string>
+	<key>shared.notificationsUnavailable</key>
+	<string>Системные уведомления недоступны; события сохраняются в приложении.</string>
+	<key>shared.notificationsUndetermined</key>
+	<string>Разрешение macOS ещё не запрошено.</string>
+	<key>shared.oneDay</key>
+	<string>1 день</string>
+	<key>shared.oneHour</key>
+	<string>1 час</string>
+	<key>shared.oneWeek</key>
+	<string>1 неделя</string>
+	<key>shared.openNotifications</key>
+	<string>Открыть уведомления macOS</string>
+	<key>shared.operations</key>
+	<string>Операции: %@</string>
+	<key>shared.operationsScope</key>
+	<string>Состояние только этого агента. Разрешения и служба второго приложения проверяются в его собственном окне.</string>
+	<key>shared.originalContent</key>
+	<string>Имена и сохранённые сообщения показаны в исходном виде.</string>
+	<key>shared.outcomeDone</key>
+	<string>Действие выполнено</string>
+	<key>shared.outcomeNoEffect</key>
+	<string>Действие не изменило файлы</string>
+	<key>shared.outcomeUnchecked</key>
+	<string>Результат пока не проверен</string>
+	<key>shared.partialAgentResult</key>
+	<string>Если один агент недоступен, используйте доступную часть результата и уточните причину. Настройка клиента не является доказательством живого соединения.</string>
+	<key>shared.partialData</key>
+	<string>Часть данных недоступна. Проверьте сводку состояния и обновите её.</string>
+	<key>shared.pauseBackground</key>
+	<string>Приостановить новые фоновые запуски</string>
+	<key>shared.pauseConfirmAction</key>
+	<string>Приостановить и запросить отмену</string>
+	<key>shared.pauseConfirmBody</key>
+	<string>Действие относится только к этому агенту и последним 100 задачам. Отмена завершается на безопасной точке, выполненные действия не откатываются. После обновления проверьте состояния и раздел восстановления. Новые ручные запросы остаются доступны.</string>
+	<key>shared.pauseConfirmTitle</key>
+	<string>Приостановить фон и запросить отмену?</string>
+	<key>shared.pauseResult</key>
+	<string>Фон приостановлен; запросы отмены отправлены для показанных активных задач. Ошибок отмены: %@. Проверьте итоговые состояния. Новые ручные запросы клиентов остаются доступны.</string>
+	<key>shared.pauseScope</key>
+	<string>Пауза относится к новым фоновым запускам. Текущие задачи можно отменить в очереди задач.</string>
+	<key>shared.pauseUnconfirmed</key>
+	<string>Пауза не подтверждена. Отмена задач не выполнялась.</string>
+	<key>shared.pauseVisible</key>
+	<string>Приостановить фон и отменить показанные задачи</string>
+	<key>shared.pauseVisibleScope</key>
+	<string>Это запрос безопасной остановки: новые фоновые запуски ставятся на паузу, показанные активные задачи получают отмену. Ручные запросы клиентов не блокируются; закрытие окна также не останавливает службу.</string>
+	<key>shared.paused</key>
+	<string>Приостановлена</string>
+	<key>shared.preparePermission</key>
+	<string>Подготовить разрешение</string>
+	<key>shared.previewDiagnostics</key>
+	<string>Предпросмотр диагностического отчёта</string>
+	<key>shared.recovery</key>
+	<string>Восстановление</string>
+	<key>shared.recoveryConfirmBody</key>
+	<string>Файлы не будут изменены и задание не будет повторено. Приостановленные правила остаются выключенными.</string>
+	<key>shared.recoveryConfirmTitle</key>
+	<string>Сохранить сверку и снять блокировку?</string>
+	<key>shared.recoveryEmpty</key>
+	<string>Заданий для сверки нет.</string>
+	<key>shared.recoveryFacts</key>
+	<string>Я проверил файлы и журнал для каждого действия</string>
+	<key>shared.recoveryIntro</key>
+	<string>После сбоя некоторые действия требуют сверки. Проверьте исходный файл, результат и журнал правила перед подтверждением.</string>
+	<key>shared.recoveryNotes</key>
+	<string>Что именно проверено (20–2000 символов)</string>
+	<key>shared.recoverySaved</key>
+	<string>Сверка сохранена. Задание не повторялось. Приостановленные правила остаются выключенными.</string>
+	<key>shared.refreshBackground</key>
+	<string>Обновить состояние фоновой работы</string>
+	<key>shared.refreshOverview</key>
+	<string>Обновить сводку</string>
+	<key>shared.refreshPermissions</key>
+	<string>Обновить разрешения</string>
+	<key>shared.refreshRecovery</key>
+	<string>Обновить задания для сверки</string>
+	<key>shared.refreshingStatus</key>
+	<string>Обновление состояния…</string>
+	<key>shared.reportAgent</key>
+	<string>Агент: %@</string>
+	<key>shared.reportDisclosure</key>
+	<string>Проверьте текст перед сохранением. Отчёт содержит только состояния и счётчики; отправка не выполняется.</string>
+	<key>shared.reportPrivacy</key>
+	<string>Пути, имена, идентификаторы, секреты, конфигурация и содержимое событий не включены.</string>
+	<key>shared.reportSamples</key>
+	<string>Выборка задач: последние 100; выборка событий: последние 50.</string>
+	<key>shared.reportSaveFailed</key>
+	<string>Не удалось сохранить отчёт. Выберите доступную папку и повторите.</string>
+	<key>shared.reportSaved</key>
+	<string>Отчёт сохранён в выбранный файл.</string>
+	<key>shared.reportScope</key>
+	<string>Область: локальный снимок GUI; настройка клиента не подтверждает живой сеанс.</string>
+	<key>shared.reportSnapshot</key>
+	<string>Снимок: %@</string>
+	<key>shared.requestCancellation</key>
+	<string>Запросить отмену</string>
+	<key>shared.resume</key>
+	<string>Возобновить</string>
+	<key>shared.resumeAdmission</key>
+	<string>Возобновить приём задач</string>
+	<key>shared.resumeConfirmBody</key>
+	<string>Клиенты и включённые планировщики смогут отправлять новые задачи. Отменённые задания не повторяются автоматически; прежние разрешения сохраняют свои ограничения.</string>
+	<key>shared.resumeConfirmTitle</key>
+	<string>Возобновить приём задач?</string>
+	<key>shared.resumeSent</key>
+	<string>Приём задач открыт. Отменённые задачи не повторяются; планировщики и клиенты могут отправлять новые поручения.</string>
+	<key>shared.reviewRequest</key>
+	<string>Проверить запрос: %@</string>
+	<key>shared.revokeAccess</key>
+	<string>Отозвать доступ</string>
+	<key>shared.saveRecovery</key>
+	<string>Сохранить сверку</string>
+	<key>shared.saveRecoveryResult</key>
+	<string>Сохранить результат сверки</string>
+	<key>shared.saveReport</key>
+	<string>Сохранить отчёт…</string>
+	<key>shared.service</key>
+	<string>Служба</string>
+	<key>shared.serviceRegistered</key>
+	<string>Служба зарегистрирована в macOS; доступность проверяется в сводке.</string>
+	<key>shared.serviceUnregistered</key>
+	<string>Локальная служба сейчас не зарегистрирована.</string>
+	<key>shared.shareMetadata</key>
+	<string>Передавать имена и относительные пути файлов</string>
+	<key>shared.snapshot</key>
+	<string>Снимок: %@</string>
+	<key>shared.statusHelp</key>
+	<string>Состояние и помощь</string>
+	<key>shared.stop</key>
+	<string>Остановить</string>
+	<key>shared.stopConfirmBody</key>
+	<string>Новые задачи будут запрещены до явного возобновления. Активные задачи остановятся на безопасной точке; уже выполненные изменения не откатываются. Проверьте callbacks и раздел восстановления.</string>
+	<key>shared.stopConfirmTitle</key>
+	<string>Аварийно остановить этого агента?</string>
+	<key>shared.stopSent</key>
+	<string>Приём новых задач закрыт до явного возобновления, включая перезапуск службы. Отмена запрошена для всей очереди. Дождитесь нуля активных callbacks и проверьте восстановление; выполненные действия не откатываются.</string>
+	<key>shared.stopThisAgent</key>
+	<string>Аварийно остановить этого агента</string>
+	<key>shared.taskCancelled</key>
+	<string>Отменена</string>
+	<key>shared.taskCancelling</key>
+	<string>Отмена запрошена</string>
+	<key>shared.taskCompleted</key>
+	<string>Завершена</string>
+	<key>shared.taskCounts</key>
+	<string>Активных: %@; требуют сверки: %@</string>
+	<key>shared.taskFailed</key>
+	<string>Ошибка</string>
+	<key>shared.taskInterrupted</key>
+	<string>Прервана</string>
+	<key>shared.taskLine</key>
+	<string>Задача %@ · %@</string>
+	<key>shared.taskPartial</key>
+	<string>Частично выполнена</string>
+	<key>shared.taskQueued</key>
+	<string>В очереди</string>
+	<key>shared.taskRecoveryRequired</key>
+	<string>Требует сверки</string>
+	<key>shared.taskRunning</key>
+	<string>Выполняется</string>
+	<key>shared.taskWaitingApproval</key>
+	<string>Ожидает согласия</string>
+	<key>shared.taskWaitingResource</key>
+	<string>Ожидает ресурс</string>
+	<key>shared.tasks</key>
+	<string>Задачи</string>
+	<key>shared.tasksEmpty</key>
+	<string>Нет записей в выборке или очередь недоступна — проверьте статус выше.</string>
+	<key>shared.unavailableFolder</key>
+	<string>Недоступная папка</string>
+	<key>shared.unavailableRefresh</key>
+	<string>Недоступно — обновите состояние</string>
+	<key>shared.verifiedOutcome</key>
+	<string>Проверенный результат</string>
+</dict>
+</plist>

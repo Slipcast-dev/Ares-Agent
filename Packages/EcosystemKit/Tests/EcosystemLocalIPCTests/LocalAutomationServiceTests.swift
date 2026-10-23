@@ -96,6 +96,7 @@ final class LocalAutomationServiceTests: XCTestCase {
         let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
         let sink = InboxTestNotificationSink()
         let service = try LocalAutomationService(directory: path, domain: "ares", notifications: sink)
+        _ = try await service.language.set(.ru)
         let captured = await service.cutoff().addingTimeInterval(1), id = UUID()
         try await service.configure(paused: nil, notificationsEnabled: true)
         try await record(service, id: id, at: captured)
@@ -130,6 +131,7 @@ final class LocalAutomationServiceTests: XCTestCase {
         let path = try directory(); defer { try? FileManager.default.removeItem(at: path) }
         let sink = InboxTestNotificationSink(authorization: "provisional")
         let service = try LocalAutomationService(directory: path, domain: "athena", notifications: sink)
+        _ = try await service.language.set(.ru)
         let captured = await service.cutoff().addingTimeInterval(1), id = UUID()
         try await service.configure(paused: nil, notificationsEnabled: true)
         try await record(service, id: id, at: captured)

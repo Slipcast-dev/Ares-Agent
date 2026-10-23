@@ -1,6 +1,6 @@
-# Разработка Ares0.29.0
+# Разработка Ares0.37.0
 
-Swift5.9+, macOS14+ target. Vendored EcosystemKit0.23.0, Yams6.2.2 pinned.
+Swift5.9+, macOS14+ target. Vendored EcosystemKit0.29.0, Yams6.2.2 pinned.
 No sibling repository is required.
 
 ```sh
@@ -13,3 +13,7 @@ scripts/package_app.zsh
 Изменения прав, очередей, отмены и восстановления требуют отрицательных регрессий.
 
 [Architecture](ARCHITECTURE.md) · [Contributing](../CONTRIBUTING.md) · [Security](../SECURITY.md).
+
+```sh
+python3 scripts/verify_localization_acceptance.py --ares-dir . --kit-dir Packages/EcosystemKit --require-reviewed-boundaries --output localization-acceptance.json
+```

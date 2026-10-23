@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>shared.accessBoundary</key>
+	<string>This does not permit sharing file contents, secrets or arbitrary commands. File changes require a separate approved plan or rule.</string>
+	<key>shared.accessDuration</key>
+	<string>Access duration</string>
+	<key>shared.accessExpiry</key>
+	<string>Access for %@ h. The plan expires at %@.</string>
+	<key>shared.accessIntro</key>
+	<string>Connecting a client does not grant permissions. Folder access, data export and approval of actions are controlled separately.</string>
+	<key>shared.accessLimits</key>
+	<string>Source object limit: %@; source size limit: %@ MiB. Response object limit: %@; response size limit: %@ KiB. Operation limit: %@ per %@ min.</string>
+	<key>shared.actionRecorded</key>
+	<string>The action is already confirmed by the journal.</string>
+	<key>shared.actionUnconfirmed</key>
+	<string>The action was not confirmed. Refresh status; do not assume the agent has stopped or resumed.</string>
+	<key>shared.admissionClosed</key>
+	<string>Admission closed; unfinished: %@; callbacks: %@; review required: %@</string>
+	<key>shared.admissionOpen</key>
+	<string>Accepting tasks</string>
+	<key>shared.agentEvents</key>
+	<string>Local agent events</string>
+	<key>shared.aggregateDisclosure</key>
+	<string>Aggregates only: no file names or paths.</string>
+	<key>shared.aggregateType</key>
+	<string>Aggregates</string>
+	<key>shared.allowNotifications</key>
+	<string>Allow system notifications</string>
+	<key>shared.allowedOperations</key>
+	<string>Allowed operations</string>
+	<key>shared.approveAccess</key>
+	<string>Approve access</string>
+	<key>shared.approveAccessTitle</key>
+	<string>Approve access: %@</string>
+	<key>shared.automationSaveFailed</key>
+	<string>Unable to save background activity settings.</string>
+	<key>shared.available</key>
+	<string>Available</string>
+	<key>shared.backgroundActivity</key>
+	<string>Background activity</string>
+	<key>shared.backgroundBoundary</key>
+	<string>Only local checks and separately approved rules run in the background. External client permissions are managed separately; the AI model does not start automatically.</string>
+	<key>shared.backgroundEnabled</key>
+	<string>Background activity is enabled</string>
+	<key>shared.backgroundNotifications</key>
+	<string>Background activity and notifications</string>
+	<key>shared.backgroundOn</key>
+	<string>Enabled</string>
+	<key>shared.backgroundPaused</key>
+	<string>Background activity is paused</string>
+	<key>shared.backgroundUnavailable</key>
+	<string>Background activity status is not yet available.</string>
+	<key>shared.blockedByMacOS</key>
+	<string>Blocked by macOS</string>
+	<key>shared.cancel</key>
+	<string>Cancel</string>
+	<key>shared.cancelTaskAccessibility</key>
+	<string>Request cancellation of task %@</string>
+	<key>shared.cancellationFailed</key>
+	<string>Unable to request cancellation. Refresh status; do not blindly repeat a task that makes changes.</string>
+	<key>shared.cancellationSent</key>
+	<string>Cancellation requested. Check the final state; completed actions are not undone.</string>
+	<key>shared.capAudit</key>
+	<string>Audit counters</string>
+	<key>shared.capComputeDuplicates</key>
+	<string>Compute duplicates</string>
+	<key>shared.capDiagnostics</key>
+	<string>Diagnostics</string>
+	<key>shared.capDiagnosticsHistory</key>
+	<string>Diagnostics history</string>
+	<key>shared.capEvents</key>
+	<string>Inbox events for AI</string>
+	<key>shared.capFindDuplicates</key>
+	<string>View duplicates</string>
+	<key>shared.capMonitorDisable</key>
+	<string>Disable monitoring</string>
+	<key>shared.capMonitorEnable</key>
+	<string>Request monitoring activation</string>
+	<key>shared.capMonitorGet</key>
+	<string>Monitor settings</string>
+	<key>shared.capMonitorHistory</key>
+	<string>Monitoring history</string>
+	<key>shared.capMonitorList</key>
+	<string>List monitors</string>
+	<key>shared.capMonitorPreview</key>
+	<string>Preview monitoring</string>
+	<key>shared.capMonitorPropose</key>
+	<string>Draft monitor</string>
+	<key>shared.capRoots</key>
+	<string>List authorized folders</string>
+	<key>shared.capRuleDisable</key>
+	<string>Disable rule</string>
+	<key>shared.capRuleEnable</key>
+	<string>Request rule activation</string>
+	<key>shared.capRuleGet</key>
+	<string>Rule settings</string>
+	<key>shared.capRuleHistory</key>
+	<string>Rule history</string>
+	<key>shared.capRuleList</key>
+	<string>List rules</string>
+	<key>shared.capRulePreview</key>
+	<string>Preview plan</string>
+	<key>shared.capRulePropose</key>
+	<string>Draft rule</string>
+	<key>shared.capRuleRun</key>
+	<string>Run rule</string>
+	<key>shared.capRuleValidate</key>
+	<string>Validate rule</string>
+	<key>shared.capScan</key>
+	<string>Scan</string>
+	<key>shared.capSearch</key>
+	<string>Search files</string>
+	<key>shared.capStorage</key>
+	<string>Storage overview</string>
+	<key>shared.capSystemInfo</key>
+	<string>Mac information</string>
+	<key>shared.capSystemMetrics</key>
+	<string>System metrics</string>
+	<key>shared.capVolume</key>
+	<string>Storage usage summary</string>
+	<key>shared.chooseAresFolder</key>
+	<string>First select a folder in the Ares overview.</string>
+	<key>shared.client</key>
+	<string>Client</string>
+	<key>shared.clientPermissions</key>
+	<string>Client permissions</string>
+	<key>shared.close</key>
+	<string>Close</string>
+	<key>shared.diagnosticReport</key>
+	<string>Diagnostic report</string>
+	<key>shared.disableLogin</key>
+	<string>Disable startup after login</string>
+	<key>shared.disabled</key>
+	<string>Disabled</string>
+	<key>shared.emergencyScope</key>
+	<string>Emergency stop blocks new tasks from all clients and schedulers of this agent and requests cancellation of the entire queue. The state survives restart. The other agent is controlled separately.</string>
+	<key>shared.emergencyStop</key>
+	<string>Emergency stop</string>
+	<key>shared.enable</key>
+	<string>Enable</string>
+	<key>shared.enableLogin</key>
+	<string>Enable startup after login</string>
+	<key>shared.enabled</key>
+	<string>Enabled</string>
+	<key>shared.errorBusy</key>
+	<string>An agent task is already using this resource.</string>
+	<key>shared.errorCancelled</key>
+	<string>The operation was cancelled.</string>
+	<key>shared.errorConflict</key>
+	<string>The request key has already been used with different parameters.</string>
+	<key>shared.errorDeadlineExceeded</key>
+	<string>The operation timed out.</string>
+	<key>shared.errorDenied</key>
+	<string>This client is not allowed to perform this operation.</string>
+	<key>shared.errorInvalidConfiguration</key>
+	<string>Local mode is not configured correctly.</string>
+	<key>shared.errorInvalidRequest</key>
+	<string>Invalid operation parameters.</string>
+	<key>shared.errorOperationFailed</key>
+	<string>The agent could not complete the operation.</string>
+	<key>shared.errorRecoveryRequired</key>
+	<string>The result of a previous operation requires review.</string>
+	<key>shared.errorRequiresGUI</key>
+	<string>This action requires the local interface and was not performed by the background agent.</string>
+	<key>shared.errorStaleSnapshot</key>
+	<string>Files have changed. Refresh the file list and submit the request again.</string>
+	<key>shared.errorUnavailable</key>
+	<string>The local agent is unavailable. Start its local profile.</string>
+	<key>shared.eventSample</key>
+	<string>In sample: %@ (up to 50)</string>
+	<key>shared.eventsEmpty</key>
+	<string>No events in the sample, or the source is unavailable — check the status overview.</string>
+	<key>shared.eventsReadOnly</key>
+	<string>Viewing does not acknowledge event delivery for Codex or DeepSeek Harness.</string>
+	<key>shared.executorActive</key>
+	<string>The executor has not stopped yet. Wait for it to finish and refresh the list.</string>
+	<key>shared.externalPermissions</key>
+	<string>External client permissions</string>
+	<key>shared.firstConnection</key>
+	<string>First connection and safe check</string>
+	<key>shared.firstConnectionStep1</key>
+	<string>1. Connect Codex or DeepSeek Harness in connections and approve the plan. Start a new client chat.</string>
+	<key>shared.firstConnectionStep2</key>
+	<string>2. In permissions, choose that client, minimal read operations and a short duration. Prepare and approve the plan separately in each agent.</string>
+	<key>shared.firstConnectionStep3</key>
+	<string>3. Ask for status and capabilities, then read the index of an Ares test folder and Athena metrics. Wait for task results; do not change files.</string>
+	<key>shared.folders</key>
+	<string>Folders: %@</string>
+	<key>shared.grantCounts</key>
+	<string>Permissions: %@; awaiting approval: %@</string>
+	<key>shared.grantExpires</key>
+	<string>Until %@ · %@</string>
+	<key>shared.hermesDisclosure</key>
+	<string>Future connection. Installation and data access are not available yet.</string>
+	<key>shared.hermesPlanned</key>
+	<string>Hermes — planned</string>
+	<key>shared.importantNotifications</key>
+	<string>Show notifications for important events</string>
+	<key>shared.inboxEvents</key>
+	<string>Inbox events</string>
+	<key>shared.inspectRecovery</key>
+	<string>Review task “%@” · %@</string>
+	<key>shared.latestTasks</key>
+	<string>Latest tasks (up to 100)</string>
+	<key>shared.legacyMCP</key>
+	<string>Shared MCP (compatibility)</string>
+	<key>shared.loginComponent</key>
+	<string>Startup after login</string>
+	<key>shared.loginConfirmBody</key>
+	<string>This agent will run in the background after macOS login, even when its window is closed. It may perform local checks and previously approved rules in authorized folders. New folders and operations still require approval. The AI model does not start automatically.</string>
+	<key>shared.loginConfirmTitle</key>
+	<string>Enable startup after login?</string>
+	<key>shared.loginDisableScope</key>
+	<string>Disabling startup applies to the next login and does not stop the running service.</string>
+	<key>shared.loginSaveFailed</key>
+	<string>Unable to change login startup. If macOS has blocked it, check the system background items settings.</string>
+	<key>shared.loginStartup</key>
+	<string>Start after login</string>
+	<key>shared.loginSystemDenied</key>
+	<string>Blocked in macOS settings</string>
+	<key>shared.metadataDisclosure</key>
+	<string>Names and relative paths are personal data. The client may send them to the selected cloud model provider.</string>
+	<key>shared.metadataType</key>
+	<string>File metadata</string>
+	<key>shared.needsAttention</key>
+	<string>Needs attention</string>
+	<key>shared.noEffectRecorded</key>
+	<string>The absence of changes is already confirmed.</string>
+	<key>shared.notRefreshed</key>
+	<string>not refreshed</string>
+	<key>shared.notificationConsent</key>
+	<string>The toggle enables notifications for this agent. A separate button requests macOS permission. Events remain in the application without that permission.</string>
+	<key>shared.notificationRequestFailed</key>
+	<string>Unable to request notification permission. Events remain available in the application.</string>
+	<key>shared.notificationSender</key>
+	<string>In System Settings, select “%@”. Notification permission belongs to that background service.</string>
+	<key>shared.notificationSettingsManual</key>
+	<string>Open System Settings → Notifications manually.</string>
+	<key>shared.notificationsAuthorized</key>
+	<string>macOS has allowed system notifications.</string>
+	<key>shared.notificationsDenied</key>
+	<string>macOS has blocked notifications. You can change permission in System Settings.</string>
+	<key>shared.notificationsProvisional</key>
+	<string>macOS has allowed quiet notifications.</string>
+	<key>shared.notificationsUnavailable</key>
+	<string>System notifications are unavailable; events remain in the application.</string>
+	<key>shared.notificationsUndetermined</key>
+	<string>macOS permission has not been requested yet.</string>
+	<key>shared.oneDay</key>
+	<string>1 day</string>
+	<key>shared.oneHour</key>
+	<string>1 hour</string>
+	<key>shared.oneWeek</key>
+	<string>1 week</string>
+	<key>shared.openNotifications</key>
+	<string>Open macOS notifications</string>
+	<key>shared.operations</key>
+	<string>Operations: %@</string>
+	<key>shared.operationsScope</key>
+	<string>Status applies only to this agent. Check the other application's permissions and service in its own window.</string>
+	<key>shared.originalContent</key>
+	<string>Names and saved messages are shown in their original form.</string>
+	<key>shared.outcomeDone</key>
+	<string>The action was completed</string>
+	<key>shared.outcomeNoEffect</key>
+	<string>The action did not change files</string>
+	<key>shared.outcomeUnchecked</key>
+	<string>Outcome not yet checked</string>
+	<key>shared.partialAgentResult</key>
+	<string>If one agent is unavailable, use the available part of the result and identify the reason. Client configuration does not prove a live connection.</string>
+	<key>shared.partialData</key>
+	<string>Some data is unavailable. Check and refresh the status overview.</string>
+	<key>shared.pauseBackground</key>
+	<string>Pause new background runs</string>
+	<key>shared.pauseConfirmAction</key>
+	<string>Pause and request cancellation</string>
+	<key>shared.pauseConfirmBody</key>
+	<string>This applies only to this agent and the latest 100 tasks. Cancellation completes at a safe point; completed actions are not undone. After refreshing, check task states and recovery. New manual requests remain available.</string>
+	<key>shared.pauseConfirmTitle</key>
+	<string>Pause background scheduling and request cancellation?</string>
+	<key>shared.pauseResult</key>
+	<string>Background scheduling is paused; cancellation requests were sent for the displayed active tasks. Cancellation errors: %@. Check final states. New manual client requests remain available.</string>
+	<key>shared.pauseScope</key>
+	<string>Pausing applies to new background runs. Current tasks can be cancelled in the task queue.</string>
+	<key>shared.pauseUnconfirmed</key>
+	<string>Pause was not confirmed. No task cancellation was attempted.</string>
+	<key>shared.pauseVisible</key>
+	<string>Pause background scheduling and cancel displayed tasks</string>
+	<key>shared.pauseVisibleScope</key>
+	<string>This requests a safe stop: new background runs are paused and displayed active tasks receive cancellation requests. Manual client requests remain available; closing the window does not stop the service.</string>
+	<key>shared.paused</key>
+	<string>Paused</string>
+	<key>shared.preparePermission</key>
+	<string>Prepare permission</string>
+	<key>shared.previewDiagnostics</key>
+	<string>Preview diagnostic report</string>
+	<key>shared.recovery</key>
+	<string>Recovery</string>
+	<key>shared.recoveryConfirmBody</key>
+	<string>Files will not be changed and the task will not be repeated. Paused rules remain disabled.</string>
+	<key>shared.recoveryConfirmTitle</key>
+	<string>Save the review and release the lock?</string>
+	<key>shared.recoveryEmpty</key>
+	<string>No tasks require review.</string>
+	<key>shared.recoveryFacts</key>
+	<string>I checked the files and journal for each action</string>
+	<key>shared.recoveryIntro</key>
+	<string>Some actions require review after a failure. Check the source file, result and rule journal before confirming.</string>
+	<key>shared.recoveryNotes</key>
+	<string>What was checked (20–2000 characters)</string>
+	<key>shared.recoverySaved</key>
+	<string>The review was saved. The task was not repeated. Paused rules remain disabled.</string>
+	<key>shared.refreshBackground</key>
+	<string>Refresh background activity status</string>
+	<key>shared.refreshOverview</key>
+	<string>Refresh overview</string>
+	<key>shared.refreshPermissions</key>
+	<string>Refresh permissions</string>
+	<key>shared.refreshRecovery</key>
+	<string>Refresh tasks for review</string>
+	<key>shared.refreshingStatus</key>
+	<string>Refreshing status…</string>
+	<key>shared.reportAgent</key>
+	<string>Agent: %@</string>
+	<key>shared.reportDisclosure</key>
+	<string>Review the text before saving. The report contains only states and counters; nothing is sent.</string>
+	<key>shared.reportPrivacy</key>
+	<string>No file paths, names, identifiers, secrets, configuration or event contents included.</string>
+	<key>shared.reportSamples</key>
+	<string>Task sample: latest 100; event sample: latest 50.</string>
+	<key>shared.reportSaveFailed</key>
+	<string>Unable to save the report. Choose an accessible folder and try again.</string>
+	<key>shared.reportSaved</key>
+	<string>The report was saved to the selected file.</string>
+	<key>shared.reportScope</key>
+	<string>Scope: local GUI snapshot; configuration is not a verified client session.</string>
+	<key>shared.reportSnapshot</key>
+	<string>Snapshot: %@</string>
+	<key>shared.requestCancellation</key>
+	<string>Request cancellation</string>
+	<key>shared.resume</key>
+	<string>Resume</string>
+	<key>shared.resumeAdmission</key>
+	<string>Resume accepting tasks</string>
+	<key>shared.resumeConfirmBody</key>
+	<string>Clients and enabled schedulers will be able to submit new tasks. Cancelled tasks are not repeated automatically; previous permissions retain their restrictions.</string>
+	<key>shared.resumeConfirmTitle</key>
+	<string>Resume accepting tasks?</string>
+	<key>shared.resumeSent</key>
+	<string>Task admission is open. Cancelled tasks are not repeated; schedulers and clients may submit new work.</string>
+	<key>shared.reviewRequest</key>
+	<string>Review request: %@</string>
+	<key>shared.revokeAccess</key>
+	<string>Revoke access</string>
+	<key>shared.saveRecovery</key>
+	<string>Save review</string>
+	<key>shared.saveRecoveryResult</key>
+	<string>Save review result</string>
+	<key>shared.saveReport</key>
+	<string>Save report…</string>
+	<key>shared.service</key>
+	<string>Service</string>
+	<key>shared.serviceRegistered</key>
+	<string>The service is registered with macOS; check availability in the overview.</string>
+	<key>shared.serviceUnregistered</key>
+	<string>The local service is not currently registered.</string>
+	<key>shared.shareMetadata</key>
+	<string>Share file names and relative paths</string>
+	<key>shared.snapshot</key>
+	<string>Snapshot: %@</string>
+	<key>shared.statusHelp</key>
+	<string>Status and help</string>
+	<key>shared.stop</key>
+	<string>Stop</string>
+	<key>shared.stopConfirmBody</key>
+	<string>New tasks will be blocked until explicitly resumed. Active tasks stop at a safe point; completed changes are not undone. Check callbacks and recovery.</string>
+	<key>shared.stopConfirmTitle</key>
+	<string>Emergency stop this agent?</string>
+	<key>shared.stopSent</key>
+	<string>New task admission is closed until explicitly resumed, including after service restart. Cancellation was requested for the entire queue. Wait for zero active callbacks and check recovery; completed actions are not undone.</string>
+	<key>shared.stopThisAgent</key>
+	<string>Emergency stop this agent</string>
+	<key>shared.taskCancelled</key>
+	<string>Cancelled</string>
+	<key>shared.taskCancelling</key>
+	<string>Cancellation requested</string>
+	<key>shared.taskCompleted</key>
+	<string>Completed</string>
+	<key>shared.taskCounts</key>
+	<string>Active: %@; review required: %@</string>
+	<key>shared.taskFailed</key>
+	<string>Failed</string>
+	<key>shared.taskInterrupted</key>
+	<string>Interrupted</string>
+	<key>shared.taskLine</key>
+	<string>Task %@ · %@</string>
+	<key>shared.taskPartial</key>
+	<string>Partially completed</string>
+	<key>shared.taskQueued</key>
+	<string>Queued</string>
+	<key>shared.taskRecoveryRequired</key>
+	<string>Review required</string>
+	<key>shared.taskRunning</key>
+	<string>Running</string>
+	<key>shared.taskWaitingApproval</key>
+	<string>Awaiting approval</string>
+	<key>shared.taskWaitingResource</key>
+	<string>Waiting for a resource</string>
+	<key>shared.tasks</key>
+	<string>Tasks</string>
+	<key>shared.tasksEmpty</key>
+	<string>No records in the sample, or the queue is unavailable — check the status above.</string>
+	<key>shared.unavailableFolder</key>
+	<string>Unavailable folder</string>
+	<key>shared.unavailableRefresh</key>
+	<string>Unavailable — refresh status</string>
+	<key>shared.verifiedOutcome</key>
+	<string>Verified outcome</string>
+</dict>
+</plist>

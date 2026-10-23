@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key> — копия</key>
+	<string> — copy</string>
+	<key>%@ · %@</key>
+	<string>%@ · %@</string>
+	<key>%@ · %@ · %@ · совпадений: %@</key>
+	<string>%@ · %@ · %@ · matches: %@</string>
+	<key>Ares MCP предоставляет чтение индекса и сканирование разрешённых папок. Проверка не меняет подключения и не запускает сканирование.</key>
+	<string>Ares MCP provides index reading and scanning of authorized folders. This check does not change connections or start a scan.</string>
+	<key>Ares будет читать только метаданные файлов в этой папке.</key>
+	<string>Ares will read only file metadata in this folder.</string>
+	<key>Athena может передать агрегированную рекомендацию. Доступ к папкам остаётся под управлением Ares.</key>
+	<string>Athena can provide an aggregate recommendation. Folder access remains under Ares control.</string>
+	<key>MCP готов: список инструментов получен.</key>
+	<string>MCP is ready: the tool list was received.</string>
+	<key>MCP-helper отсутствует в приложении.</key>
+	<string>The MCP helper is missing from the application.</string>
+	<key>Автоматически</key>
+	<string>Automatic</string>
+	<key>Агент не смог завершить операцию.</key>
+	<string>The agent could not complete the operation.</string>
+	<key>Без расширения</key>
+	<string>No extension</string>
+	<key>В локальном режиме включённые правила выполняет отдельный агент. Новое правило выключено; «Проверить» показывает совпадения без изменения файлов.</key>
+	<string>In local mode, a separate agent executes enabled rules. New rules are disabled; “Check” shows matches without changing files.</string>
+	<key>В любое время</key>
+	<string>Any time</string>
+	<key>Включать подпапки</key>
+	<string>Include subfolders</string>
+	<key>Включено</key>
+	<string>Enabled</string>
+	<key>Включите локальное чтение содержимого в редакторе правила.</key>
+	<string>Enable local content reading in the rule editor.</string>
+	<key>Включить правило?</key>
+	<string>Enable rule?</string>
+	<key>Вне известных системных каталогов</key>
+	<string>Outside known system folders</string>
+	<key>Впервые обнаружен после</key>
+	<string>First detected after</string>
+	<key>Время выполнения истекло.</key>
+	<string>The operation timed out.</string>
+	<key>Вручную</key>
+	<string>Manual</string>
+	<key>Все типы</key>
+	<string>All types</string>
+	<key>Все условия (выключено — любое)</key>
+	<string>Match all conditions (off — match any)</string>
+	<key>Все файлы</key>
+	<string>All files</string>
+	<key>Выберите</key>
+	<string>Choose</string>
+	<key>Выберите папки для поиска файлов и дубликатов. Доступ можно убрать в любой момент после завершения анализа.</key>
+	<string>Choose folders to find files and duplicates. You can revoke access after analysis finishes.</string>
+	<key>Выберите папку</key>
+	<string>Choose a folder</string>
+	<key>Выберите папку для анализа</key>
+	<string>Choose a folder to analyze</string>
+	<key>Выберите папку на внешнем диске. Проверка подключения выполняется каждые 30 секунд; краткое отключение между проверками может быть пропущено.</key>
+	<string>Choose a folder on an external drive. Connection checks run every 30 seconds; brief disconnections between checks may be missed.</string>
+	<key>Выберите разрешённую папку</key>
+	<string>Choose an authorized folder</string>
+	<key>Выбрать папку заново</key>
+	<string>Select folder again</string>
+	<key>Выполнение отменено. Завершённые действия сохранены в истории.</key>
+	<string>Execution cancelled. Completed actions are saved in history.</string>
+	<key>Выполнение правила</key>
+	<string>Rule execution</string>
+	<key>Выполнение…</key>
+	<string>Running…</string>
+	<key>Выполнить один пропущенный запуск при открытии</key>
+	<string>Run once on opening if a scheduled run was missed</string>
+	<key>Выполняется</key>
+	<string>Running</string>
+	<key>Группа дубликатов</key>
+	<string>Duplicate group</string>
+	<key>Данные из последнего сканирования. «Обновить» перечитывает индекс.</key>
+	<string>Data is from the last scan. Refresh reloads the index.</string>
+	<key>Действие</key>
+	<string>Action</string>
+	<key>Действия по порядку</key>
+	<string>Actions in order</string>
+	<key>Действия: %@</key>
+	<string>Actions: %@</string>
+	<key>Диагностика подключения</key>
+	<string>Connection diagnostics</string>
+	<key>Добавить Finder-тег</key>
+	<string>Add Finder tag</string>
+	<key>Добавить действие</key>
+	<string>Add action</string>
+	<key>Добавить папку</key>
+	<string>Add folder</string>
+	<key>Добавлен Finder-тег</key>
+	<string>Finder tag added</string>
+	<key>Добавьте папку в «Обзоре»</key>
+	<string>Add a folder in Overview</string>
+	<key>Добавьте папку через стандартное окно выбора macOS.</key>
+	<string>Add a folder using the standard macOS folder picker.</string>
+	<key>Доступ к папкам</key>
+	<string>Folder access</string>
+	<key>Доступ к папке отозван или диск отключён.</key>
+	<string>Folder access was revoked or the drive was disconnected.</string>
+	<key>Доступ к папке отсутствует</key>
+	<string>Folder access unavailable</string>
+	<key>Доступ подтверждён. Правила можно проверить и включить вручную.</key>
+	<string>Access confirmed. You can review and enable rules manually.</string>
+	<key>Доступ после переноса</key>
+	<string>Access after migration</string>
+	<key>Другое правило завершилось</key>
+	<string>Another rule completed</string>
+	<key>Дубликаты</key>
+	<string>Duplicates</string>
+	<key>Дублировать</key>
+	<string>Duplicate</string>
+	<key>Ежедневные и недельные запуски сохраняют местное время при переходе на летнее/зимнее время.</key>
+	<string>Daily and weekly runs keep local time across daylight saving time changes.</string>
+	<key>Есть ошибки</key>
+	<string>Errors occurred</string>
+	<key>За 30 дней</key>
+	<string>Within 30 days</string>
+	<key>За 7 дней</key>
+	<string>Within 7 days</string>
+	<key>Завершено</key>
+	<string>Completed</string>
+	<key>Завершилось копирование / скачивание</key>
+	<string>Copy / download completed</string>
+	<key>Загрузка индекса…</key>
+	<string>Loading index…</string>
+	<key>Заданный интервал</key>
+	<string>Specified interval</string>
+	<key>Задачи и история</key>
+	<string>Tasks and history</string>
+	<key>Заканчивается на</key>
+	<string>Ends with</string>
+	<key>Закрыть</key>
+	<string>Close</string>
+	<key>Заново выберите папку «%@». Правила останутся выключенными.</key>
+	<string>Select the folder “%@” again. Rules will remain disabled.</string>
+	<key>Записать в историю</key>
+	<string>Record in history</string>
+	<key>Запросы локального подтверждения</key>
+	<string>Local approval requests</string>
+	<key>Запустить другое правило</key>
+	<string>Run another rule</string>
+	<key>Запустить сейчас</key>
+	<string>Run now</string>
+	<key>Изменение подключения…</key>
+	<string>Updating connection…</string>
+	<key>Изменены</key>
+	<string>Modified</string>
+	<key>Изменить</key>
+	<string>Edit</string>
+	<key>Изменён</key>
+	<string>Modified</string>
+	<key>Изменён после</key>
+	<string>Modified after</string>
+	<key>Изменён: %@</key>
+	<string>Modified: %@</string>
+	<key>Имя</key>
+	<string>Name</string>
+	<key>Индексирование: %@ файлов</key>
+	<string>Indexed file count: %@</string>
+	<key>Интеграции и безопасность</key>
+	<string>Integrations and security</string>
+	<key>Интервал в секундах (минимум 30)</key>
+	<string>Interval in seconds (minimum 30)</string>
+	<key>Исключить имена (* и ?, через запятую)</key>
+	<string>Exclude names (* and ?, comma-separated)</string>
+	<key>Исключить подпапки (относительные пути через запятую)</key>
+	<string>Exclude subfolders (comma-separated relative paths)</string>
+	<key>Исключить тег</key>
+	<string>Exclude tag</string>
+	<key>История</key>
+	<string>History</string>
+	<key>Исходное правило</key>
+	<string>Source rule</string>
+	<key>Каждые 24 часа</key>
+	<string>Every 24 hours</string>
+	<key>Каждые 7 суток</key>
+	<string>Every 7 days</string>
+	<key>Как в системе</key>
+	<string>System</string>
+	<key>Календарное время с учётом часового пояса</key>
+	<string>Calendar time with time zone</string>
+	<key>Ключ запроса уже использован с другими параметрами.</key>
+	<string>The request key was already used with different parameters.</string>
+	<key>Ключевое слово в документе</key>
+	<string>Keyword in document</string>
+	<key>Когда</key>
+	<string>When</string>
+	<key>Количество файлов достигло порога</key>
+	<string>File count reached threshold</string>
+	<key>Корень</key>
+	<string>Root</string>
+	<key>Крупные файлы</key>
+	<string>Large files</string>
+	<key>Крупные ≥ 100 МБ</key>
+	<string>Large ≥ 100 MB</string>
+	<key>Лимит объектов запуска: %@; лимит объёма: %@.</key>
+	<string>Run object limit: %@; size limit: %@.</string>
+	<key>Локальная эвристика по словам: счёт, договор или чек; результат не гарантирует тип документа.</key>
+	<string>Local word-based heuristic: invoice, contract, or receipt; the result does not guarantee the document type.</string>
+	<key>Локальный агент недоступен. Запустите свой локальный профиль.</key>
+	<string>The local agent is unavailable. Start its local profile.</string>
+	<key>Локальный режим настроен некорректно.</key>
+	<string>Local mode is not configured correctly.</string>
+	<key>Любой</key>
+	<string>Any</string>
+	<key>Максимум байт</key>
+	<string>Maximum bytes</string>
+	<key>Минимум байт</key>
+	<string>Minimum bytes</string>
+	<key>Модель и провайдер наследуются из настроек Codex.</key>
+	<string>The model and provider are inherited from Codex settings.</string>
+	<key>Модель и провайдер наследуются из настроек Harness.</key>
+	<string>The model and provider are inherited from Harness settings.</string>
+	<key>Название</key>
+	<string>Name</string>
+	<key>Назначение уже существует; перезапись запрещена.</key>
+	<string>The destination already exists; overwriting is prohibited.</string>
+	<key>Назначения: %@</key>
+	<string>Destinations: %@</string>
+	<key>Найдено: %@ из %@. Выбрано: %@</key>
+	<string>Matching: %@ of %@. Selected: %@</string>
+	<key>Найти точные дубликаты</key>
+	<string>Find exact duplicates</string>
+	<key>Настроено</key>
+	<string>Configured</string>
+	<key>Настройки</key>
+	<string>Settings</string>
+	<key>Находится в папке заданное время</key>
+	<string>In folder for a specified period</string>
+	<key>Начало</key>
+	<string>Start</string>
+	<key>Начинается с</key>
+	<string>Starts with</string>
+	<key>Не изменялся заданное время</key>
+	<string>Unchanged for a specified period</string>
+	<key>Не менялись год</key>
+	<string>Unchanged for a year</string>
+	<key>Не подключено</key>
+	<string>Not connected</string>
+	<key>Не удалось завершить операцию</key>
+	<string>Unable to complete the operation</string>
+	<key>Не удалось завершить операцию. Файлы не изменены.</key>
+	<string>Unable to complete the operation. Files were not changed.</string>
+	<key>Не удалось открыть файл</key>
+	<string>Unable to open the file</string>
+	<key>Не удалось подтвердить доступ. Выберите ту же папку, которая указана в перенесённых данных.</key>
+	<string>Could not confirm access. Select the same folder as specified in the migrated data.</string>
+	<key>Некорректные параметры операции.</key>
+	<string>The operation parameters are invalid.</string>
+	<key>Необходима проверка результата предыдущей операции.</key>
+	<string>The result of the previous operation needs review.</string>
+	<key>Нет действий с безопасно подтверждённой ошибкой для повтора.</key>
+	<string>There are no actions with a safely confirmed failure to retry.</string>
+	<key>Нет папок, ожидающих разрешения.</key>
+	<string>No folders are awaiting permission.</string>
+	<key>Нет файлов по выбранным условиям</key>
+	<string>No files match these filters</string>
+	<key>Новое правило</key>
+	<string>New rule</string>
+	<key>Новый точный дубликат</key>
+	<string>New exact duplicate</string>
+	<key>Новый файл / поступление в папку</key>
+	<string>New file / arrival in folder</string>
+	<key>Обзор</key>
+	<string>Overview</string>
+	<key>Обновить</key>
+	<string>Refresh</string>
+	<key>Обновить запросы подтверждения</key>
+	<string>Refresh approval requests</string>
+	<key>Обновить список папок</key>
+	<string>Refresh folder list</string>
+	<key>Обновить статусы</key>
+	<string>Refresh statuses</string>
+	<key>Обрабатывать существующие файлы при первом включении</key>
+	<string>Process existing files when first enabled</string>
+	<key>Обработано совпадений: %@. Результат: %@.</key>
+	<string>Matches processed: %@. Result: %@.</string>
+	<key>Обработано совпадений: %@. Результат: %@. Подробности — в истории.</key>
+	<string>Matches processed: %@. Result: %@. See history for details.</string>
+	<key>Объектов сейчас: %@. Объём: %@.</key>
+	<string>Current objects: %@. Size: %@.</string>
+	<key>Объём лишних копий: %@</key>
+	<string>Size of extra copies: %@</string>
+	<key>Обязательный тег</key>
+	<string>Required tag</string>
+	<key>Один ZIP для всех совпавших файлов</key>
+	<string>One ZIP for all matching files</string>
+	<key>Однократно</key>
+	<string>Once</string>
+	<key>Одноразовый план. Изменение файлов или истечение срока требует нового просмотра.</key>
+	<string>One-time plan. Changed files or expiry require a new review.</string>
+	<key>Операция не разрешена этому клиенту.</key>
+	<string>This client is not allowed to perform the operation.</string>
+	<key>Операция отменена.</key>
+	<string>The operation was cancelled.</string>
+	<key>Операция превысила время ожидания.</key>
+	<string>The operation timed out.</string>
+	<key>От 1 ГБ</key>
+	<string>At least 1 GB</string>
+	<key>От 10 МБ</key>
+	<string>At least 10 MB</string>
+	<key>От 100 МБ</key>
+	<string>At least 100 MB</string>
+	<key>Отключить</key>
+	<string>Disconnect</string>
+	<key>Отключить %@</key>
+	<string>Disconnect %@</string>
+	<key>Отключить Ares</key>
+	<string>Disconnect Ares</string>
+	<key>Отмена</key>
+	<string>Cancel</string>
+	<key>Отменено</key>
+	<string>Cancelled</string>
+	<key>Отменить</key>
+	<string>Cancel</string>
+	<key>Оформление</key>
+	<string>Appearance</string>
+	<key>Оценка по пути; назначение файла не проверялось.</key>
+	<string>Assessment is based on the path; the file’s purpose was not checked.</string>
+	<key>Ошибка</key>
+	<string>Error</string>
+	<key>Ошибка другого правила</key>
+	<string>Another rule failed</string>
+	<key>Папка</key>
+	<string>Folder</string>
+	<key>Папка назначения</key>
+	<string>Destination folder</string>
+	<key>Папка: %@</key>
+	<string>Folder: %@</string>
+	<key>Папки ещё не добавлены</key>
+	<string>No folders added yet</string>
+	<key>План подтверждён. Клиент может запустить его до истечения срока.</key>
+	<string>Plan approved. The client may run it before it expires.</string>
+	<key>По расписанию</key>
+	<string>Scheduled</string>
+	<key>Повтор</key>
+	<string>Retry</string>
+	<key>Повторить действия с ошибкой</key>
+	<string>Retry failed actions</string>
+	<key>Подборка</key>
+	<string>Collection</string>
+	<key>Подключение агентов</key>
+	<string>Agent connections</string>
+	<key>Подключение внешнего агента не разрешает произвольные пути, shell-команды или изменение файлов. Разрешённые папки управляются в «Обзоре».</key>
+	<string>Connecting an external agent does not authorize arbitrary paths, shell commands, or file changes. Manage authorized folders in Overview.</string>
+	<key>Подключение субагента Codex</key>
+	<string>Codex subagent connection</string>
+	<key>Подключение субагента Harness</key>
+	<string>Harness subagent connection</string>
+	<key>Подключить</key>
+	<string>Connect</string>
+	<key>Подключить %@</key>
+	<string>Connect %@</string>
+	<key>Подключить Ares</key>
+	<string>Connect Ares</string>
+	<key>Подключён диск</key>
+	<string>Drive connected</string>
+	<key>Подтвердить план</key>
+	<string>Approve plan</string>
+	<key>Подтвердить план?</key>
+	<string>Approve plan?</string>
+	<key>Подтверждённых групп пока нет.</key>
+	<string>No confirmed groups yet.</string>
+	<key>Поиск по имени или относительному пути</key>
+	<string>Search by name or relative path</string>
+	<key>Поиск файлов</key>
+	<string>Find files</string>
+	<key>Показано %@ из %@ копий · каждая %@</key>
+	<string>Copies shown: %@ of %@ · %@ each</string>
+	<key>Показано %@ из %@ файлов с дубликатами. Пропущено объектов: %@.</key>
+	<string>Duplicate files shown: %@ of %@. Skipped item count: %@.</string>
+	<key>Показано %@ из %@. Подтверждается весь указанный набор.</key>
+	<string>Showing %@ of %@. Approval covers the entire specified set.</string>
+	<key>Показать в Finder</key>
+	<string>Show in Finder</string>
+	<key>Показать все файлы</key>
+	<string>Show all files</string>
+	<key>Показать дубликаты</key>
+	<string>Show duplicates</string>
+	<key>Показать ещё</key>
+	<string>Show more</string>
+	<key>Показать ещё файлы плана</key>
+	<string>Show more plan files</string>
+	<key>Показать файлы</key>
+	<string>Show files</string>
+	<key>Порог (байты или количество)</key>
+	<string>Threshold (bytes or count)</string>
+	<key>Последний запуск: %@ · %@ · файлов: %@</key>
+	<string>Last run: %@ · %@ · files: %@</string>
+	<key>Правила</key>
+	<string>Rules</string>
+	<key>Правила ещё не выполнялись.</key>
+	<string>No rules have run yet.</string>
+	<key>Правило</key>
+	<string>Rule</string>
+	<key>Правило включено в пределах подтверждённых настроек и лимитов.</key>
+	<string>The rule is enabled within the approved settings and limits.</string>
+	<key>Предпросмотр</key>
+	<string>Preview</string>
+	<key>Прервано</key>
+	<string>Interrupted</string>
+	<key>При запуске приложения</key>
+	<string>On application launch</string>
+	<key>Приложение</key>
+	<string>Application</string>
+	<key>Проверены условия над текущими файлами. Событие и действия не выполнялись.</key>
+	<string>Conditions were checked against current files. The event and actions were not executed.</string>
+	<key>Проверить</key>
+	<string>Check</string>
+	<key>Проверить MCP</key>
+	<string>Check MCP</string>
+	<key>Проверить план: %@</key>
+	<string>Review plan: %@</string>
+	<key>Проверка локального сервера…</key>
+	<string>Checking local server…</string>
+	<key>Проверка не завершилась за 5 секунд или helper вернул ошибку. Можно повторить.</key>
+	<string>The check did not complete within 5 seconds or the helper returned an error. You can try again.</string>
+	<key>Проверка регистрации…</key>
+	<string>Checking registration…</string>
+	<key>Проверка результата не прошла. Исходник сохранён.</key>
+	<string>Result verification failed. The source file was preserved.</string>
+	<key>Проверьте настройки правила и папку назначения.</key>
+	<string>Check the rule settings and destination folder.</string>
+	<key>Проверяем содержимое файлов…</key>
+	<string>Checking file contents…</string>
+	<key>Проверяются только файлы одинакового размера; совпадение подтверждается SHA-256.</key>
+	<string>Only files of the same size are checked; identical content is confirmed with SHA-256.</string>
+	<key>Пропущено</key>
+	<string>Skipped</string>
+	<key>Путь выходит за пределы разрешённой папки или содержит ссылку.</key>
+	<string>The path is outside the authorized folder or contains a link.</string>
+	<key>Размер</key>
+	<string>Size</string>
+	<key>Размер папки превысил порог</key>
+	<string>Folder size exceeded threshold</string>
+	<key>Размер файла превысил порог</key>
+	<string>File size exceeded threshold</string>
+	<key>Разрешение действует для этой версии правила. Следующие срабатывания проверяют файлы и лимиты без нового запроса.</key>
+	<string>Approval applies to this version of the rule. Subsequent triggers check files and limits without a new request.</string>
+	<key>Разрешить локальное чтение текста и OCR</key>
+	<string>Allow local text reading and OCR</string>
+	<key>Разрешить уведомления macOS</key>
+	<string>Allow macOS notifications</string>
+	<key>Разрешённые папки (%@)</key>
+	<string>Authorized folders (%@)</string>
+	<key>Разрешённых папок: %@</key>
+	<string>Authorized folder count: %@</string>
+	<key>Расписание</key>
+	<string>Schedule</string>
+	<key>Расположение не определено</key>
+	<string>Location undetermined</string>
+	<key>Расширения через запятую</key>
+	<string>Comma-separated extensions</string>
+	<key>Режим выполнения</key>
+	<string>Execution mode</string>
+	<key>Результат будет сохранён в подпапке Ares Results. Исходники не удаляются.</key>
+	<string>The result will be saved in the Ares Results subfolder. Source files are not deleted.</string>
+	<key>Результаты появятся после анализа.</key>
+	<string>Results will appear after analysis.</string>
+	<key>Результаты правила</key>
+	<string>Rule results</string>
+	<key>Ресурс уже занят задачей агента.</key>
+	<string>An agent task is already using this resource.</string>
+	<key>Ручной запуск</key>
+	<string>Manual run</string>
+	<key>Сведения о регистрации и план изменений показаны в исходном языке службы.</key>
+	<string>Registration details and the change plan are shown in the service’s original language.</string>
+	<key>Светлая</key>
+	<string>Light</string>
+	<key>Системные и служебные каталоги, приложения и проекты исключаются автоматически.</key>
+	<string>System and service directories, applications, and projects are excluded automatically.</string>
+	<key>Системный каталог</key>
+	<string>System folder</string>
+	<key>Сканирование отменено. Изменения файлов не выполнялись.</key>
+	<string>Scanning was cancelled. No file changes were made.</string>
+	<key>Скопировать</key>
+	<string>Copy</string>
+	<key>Следующее правило</key>
+	<string>Next rule</string>
+	<key>Служебные данные или приложение</key>
+	<string>Service data or application</string>
+	<key>Сначала добавьте и просканируйте папку.</key>
+	<string>Add and scan a folder first.</string>
+	<key>Сначала разрешите уведомления кнопкой в разделе «Правила».</key>
+	<string>First, allow notifications using the button in Rules.</string>
+	<key>Снят Finder-тег</key>
+	<string>Finder tag removed</string>
+	<key>Снять Finder-тег</key>
+	<string>Remove Finder tag</string>
+	<key>Событие</key>
+	<string>Event</string>
+	<key>Событие → условия → действия</key>
+	<string>Event → conditions → actions</string>
+	<key>Совпадение SHA-256 подтверждает одинаковое содержимое. Оно не определяет, нужны ли обе копии приложениям или проектам.</key>
+	<string>Matching SHA-256 hashes confirm identical content. They do not determine whether apps or projects need both copies.</string>
+	<key>Совпадений: %@</key>
+	<string>Matches: %@</string>
+	<key>Содержимое обрабатывается локально и не отправляется в сеть. Автоматизация действует только при открытом приложении.</key>
+	<string>Content is processed locally and is not sent over the network. Automation runs only while the application is open.</string>
+	<key>Содержит</key>
+	<string>Contains</string>
+	<key>Создайте первое правило. Сначала добавьте папку в «Обзоре».</key>
+	<string>Create your first rule. First, add a folder in Overview.</string>
+	<key>Создан после</key>
+	<string>Created after</string>
+	<key>Создана подпапка</key>
+	<string>Subfolder created</string>
+	<key>Созданы за 7 дней</key>
+	<string>Created within 7 days</string>
+	<key>Создать</key>
+	<string>Create</string>
+	<key>Создать и проверить ZIP-копию</key>
+	<string>Create and verify ZIP copy</string>
+	<key>Создать подпапки</key>
+	<string>Create subfolders</string>
+	<key>Сохранить</key>
+	<string>Save</string>
+	<key>Срок (дней): %@</key>
+	<string>Period (days): %@</string>
+	<key>Срок: %@</key>
+	<string>Expires: %@</string>
+	<key>Старые разрешения не включаются автоматически. Выберите каждую папку заново; индекс и история сохранятся.</key>
+	<string>Previous permissions are not enabled automatically. Select each folder again; the index and history will be preserved.</string>
+	<key>Статус показывает наличие настройки, а не проверенный сеанс. После изменения подключения начните новый чат выбранного клиента. Уже открытый сеанс может сохранить прежний набор инструментов; автоматическое обновление не гарантируется.</key>
+	<string>The status indicates configuration, not a verified session. Start a new chat in the selected client after changing the connection. An existing session may retain its previous tools; an automatic update is not guaranteed.</string>
+	<key>Тег / ключевое слово / тип документа</key>
+	<string>Tag / keyword / document type</string>
+	<key>Тег / подпапки (каждая с новой строки)</key>
+	<string>Tag / subfolders (one per line)</string>
+	<key>Текст / шаблон (* и ?)</key>
+	<string>Text / pattern (* and ?)</string>
+	<key>Текст на изображении (OCR)</key>
+	<string>Text in image (OCR)</string>
+	<key>Тема</key>
+	<string>Theme</string>
+	<key>Тип</key>
+	<string>Type</string>
+	<key>Тип документа</key>
+	<string>Document type</string>
+	<key>Тип: %@ · %@</key>
+	<string>Type: %@ · %@</string>
+	<key>Точные дубликаты</key>
+	<string>Exact duplicates</string>
+	<key>Требуется проверка результата</key>
+	<string>Result review required</string>
+	<key>Тёмная</key>
+	<string>Dark</string>
+	<key>Убрать действие</key>
+	<string>Remove action</string>
+	<key>Убрать доступ</key>
+	<string>Revoke access</string>
+	<key>Убрать доступ к папке %@</key>
+	<string>Revoke access to folder %@</string>
+	<key>Убрать папку из разрешённых?</key>
+	<string>Revoke access to this folder?</string>
+	<key>Уведомить</key>
+	<string>Notify</string>
+	<key>Уведомления выключены в macOS.</key>
+	<string>Notifications are disabled in macOS.</string>
+	<key>Уведомления разрешены.</key>
+	<string>Notifications are allowed.</string>
+	<key>Удалить правило</key>
+	<string>Delete rule</string>
+	<key>Удалить правило? Созданные файлы останутся на месте.</key>
+	<string>Delete this rule? Created files will remain in place.</string>
+	<key>Удаляется только разрешение и локальный индекс. Файлы остаются на месте.</key>
+	<string>Only the permission and local index are removed. Files stay in place.</string>
+	<key>Уже выполняется другое правило.</key>
+	<string>Another rule is already running.</string>
+	<key>Условия</key>
+	<string>Conditions</string>
+	<key>Файл изменён</key>
+	<string>File modified</string>
+	<key>Файл переименован</key>
+	<string>File renamed</string>
+	<key>Файлы</key>
+	<string>Files</string>
+	<key>Файлы в папке «%@» останутся на месте. Для повторного доступа потребуется снова выбрать папку.</key>
+	<string>Files in “%@” will stay in place. To restore access, select the folder again.</string>
+	<key>Файлы изменились. Обновите список файлов и повторите запрос.</key>
+	<string>The files changed. Refresh the file list and try again.</string>
+	<key>Цепочка правил</key>
+	<string>Rule chain</string>
+	<key>Часовой пояс</key>
+	<string>Time zone</string>
+	<key>Шаблон (* и ?)</key>
+	<string>Pattern (* and ?)</string>
+	<key>Это действие требует локального интерфейса и не выполнено фоновым агентом.</key>
+	<string>This action requires the local interface and was not performed by the background agent.</string>
+	<key>Этот раздел будет доступен в одном из следующих этапов разработки.</key>
+	<string>This section will be available in a later development stage.</string>
+</dict>
+</plist>

@@ -1,6 +1,7 @@
 import AppKit
 import Combine
 import Foundation
+import EcosystemLocalization
 import FileOrganizerCore
 
 /// Состояние экрана обзора. ViewModel владеет жизненным циклом безопасного
@@ -12,8 +13,8 @@ final class OverviewViewModel: ObservableObject {
     @Published private(set) var isScanning = false
     @Published private(set) var progress: ScanProgress?
     @Published private(set) var lastSummary: ScanSummary?
-    @Published var errorMessage: String?
-    @Published private(set) var duplicateNotice: String?
+    @Published var errorMessage: AresMessage?
+    @Published private(set) var duplicateNotice: AresMessage?
     @Published private(set) var nextDuplicateCursor: String?
     private var duplicateRootID: UUID?
     private var totalDuplicateCount: Int?
@@ -61,11 +62,12 @@ final class OverviewViewModel: ObservableObject {
 
     /// Стандартная панель macOS — единственный путь получения нового файлового
     /// доступа. Агентам и текстовым полям не разрешено передавать URL напрямую.
-    func chooseRootAndScan() {
+    func chooseRootAndScan(language: AgentLanguage) {
+        let l10n = AresLocalization(language: language)
         let panel = NSOpenPanel()
-        panel.title = "Выберите папку для анализа"
-        panel.message = "Ares будет читать только метаданные файлов в этой папке."
-        panel.prompt = "Добавить папку"
+        panel.title = l10n.text("Выберите папку для анализа")
+        panel.message = l10n.text("Ares будет читать только метаданные файлов в этой папке.")
+        panel.prompt = l10n.text("Добавить папку")
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
@@ -90,7 +92,7 @@ final class OverviewViewModel: ObservableObject {
                 roots = try await container.fileRepository.fetchRoots()
                 lastSummary = summary
             } catch is CancellationError {
-                errorMessage = "Сканирование отменено. Изменения файлов не выполнялись."
+                errorMessage = AresMessage("Сканирование отменено. Изменения файлов не выполнялись.")
             } catch {
                 errorMessage = Self.userMessage(for: error)
             }
@@ -103,7 +105,7 @@ final class OverviewViewModel: ObservableObject {
     func findDuplicates(rootID: UUID? = nil) {
         guard !isFindingDuplicates, !isScanning, !isRemovingRoot else { return }
         guard let root = rootID.flatMap({ id in roots.first { $0.id == id } }) ?? roots.first else {
-            errorMessage = "Сначала добавьте и просканируйте папку."
+            errorMessage = AresMessage("Сначала добавьте и просканируйте папку.")
             return
         }
         isFindingDuplicates = true
@@ -137,14 +139,15 @@ final class OverviewViewModel: ObservableObject {
     }
     private func updateDuplicateNotice(_ skipped: Int) {
         let count = duplicateGroups.reduce(0) { $0 + $1.records.count }
-        duplicateNotice = "Показано \(count) из \(totalDuplicateCount ?? count) файлов с дубликатами." + (skipped > 0 ? " Пропущено объектов: \(skipped)." : "")
+        duplicateNotice = AresMessage("Показано %@ из %@ файлов с дубликатами. Пропущено объектов: %@.",
+            args: [count.formatted(), (totalDuplicateCount ?? count).formatted(), skipped.formatted()])
     }
 
     private func updateProgress(_ newProgress: ScanProgress) {
         progress = newProgress
     }
 
-    private static func userMessage(for error: Error) -> String {
-        (error as? LocalizedError)?.errorDescription ?? "Не удалось завершить операцию. Файлы не изменены."
+    private static func userMessage(for error: Error) -> AresMessage {
+        .runtime(AresErrorLocalization.message(for: error))
     }
 }

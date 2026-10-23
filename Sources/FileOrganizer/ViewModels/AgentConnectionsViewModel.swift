@@ -1,4 +1,5 @@
 import Foundation
+import EcosystemLocalization
 import Combine
 import FileOrganizerCore
 import EcosystemLocalIPC
@@ -11,9 +12,9 @@ final class AgentConnectionsViewModel: ObservableObject {
     @Published var tasks: [AgentTask] = []
     @Published var isChecking = false
     @Published var isHealthy = false
-    @Published var healthMessage: String?
+    @Published var healthMessage: AresMessage?
     @Published var connected: Set<ExternalAgent> = []
-    @Published var registrationMessages: [ExternalAgent: String] = [:]
+    @Published var registrationMessages: [ExternalAgent: AresMessage] = [:]
     @Published var isRegistering = false
     private let container: AppContainer
     private let registration: AgentRegistrationService
@@ -52,9 +53,9 @@ final class AgentConnectionsViewModel: ObservableObject {
         do {
             let state = try await registration.status(agent)
             if state.connected { connected.insert(agent) } else { connected.remove(agent) }
-            registrationMessages[agent] = state.message
+            registrationMessages[agent] = .verbatim(state.message)
         } catch {
-            connected.remove(agent); registrationMessages[agent] = error.localizedDescription
+            connected.remove(agent); registrationMessages[agent] = .runtime(.capture(error))
         }
     }
     @Published var codexPlan: CodexConnectionPlan?
@@ -66,7 +67,7 @@ final class AgentConnectionsViewModel: ObservableObject {
         Task {
             defer { isRegistering = false }
             do { _ = try await registration.applyCodexConnection(plan); await refresh(.codex) }
-            catch { registrationMessages[.codex] = error.localizedDescription }
+            catch { registrationMessages[.codex] = .runtime(.capture(error)) }
         }
     }
 
@@ -77,7 +78,7 @@ final class AgentConnectionsViewModel: ObservableObject {
             Task {
                 defer { isRegistering = false }
                 do { codexPlan = try await registration.previewCodexConnection(connected: !connected.contains(.codex)) }
-                catch { registrationMessages[.codex] = error.localizedDescription }
+                catch { registrationMessages[.codex] = .runtime(.capture(error)) }
             }
             return
         }
@@ -85,7 +86,7 @@ final class AgentConnectionsViewModel: ObservableObject {
         Task {
             defer { isRegistering = false }
             do { harnessPlan = try await registration.previewHarnessConnection(connected: !connected.contains(.harness)) }
-            catch { registrationMessages[.harness] = error.localizedDescription }
+            catch { registrationMessages[.harness] = .runtime(.capture(error)) }
         }
     }
 
@@ -95,7 +96,7 @@ final class AgentConnectionsViewModel: ObservableObject {
         Task {
             defer { isRegistering = false }
             do { _ = try await registration.applyHarnessConnection(plan); await refresh(.harness) }
-            catch { registrationMessages[.harness] = error.localizedDescription }
+            catch { registrationMessages[.harness] = .runtime(.capture(error)) }
         }
     }
 
@@ -109,10 +110,10 @@ final class AgentConnectionsViewModel: ObservableObject {
             defer { isChecking = false }
             let helperURL = Self.helperURL
             guard FileManager.default.isExecutableFile(atPath: helperURL.path) else {
-                isHealthy = false; healthMessage = "MCP-helper отсутствует в приложении."; return
+                isHealthy = false; healthMessage = AresMessage("MCP-helper отсутствует в приложении."); return
             }
             isHealthy = await MCPHealthCheck.run(helperURL: helperURL)
-            healthMessage = isHealthy ? "MCP готов: список инструментов получен." : "Проверка не завершилась за 5 секунд или helper вернул ошибку. Можно повторить."
+            healthMessage = isHealthy ? AresMessage("MCP готов: список инструментов получен.") : AresMessage("Проверка не завершилась за 5 секунд или helper вернул ошибку. Можно повторить.")
         }
     }
 }

@@ -1,11 +1,15 @@
 import SwiftUI
+import EcosystemLocalization
 import FileOrganizerCore
 import EcosystemUI
 
 /// Единая точка управления оформлением и внешними подключениями. Один владелец
 /// модели сохраняет состояние всех секций на время жизни экрана.
 struct SettingsOverviewView: View {
+    @Environment(\.agentLanguage) private var language
+    private var l10n: AresLocalization { AresLocalization(language: language) }
     private let container: AppContainer
+    @Environment(\.localLanguageModel) private var languageModel
     @AppStorage(AppTheme.storageKey) private var storedTheme = AppTheme.system.rawValue
     @StateObject private var connections: AgentConnectionsViewModel
 
@@ -16,11 +20,12 @@ struct SettingsOverviewView: View {
 
     var body: some View {
         Form {
+            if let languageModel { LocalLanguageSection(model: languageModel) }
             Section {
-                Picker("Тема", selection: $storedTheme) {
-                    ForEach(AppTheme.allCases) { Text($0.title).tag($0.rawValue) }
+                Picker(l10n.text("Тема"), selection: $storedTheme) {
+                    ForEach(AppTheme.allCases) { Text(l10n.text($0.title)).tag($0.rawValue) }
                 }
-            } header: { Label("Оформление", systemImage: "paintpalette") }
+            } header: { Label(l10n.text("Оформление"), systemImage: "paintpalette") }
             if let client = container.localRuntimeClient {
                 LocalOperationsSection(client: client)
                 LocalRecoverySection(client: client)
@@ -34,7 +39,7 @@ struct SettingsOverviewView: View {
         .padding()
         .task { connections.load() }
         .toolbar {
-            Button("Обновить статусы", systemImage: "arrow.clockwise") { connections.load() }
+            Button(l10n.text("Обновить статусы"), systemImage: "arrow.clockwise") { connections.load() }
                 .disabled(connections.isRegistering)
         }
     }

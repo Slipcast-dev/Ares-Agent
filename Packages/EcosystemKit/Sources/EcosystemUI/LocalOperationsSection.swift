@@ -1,4 +1,5 @@
 import SwiftUI
+import EcosystemLocalization
 import UniformTypeIdentifiers
 import EcosystemContracts
 import EcosystemLocalIPC
@@ -18,13 +19,18 @@ private struct DiagnosticsDocument: FileDocument {
 }
 
 public struct LocalOperationsSection: View {
+    @Environment(\.agentLanguage) private var language
+    private var l10n: AgentLocalization { AgentLocalization(language: language) }
     @StateObject private var model: LocalOperationsModel
     @State private var preview: String?
     @State private var exporting = false
+    @State private var pauseLanguage = ConfirmationLanguage(language: .english)
+    @State private var emergencyLanguage = ConfirmationLanguage(language: .english)
+    @State private var resumeLanguage = ConfirmationLanguage(language: .english)
     @State private var confirmingPause = false
     @State private var confirmingEmergency = false
     @State private var confirmingResume = false
-    @State private var saveMessage: String?
+    @State private var saveMessage: SharedText?
 
     public init(client: Result<LocalRPCClient, Error>) {
         _model = StateObject(wrappedValue: LocalOperationsModel(client: client))
@@ -32,121 +38,122 @@ public struct LocalOperationsSection: View {
     init(model: LocalOperationsModel) { _model = StateObject(wrappedValue: model) }
     public var body: some View {
         Section {
-            Text("Состояние только этого агента. Разрешения и служба второго приложения проверяются в его собственном окне.")
+            Text(l10n.text(.operationsScope))
                 .font(.caption).foregroundStyle(.secondary)
             ForEach(model.components) { component in
                 VStack(alignment: .leading, spacing: 3) {
-                    Label(component.title, systemImage: component.available && component.value != "Требует внимания" ? "checkmark.circle" : "exclamationmark.triangle")
-                    Text(component.value).font(.caption).foregroundStyle(.secondary)
+                    Label(l10n.text(component.title), systemImage: component.available && !component.needsAttention ? "checkmark.circle" : "exclamationmark.triangle")
+                    Text(component.value.localized(using: l10n)).font(.caption).foregroundStyle(.secondary)
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("operations." + component.id)
             }
             if let date = model.refreshedAt {
-                Text("Снимок: " + date.formatted(date: .abbreviated, time: .standard))
+                Text(l10n.message(.snapshot, .text(date.formatted(date: .abbreviated, time: .standard))))
                     .font(.caption).foregroundStyle(.secondary)
             }
-            if model.busy { ProgressView("Обновление состояния…") }
-            DisclosureGroup("Первое подключение и безопасная проверка") {
-                Text("1. Подключите Codex или DeepSeek Harness в разделе подключений и подтвердите план. Начните новый чат клиента.")
-                Text("2. В разрешениях выберите этого клиента, минимальные операции чтения и короткий срок. Подготовьте и подтвердите план отдельно в каждом агенте.")
-                Text("3. Поручите проверить статус и возможности, затем прочитать индекс тестовой папки Ареса и показатели Афины. Дождитесь итогов задач; файлы не изменять.")
-                Text("Если один агент недоступен, используйте доступную часть результата и уточните причину. Настройка клиента не является доказательством живого соединения.")
+            if model.busy { ProgressView(l10n.text(.refreshingStatus)) }
+            DisclosureGroup(l10n.text(.firstConnection)) {
+                Text(l10n.text(.firstConnectionStep1))
+                Text(l10n.text(.firstConnectionStep2))
+                Text(l10n.text(.firstConnectionStep3))
+                Text(l10n.text(.partialAgentResult))
             }
-            Button("Обновить сводку") { Task { await model.refresh() } }
+            Button(l10n.text(.refreshOverview)) { Task { await model.refresh() } }
                 .disabled(model.busy).accessibilityIdentifier("operations.refresh")
-            DisclosureGroup("Последние задачи (до 100)") {
-                if model.tasks.isEmpty { Text("Нет записей в выборке или очередь недоступна — проверьте статус выше.") }
+            DisclosureGroup(l10n.text(.latestTasks)) {
+                if model.tasks.isEmpty { Text(l10n.text(.tasksEmpty)) }
                 ForEach(model.tasks) { task in
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Задача " + task.id.uuidString.prefix(8) + " · " + Self.statusTitle(task.status))
+                        Text(l10n.message(.taskLine, .text(String(task.id.uuidString.prefix(8))), .text(Self.statusTitle(task.status, language: language))))
                             .textSelection(.enabled)
                         if !task.status.isTerminal {
-                            Button("Запросить отмену") { Task { await model.cancel(task) } }
+                            Button(l10n.text(.requestCancellation)) { Task { await model.cancel(task) } }
                                 .disabled(model.busy)
-                                .accessibilityLabel("Запросить отмену задачи " + task.id.uuidString.prefix(8))
+                                .accessibilityLabel(l10n.message(.cancelTaskAccessibility, .text(String(task.id.uuidString.prefix(8)))))
                         }
                     }
                 }
             }.accessibilityIdentifier("operations.tasks")
-            Button("Аварийно остановить этого агента", role: .destructive) { confirmingEmergency = true }
+            Button(l10n.text(.stopThisAgent), role: .destructive) { emergencyLanguage = ConfirmationLanguage(language: language); confirmingEmergency = true }
                 .disabled(model.busy).accessibilityIdentifier("operations.emergencyStop")
-            Button("Возобновить приём задач") { confirmingResume = true }
+            Button(l10n.text(.resumeAdmission)) { resumeLanguage = ConfirmationLanguage(language: language); confirmingResume = true }
                 .disabled(model.busy || model.emergency?.stopped != true)
                 .accessibilityIdentifier("operations.emergencyResume")
-            Text("Аварийная остановка блокирует новые задачи всех клиентов и планировщиков этого агента и запрашивает отмену всей очереди. Состояние сохраняется после перезапуска. Второй агент управляется отдельно.")
+            Text(l10n.text(.emergencyScope))
                 .font(.caption).foregroundStyle(.secondary)
-            Button("Приостановить фон и отменить показанные задачи", role: .destructive) { confirmingPause = true }
+            Button(l10n.text(.pauseVisible), role: .destructive) { pauseLanguage = ConfirmationLanguage(language: language); confirmingPause = true }
                 .disabled(model.busy || model.refreshedAt == nil)
                 .accessibilityIdentifier("operations.pauseCancel")
-            Text("Это запрос безопасной остановки: новые фоновые запуски ставятся на паузу, показанные активные задачи получают отмену. Ручные запросы клиентов не блокируются; закрытие окна также не останавливает службу.")
+            Text(l10n.text(.pauseVisibleScope))
                 .font(.caption).foregroundStyle(.secondary)
-            if let message = model.actionMessage { Text(message).accessibilityIdentifier("operations.result") }
-            Button("Предпросмотр диагностического отчёта") { preview = model.report; saveMessage = nil }
+            if let message = model.actionMessage { Text(message.localized(using: l10n)).accessibilityIdentifier("operations.result") }
+            Button(l10n.text(.previewDiagnostics)) { preview = model.report(language: language); saveMessage = nil }
                 .disabled(model.busy || model.refreshedAt == nil)
                 .accessibilityIdentifier("operations.preview")
-            if let saveMessage { Text(saveMessage).font(.caption) }
-        } header: { Label("Состояние и помощь", systemImage: "heart.text.square") }
+            if let saveMessage { Text(l10n.text(saveMessage)).font(.caption) }
+        } header: { Label(l10n.text(.statusHelp), systemImage: "heart.text.square") }
         .task { await model.refresh() }
-        .alert("Приостановить фон и запросить отмену?", isPresented: $confirmingPause) {
-            Button("Отмена", role: .cancel) {}
-            Button("Приостановить и запросить отмену", role: .destructive) { Task { await model.pauseAndCancelVisible() } }
+        .alert(pauseLanguage.localization.text(.pauseConfirmTitle), isPresented: $confirmingPause) {
+            Button(pauseLanguage.localization.text(.cancel), role: .cancel) {}
+            Button(pauseLanguage.localization.text(.pauseConfirmAction), role: .destructive) { Task { await model.pauseAndCancelVisible() } }
                 .accessibilityIdentifier("operations.pauseCancel.confirm")
         } message: {
-            Text("Действие относится только к этому агенту и последним 100 задачам. Отмена завершается на безопасной точке, выполненные действия не откатываются. После обновления проверьте состояния и раздел восстановления. Новые ручные запросы остаются доступны.")
+            Text(pauseLanguage.localization.text(.pauseConfirmBody))
         }
-        .alert("Аварийно остановить этого агента?", isPresented: $confirmingEmergency) {
-            Button("Отмена", role: .cancel) {}
-            Button("Остановить", role: .destructive) { Task { await model.setEmergencyStop(true) } }
+        .alert(emergencyLanguage.localization.text(.stopConfirmTitle), isPresented: $confirmingEmergency) {
+            Button(emergencyLanguage.localization.text(.cancel), role: .cancel) {}
+            Button(emergencyLanguage.localization.text(.stop), role: .destructive) { Task { await model.setEmergencyStop(true) } }
                 .accessibilityIdentifier("operations.emergencyStop.confirm")
         } message: {
-            Text("Новые задачи будут запрещены до явного возобновления. Активные задачи остановятся на безопасной точке; уже выполненные изменения не откатываются. Проверьте callbacks и раздел восстановления.")
+            Text(emergencyLanguage.localization.text(.stopConfirmBody))
         }
-        .alert("Возобновить приём задач?", isPresented: $confirmingResume) {
-            Button("Отмена", role: .cancel) {}
-            Button("Возобновить") { Task { await model.setEmergencyStop(false) } }
+        .alert(resumeLanguage.localization.text(.resumeConfirmTitle), isPresented: $confirmingResume) {
+            Button(resumeLanguage.localization.text(.cancel), role: .cancel) {}
+            Button(resumeLanguage.localization.text(.resume)) { Task { await model.setEmergencyStop(false) } }
                 .accessibilityIdentifier("operations.emergencyResume.confirm")
         } message: {
-            Text("Клиенты и включённые планировщики смогут отправлять новые задачи. Отменённые задания не повторяются автоматически; прежние разрешения сохраняют свои ограничения.")
+            Text(resumeLanguage.localization.text(.resumeConfirmBody))
         }
         .sheet(isPresented: Binding(get: { preview != nil }, set: { if !$0 { preview = nil } })) {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Диагностический отчёт").font(.headline)
-                if let saveMessage { Text(saveMessage).font(.caption) }
-                Text("Проверьте текст перед сохранением. Отчёт содержит только состояния и счётчики; отправка не выполняется.")
+                Text(l10n.text(.diagnosticReport)).font(.headline)
+                if let saveMessage { Text(l10n.text(saveMessage)).font(.caption) }
+                Text(l10n.text(.reportDisclosure))
                 ScrollView { Text(preview ?? "").font(.system(.body, design: .monospaced))
                     .textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading) }
                     .accessibilityIdentifier("operations.preview.text")
                 HStack {
-                    Button("Закрыть", role: .cancel) { preview = nil }.keyboardShortcut(.cancelAction)
+                    Button(l10n.text(.close), role: .cancel) { preview = nil }.keyboardShortcut(.cancelAction)
                     Spacer()
-                    Button("Сохранить отчёт…") { exporting = true }
+                    Button(l10n.text(.saveReport)) { exporting = true }
                         .accessibilityIdentifier("operations.export")
                 }
             }.padding().frame(minWidth: 400, idealWidth: 580, minHeight: 340, idealHeight: 460)
             .fileExporter(isPresented: $exporting, document: DiagnosticsDocument(text: preview ?? ""),
                           contentType: .plainText, defaultFilename: "agent-diagnostics") { result in
                 switch result {
-                case .success: saveMessage = "Отчёт сохранён в выбранный файл."
-                case .failure: saveMessage = "Не удалось сохранить отчёт. Выберите доступную папку и повторите."
+                case .success: saveMessage = .reportSaved
+                case .failure: saveMessage = .reportSaveFailed
                 }
             }
         }
     }
-    static func statusTitle(_ status: TaskStatus) -> String {
+    static func statusTitle(_ status: TaskStatus, language: AgentLanguage = .russian) -> String {
+        let l10n = AgentLocalization(language: language)
         switch status {
-        case .queued: "В очереди"
-        case .running: "Выполняется"
-        case .waitingForApproval: "Ожидает согласия"
-        case .waitingForResource: "Ожидает ресурс"
-        case .cancelling: "Отмена запрошена"
-        case .completed: "Завершена"
-        case .partial: "Частично выполнена"
-        case .failed: "Ошибка"
-        case .cancelled: "Отменена"
-        case .interrupted: "Прервана"
-        case .recoveryRequired: "Требует сверки"
+        case .queued: return l10n.text(.taskQueued)
+        case .running: return l10n.text(.taskRunning)
+        case .waitingForApproval: return l10n.text(.taskWaitingApproval)
+        case .waitingForResource: return l10n.text(.taskWaitingResource)
+        case .cancelling: return l10n.text(.taskCancelling)
+        case .completed: return l10n.text(.taskCompleted)
+        case .partial: return l10n.text(.taskPartial)
+        case .failed: return l10n.text(.taskFailed)
+        case .cancelled: return l10n.text(.taskCancelled)
+        case .interrupted: return l10n.text(.taskInterrupted)
+        case .recoveryRequired: return l10n.text(.taskRecoveryRequired)
         }
     }
 }

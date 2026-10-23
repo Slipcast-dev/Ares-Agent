@@ -2,6 +2,7 @@ import CoreFoundation
 import Foundation
 import FileOrganizerCore
 import EcosystemLocalIPC
+import EcosystemLocalization
 
 /// MCP может создавать выключенный проект, но не подтверждать план.
 /// Нормализация default значений выполняется до строгого server decoding.
@@ -90,7 +91,7 @@ enum RuleMCP {
         if name == "rule.preview" {
             let id = try LocalWire.decode(LocalTaskID.self, data)
             let plan: RulePlanSummary = try await client.waitForResult(id.id, cancelOnCancellation: false, onProgress: { progress in
-                if let progress { await context?.progress(Double(progress.processed.value), progress.total.map { Double($0.value) }, "Выполнение") }
+                if let progress { await context?.progress(Double(progress.processed.value), progress.total.map { Double($0.value) }, AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText("Выполнение")) }
             })
             resultData = try LocalWire.encode(plan)
         }
@@ -140,7 +141,7 @@ enum RuleMCP {
             "archiveTogether": ["type": "boolean"]
         ]]
         return ["type": "object", "additionalProperties": false,
-            "description": "Выключенный проект правила. Подтверждение действий и чтения содержимого выполняется в локальном интерфейсе.",
+            "description": RuntimeLocalization.bilingual("Выключенный проект правила. Подтверждение действий и чтения содержимого выполняется в локальном интерфейсе."),
             "properties": [
                 "name": ["type": "string", "minLength": 1, "maxLength": 200], "rootID": uuid,
                 "maximumFiles": ["type": "integer", "minimum": 1, "maximum": 1000],
@@ -172,7 +173,7 @@ enum RuleMCP {
             }
             if name == "rule.history" { properties["runId"] = ["type": "string", "format": "uuid"]; properties["cursor"] = ["type": "string", "minLength": 1, "maxLength": 2048] }
             if ["rule.list", "rule.history"].contains(name) { properties["offset"] = ["type": "integer", "minimum": 0, "maximum": 100000] }
-            return ["name": name, "description": "Правила Ares: \(name). Мутации требуют локально утверждённого плана или включённого правила; MCP не выдаёт подтверждение.", "inputSchema": ["type": "object", "additionalProperties": false, "properties": properties, "required": required]]
+            return ["name": name, "description": RuntimeLocalization.bilingual("Правила Ares: %@. Мутации требуют локально утверждённого плана или включённого правила; MCP не выдаёт подтверждение.", name), "inputSchema": ["type": "object", "additionalProperties": false, "properties": properties, "required": required]]
         }
     }
 }

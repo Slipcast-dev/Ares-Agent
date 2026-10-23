@@ -1,6 +1,7 @@
 import CryptoKit
 import Darwin
 import Foundation
+import EcosystemLocalization
 
 /// Адаптер управляет только собственным блоком TOML и одним файлом роли.
 /// Файловый lock общий для двух приложений; actor защищает состояние внутри процесса.
@@ -47,12 +48,14 @@ public actor CodexAdapter {
         // Пользовательский редактор не участвует в lock: план должен описывать
         // именно проверенный снимок, а не правку, появившуюся во время CLI-проверки.
         guard initialFingerprint == (try fingerprint()) else { throw CodexAdapterError.stalePlan }
+        // Двуязычный текст относится только к новому DTO: fingerprint вычислен
+        // из прежних bytes конфигурации, сохранённые планы не переписываются.
         return CodexConnectionPlan(domain: name, connected: connected,
             fingerprint: initialFingerprint, changes: prepared.changed ? [connected
-                ? "Подключить роль \(name) и её MCP-сервер в выбранном профиле Codex."
-                : "Удалить принадлежащие экосистеме роль \(name) и блок MCP."] : [],
-            warnings: ["Доступ к операциям выдаётся отдельно в приложении агента.",
-                "После подключения начните новый сеанс Codex, чтобы перечитать роли."],
+                ? RuntimeLocalization.bilingual("Подключить роль %@ и её MCP-сервер в выбранном профиле Codex.", name)
+                : RuntimeLocalization.bilingual("Удалить принадлежащие экосистеме роль %@ и блок MCP.", name)] : [],
+            warnings: [RuntimeLocalization.bilingual("Доступ к операциям выдаётся отдельно в приложении агента."),
+                RuntimeLocalization.bilingual("После подключения начните новый сеанс Codex, чтобы перечитать роли.")],
             backupDirectory: prepared.changed ? state.appendingPathComponent("backups").path : nil)
     }
 
@@ -116,14 +119,14 @@ public actor CodexAdapter {
             do { _ = try await validateCLI(try read(config) ?? Data()) }
             catch CodexAdapterError.cliValidationFailed {
                 return CodexAdapterStatus(domain: name, connected: false, state: "conflict",
-                    detail: "Codex отклонил конфигурацию подключённого агента; файлы не изменены.")
+                    detail: RuntimeLocalization.bilingual("Codex отклонил конфигурацию подключённого агента; файлы не изменены."))
             }
             guard before == (try fingerprint()) else { throw CodexAdapterError.stalePlan }
         }
         if status.state == "disconnected", configuration.codexExecutableURL != nil {
             let names = try await validateCLI(try read(config) ?? Data(), requireOwnServer: false)
             if names.contains(name) {
-                return CodexAdapterStatus(domain: name, connected: false, state: "conflict", detail: "Codex сообщает о чужом MCP-сервере с тем же именем.")
+                return CodexAdapterStatus(domain: name, connected: false, state: "conflict", detail: RuntimeLocalization.bilingual("Codex сообщает о чужом MCP-сервере с тем же именем."))
             }
         }
         return status
@@ -159,7 +162,7 @@ public actor CodexAdapter {
 
     private func currentStatus() throws -> CodexAdapterStatus {
         if manager.fileExists(atPath: journal.path) {
-            return CodexAdapterStatus(domain: name, connected: false, state: "recoveryRequired", detail: "Операция не завершена; требуется сверка журнала.")
+            return CodexAdapterStatus(domain: name, connected: false, state: "recoveryRequired", detail: RuntimeLocalization.bilingual("Операция не завершена; требуется сверка журнала."))
         }
         let snapshot = try inspect()
         do {
@@ -169,14 +172,14 @@ public actor CodexAdapter {
                 var remaining = String(decoding: snapshot.config, as: UTF8.self)
                 remaining.removeSubrange(owned!)
                 guard !duplicate, !hasServer(remaining) else { throw CodexAdapterError.conflict }
-                return CodexAdapterStatus(domain: name, connected: true, state: "connected", detail: "Роль и MCP-блок принадлежат экосистеме и не изменены.")
+                return CodexAdapterStatus(domain: name, connected: true, state: "connected", detail: RuntimeLocalization.bilingual("Роль и MCP-блок принадлежат экосистеме и не изменены."))
             }
             if snapshot.role != nil || hasServer(String(decoding: snapshot.config, as: UTF8.self)) || duplicate {
-                return CodexAdapterStatus(domain: name, connected: false, state: "conflict", detail: "Имя роли или MCP-сервера уже занято.")
+                return CodexAdapterStatus(domain: name, connected: false, state: "conflict", detail: RuntimeLocalization.bilingual("Имя роли или MCP-сервера уже занято."))
             }
-            return CodexAdapterStatus(domain: name, connected: false, state: "disconnected", detail: "Агент не подключён в выбранном профиле.")
+            return CodexAdapterStatus(domain: name, connected: false, state: "disconnected", detail: RuntimeLocalization.bilingual("Агент не подключён в выбранном профиле."))
         } catch CodexAdapterError.conflict {
-            return CodexAdapterStatus(domain: name, connected: false, state: "conflict", detail: "Управляемые файлы изменены вручную; автоматическая перезапись запрещена.")
+            return CodexAdapterStatus(domain: name, connected: false, state: "conflict", detail: RuntimeLocalization.bilingual("Управляемые файлы изменены вручную; автоматическая перезапись запрещена."))
         }
     }
 

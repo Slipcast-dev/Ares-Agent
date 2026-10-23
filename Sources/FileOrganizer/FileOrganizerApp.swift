@@ -1,5 +1,6 @@
 import SwiftUI
 import EcosystemLocalIPC
+import EcosystemLocalization
 import EcosystemUI
 import AppKit
 import FileOrganizerCore
@@ -12,20 +13,26 @@ struct FileOrganizerApp: App {
     @AppStorage(AppTheme.storageKey) private var storedTheme = AppTheme.system.rawValue
     @StateObject private var overviewViewModel: OverviewViewModel
 
-    private let startupError: String?
+    @StateObject private var language: LocalLanguageModel
+    private let startupError: RuntimeMessage?
 
     init() {
+        if AresLocalization.runProbeIfRequested() { exit(0) }
+        if LocalizationProbe.runIfRequested() { exit(0) }
         do {
             try InstalledRuntimeBootstrap.configureEnvironment(domain: "ares")
             startupError = nil
-            _overviewViewModel = StateObject(wrappedValue: OverviewViewModel())
+            let overview = OverviewViewModel()
+            _overviewViewModel = StateObject(wrappedValue: overview)
+            _language = StateObject(wrappedValue: LocalLanguageModel(client: overview.container.localRuntimeClient))
         } catch {
-            startupError = error.localizedDescription
+            startupError = .capture(error)
             // Ошибочный IPC-клиент не открывает legacy БД. Экран ошибки не
             // запускает ни load, ни миграции; /dev/null служит неиспользуемым URL.
             let container = AppContainer(databaseURL: URL(fileURLWithPath: "/dev/null"),
                 localClientOverride: .failure(error))
             _overviewViewModel = StateObject(wrappedValue: OverviewViewModel(container: container))
+            _language = StateObject(wrappedValue: LocalLanguageModel(client: .failure(error)))
         }
     }
 
@@ -35,12 +42,14 @@ struct FileOrganizerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if let startupError {
-                InstalledRuntimeFailureView(message: startupError)
-            } else {
-                ContentView(viewModel: overviewViewModel)
-                    .preferredColorScheme(selectedTheme.preferredColorScheme)
-            }
+            Group {
+                if let startupError {
+                    InstalledRuntimeFailureView(message: AgentLocalization(language: language.state.effectiveLanguage).runtimeMessage(startupError))
+                } else {
+                    ContentView(viewModel: overviewViewModel)
+                        .preferredColorScheme(selectedTheme.preferredColorScheme)
+                }
+            }.agentLanguageContext(language)
         }
         // Начальный размер — только предпочтение для нового окна, не предел
         // уменьшения. Сохранённый пользователем размер macOS восстанавливает.

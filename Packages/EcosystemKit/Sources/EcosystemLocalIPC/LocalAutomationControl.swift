@@ -1,4 +1,5 @@
 import Foundation
+import EcosystemLocalization
 
 public struct LocalAutomationRequest: Codable, Sendable {
     public var paused: Bool?
@@ -92,7 +93,7 @@ public enum LocalInboxMCP {
                 properties["limit"] = ["type": "integer", "minimum": 1, "maximum": 50]
                 if name == "events.claim" { properties["leaseSeconds"] = ["type": "integer", "minimum": 30, "maximum": 300] }
             }
-            return ["name": name, "description": "Сохранённые локальные события: явное чтение, временный захват и подтверждение; модель автоматически не запускается.", "inputSchema": ["type": "object", "properties": properties, "required": required, "additionalProperties": false]]
+            return ["name": name, "description": RuntimeLocalization.bilingual("Сохранённые локальные события: явное чтение, временный захват и подтверждение; модель автоматически не запускается."), "inputSchema": ["type": "object", "properties": properties, "required": required, "additionalProperties": false]]
         }
     }
     public static func call(_ name: String, args: [String: Any], client: LocalRPCClient) async throws -> [String: Any] {

@@ -17,7 +17,7 @@ final class FilesViewModel: ObservableObject {
     @Published var minimumSize = Int64(0)
     @Published var modifiedWithinDays = 0
     @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published var errorMessage: AresMessage?
     @Published var previewURL: URL?
     @Published var includedPaths: Set<String>?
     private var scopedRoot: URL?
@@ -48,7 +48,7 @@ final class FilesViewModel: ObservableObject {
             roots = try await container.fileRepository.fetchRoots()
             if !roots.contains(where: { $0.id == rootID }) { rootID = roots.first?.id }
             await loadRecords()
-        } catch { errorMessage = error.localizedDescription }
+        } catch { errorMessage = .runtime(AresErrorLocalization.message(for: error)) }
     }
 
     func loadRecords() async {
@@ -66,7 +66,7 @@ final class FilesViewModel: ObservableObject {
             guard requestID == token else { return }
             records = result
         } catch {
-            if requestID == token { errorMessage = error.localizedDescription }
+            if requestID == token { errorMessage = .runtime(AresErrorLocalization.message(for: error)) }
         }
         if requestID == token { isLoading = false }
     }
@@ -101,7 +101,7 @@ final class FilesViewModel: ObservableObject {
                     NSWorkspace.shared.activateFileViewerSelecting([file])
                     url.stopAccessingSecurityScopedResource()
                 }
-            } catch { errorMessage = error.localizedDescription }
+            } catch { errorMessage = .runtime(AresErrorLocalization.message(for: error)) }
         }
     }
 

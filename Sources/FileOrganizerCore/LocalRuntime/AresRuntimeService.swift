@@ -77,6 +77,10 @@ public actor AresRuntimeService {
     }
     public func stopObservation() { watcher?.stop(); watcher = nil }
     public func handle(role: LocalRole, clientID: LocalMCPClient? = nil, request: LocalRPCRequest) async throws -> Data {
+        if request.operation.hasPrefix("language.") {
+            guard let automation else { throw LocalRuntimeFailure.denied }
+            return try await LocalLanguageControl.handle(store: automation.language, role: role, request: request)
+        }
         if request.operation.hasPrefix("operations.emergency_") {
             guard role == .gui else { throw LocalRuntimeFailure.denied }
             _ = try LocalWire.decode(LocalEmpty.self, request.payload, keys: [])

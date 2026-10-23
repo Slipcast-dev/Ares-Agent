@@ -19,7 +19,7 @@ final class RulesViewModel: ObservableObject {
     @Published var editor: AutomationRule?
     @Published var checkResults: [RuleFileSnapshot] = []
     @Published var showCheckResults = false
-    @Published var message: String?
+    @Published var message: AresMessage?
     @Published var isBusy = false
     private var work: Task<Void, Never>?
     let container: AppContainer
@@ -31,7 +31,7 @@ final class RulesViewModel: ObservableObject {
             roots = try await container.fileRepository.fetchRoots()
             if let remote = container.localRuntimeClient { pendingPlans = try await remote.get().call("rule.pending", RuleControlRequest()) }
             runs = try await container.fileRepository.ruleObjects(RuleRun.self, table: .runs).sorted { $0.createdAt > $1.createdAt }
-        } catch { message = error.localizedDescription }
+        } catch { message = Self.presentation(error) }
     }
     func save(_ rule: AutomationRule) {
         message = nil
@@ -54,16 +54,16 @@ final class RulesViewModel: ObservableObject {
                 editor = nil
                 await load()
                 if container.isLocalRuntimeClient && rule.enabled { requestEnabled(rule, enabled: true) }
-            } catch { message = error.localizedDescription }
+            } catch { message = Self.presentation(error) }
         }
     }
-    func duplicate(_ rule: AutomationRule) {
-        var copy = rule; copy.id = UUID(); copy.name += " — копия"; copy.enabled = false
+    func duplicate(_ rule: AutomationRule, suffix: String) {
+        var copy = rule; copy.id = UUID(); copy.name += suffix; copy.enabled = false
         copy.actions = copy.actions.map { var action = $0; action.id = UUID(); return action }
         editor = copy
     }
     func remove(_ rule: AutomationRule) {
-        Task { do { try await container.fileRepository.deleteRule(id: rule.id); await load() } catch { message = error.localizedDescription } }
+        Task { do { try await container.fileRepository.deleteRule(id: rule.id); await load() } catch { message = Self.presentation(error) } }
     }
     func check(_ rule: AutomationRule) {
         perform {
@@ -84,7 +84,7 @@ final class RulesViewModel: ObservableObject {
                 let page: RulePlanFilesPage = try await remote.get().call("rule.plan_files", RuleControlRequest(planID: plan.id, offset: offset))
                 guard reviewingPlan?.id == plan.id else { return }
                 reviewingFiles += page.files; nextReviewOffset = page.nextOffset
-            } catch { nextReviewOffset = offset; message = error.localizedDescription }
+            } catch { nextReviewOffset = offset; message = Self.presentation(error) }
         }
     }
     func requestEnabled(_ rule: AutomationRule, enabled: Bool) {
@@ -98,7 +98,7 @@ final class RulesViewModel: ObservableObject {
                     let _: DisabledRuleReply = try await remote.get().call("rule.disable", RuleControlRequest(ruleID: rule.id))
                     await load()
                 }
-            } catch { message = error.localizedDescription }
+            } catch { message = Self.presentation(error) }
         }
     }
     func confirmPlan(_ plan: RulePlanSummary) {
@@ -110,9 +110,9 @@ final class RulesViewModel: ObservableObject {
             if execute && plan.kind == "run" {
                 let id: LocalTaskID = try await client.call("rule.run", RuleControlRequest(ruleID: plan.ruleID, planID: plan.id, key: UUID().uuidString))
                 let run: RuleRun = try await client.waitForResult(id.id)
-                self.message = "Обработано совпадений: \(run.matchedCount). Результат: \(RulePresentation.status(run.status))."
+                self.message = .init("Обработано совпадений: %@. Результат: %@.", messages: [.verbatim(run.matchedCount.formatted()), Self.statusMessage(run.status)])
             } else {
-                self.message = plan.kind == "enable" ? "Правило включено в пределах подтверждённых настроек и лимитов." : "План подтверждён. Клиент может запустить его до истечения срока."
+                self.message = .init(plan.kind == "enable" ? "Правило включено в пределах подтверждённых настроек и лимитов." : "План подтверждён. Клиент может запустить его до истечения срока.")
             }
             await self.load()
         }
@@ -129,7 +129,7 @@ final class RulesViewModel: ObservableObject {
         }
         perform {
             let run = try await self.container.ruleCoordinator.run(rule)
-            self.message = "Обработано совпадений: \(run.matchedCount). Результат: \(RulePresentation.status(run.status)). Подробности — в истории."
+            self.message = .init("Обработано совпадений: %@. Результат: %@. Подробности — в истории.", messages: [.verbatim(run.matchedCount.formatted()), Self.statusMessage(run.status)])
             await self.load()
         }
     }
@@ -138,7 +138,7 @@ final class RulesViewModel: ObservableObject {
         guard let rule = rules.first(where: { $0.id == previous.ruleID }) else { return }
         if container.isLocalRuntimeClient { run(rule); return }
         let paths = Set(previous.results.filter { $0.status == "failed" }.map(\.relativePath))
-        guard !paths.isEmpty else { message = "Нет действий с безопасно подтверждённой ошибкой для повтора."; return }
+        guard !paths.isEmpty else { message = .init("Нет действий с безопасно подтверждённой ошибкой для повтора."); return }
         perform {
             _ = try await self.container.ruleCoordinator.run(rule, paths: paths)
             await self.load()
@@ -148,16 +148,30 @@ final class RulesViewModel: ObservableObject {
         guard !isBusy else { return }; isBusy = true
         work = Task {
             defer { isBusy = false; work = nil }
-            do { try await operation() } catch is CancellationError { message = "Выполнение отменено. Завершённые действия сохранены в истории." }
-            catch { message = error.localizedDescription }
+            do { try await operation() } catch is CancellationError { message = .init("Выполнение отменено. Завершённые действия сохранены в истории.") }
+            catch { message = Self.presentation(error) }
         }
     }
+    /// Известные ошибки переводятся по типу; произвольные ошибки ОС
+    /// заменяются безопасным сообщением без локальных путей и секретов.
+    private static func presentation(_ error: Error) -> AresMessage {
+        .runtime(AresErrorLocalization.message(for: error))
+    }
+
+    private static func statusMessage(_ status: String) -> AresMessage {
+        switch status {
+        case "running", "recoveryRequired", "completed", "partial_or_failed", "failed", "cancelled", "interrupted", "skipped":
+            return .init(RulePresentation.status(status))
+        default: return .verbatim(status)
+        }
+    }
+
     func requestNotifications() {
         Task {
             do {
                 let allowed = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
-                message = allowed ? "Уведомления разрешены." : "Уведомления выключены в macOS."
-            } catch { message = error.localizedDescription }
+                message = .init(allowed ? "Уведомления разрешены." : "Уведомления выключены в macOS.")
+            } catch { message = Self.presentation(error) }
         }
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import EcosystemLocalization
 import EcosystemContracts
 
 /// Единый внешний словарь двух независимых агентов. Runtime продолжает
@@ -23,7 +24,7 @@ public enum LocalCommonMCP {
                 properties["contractVersion"] = ["type": "object", "additionalProperties": false,
                     "properties": ["major": ["type": "integer", "minimum": 0], "minor": ["type": "integer", "minimum": 0]], "required": ["major"]]
             }
-            return ["name": name, "description": "Общая операция локального агента: " + name,
+            return ["name": name, "description": RuntimeLocalization.bilingual("Общая операция локального агента: %@", name),
                     "inputSchema": ["type": "object", "properties": properties, "required": required, "additionalProperties": false]]
         }
     }
@@ -33,7 +34,7 @@ public enum LocalCommonMCP {
         guard names.contains(name) else { throw LocalRuntimeFailure.invalidRequest }
         if name == "agent.get_capabilities" {
             if let requested = arguments["contractVersion"] as? [String: Any], (requested["major"] as? Int) != 1 {
-                return ["error": ["code": "INCOMPATIBLE_VERSION", "message": "Поддерживается major 1.", "retryable": false, "correlationId": UUID().uuidString]]
+                return ["error": ["code": "INCOMPATIBLE_VERSION", "message": AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText("Поддерживается major 1."), "retryable": false, "correlationId": UUID().uuidString]]
             }
             return ["agentId": domain, "contractVersion": ["major": 1, "minor": 0],
                 "protocolVersions": ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"],
@@ -82,8 +83,8 @@ public enum LocalCommonMCP {
     public static func failure(_ error: Error) -> Data {
         let safe = LocalRuntimeFailure.safe(error)
         return (try? result(["error": ["code": safe.knownCode.rawValue,
-            "message": safe.errorDescription ?? "Ошибка локального агента.",
+            "message": AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeError(safe),
             "retryable": [LocalRuntimeFailure.busy, .unavailable].contains(safe),
-            "correlationId": UUID().uuidString, "suggestedAction": "Проверьте состояние агента и локальные разрешения."]])) ?? Data()
+            "correlationId": UUID().uuidString, "suggestedAction": AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText("Проверьте состояние агента и локальные разрешения.")]])) ?? Data()
     }
 }

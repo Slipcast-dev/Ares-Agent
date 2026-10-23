@@ -1,13 +1,16 @@
 import Darwin
 import Foundation
+import EcosystemLocalization
 
 /// Общий CLI обслуживания входит в каждое приложение. Он не зависит от Python,
 /// исходников, доступа к другой роли или выбранной модели клиента.
 public enum InstalledMaintenanceCommand {
     public static func run(domain: String) -> Int32 {
+        if LocalizationProbe.runIfRequested() { return 0 }
         do {
             let args = Array(CommandLine.arguments.dropFirst())
-            let usage = "Usage: maintenance uninstall PROFILE --confirm | backup PROFILE | upgrade PROFILE --confirm | rollback PROFILE CHECKPOINT --confirm | recover PROFILE --confirm\nStop this profile's launchd job first; do not interrupt active operations.\n"
+            let localization = AgentLocalization(language: RuntimeLocalization.clientLanguage)
+            let usage = localization.runtimeText("maintenance.usage")
             if args == ["--help"] { print(usage); return 0 }
             guard args.count >= 2, args[1].hasPrefix("/"), !args[1].split(separator: "/").contains("..") else {
                 fputs(usage, stderr); return 64
@@ -16,7 +19,7 @@ public enum InstalledMaintenanceCommand {
             switch args[0] {
             case "uninstall" where args.count == 3 && args[2] == "--confirm":
                 let backup = try InstalledRuntimeMaintenance.prepareUninstall(domain: domain, profile: profile)
-                print("Ready to remove this application's .app after quitting its GUI. Profile retained. Backup: " + backup.path)
+                print(localization.runtimeText("maintenance.removeReady", backup.path))
             case "backup" where args.count == 2:
                 print(try InstalledRuntimeMaintenance.backup(domain: domain, profile: profile).path)
             case "upgrade" where args.count == 3 && args[2] == "--confirm":
@@ -35,7 +38,7 @@ public enum InstalledMaintenanceCommand {
             }
             return 0
         } catch {
-            fputs(error.localizedDescription + "\n", stderr)
+            fputs(AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeError(error) + "\n", stderr)
             return 78
         }
     }

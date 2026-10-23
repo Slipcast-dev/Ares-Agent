@@ -1,6 +1,7 @@
 import CryptoKit
 import Darwin
 import Foundation
+import EcosystemLocalization
 import EcosystemContracts
 import EcosystemRuntimeSupport
 
@@ -95,7 +96,7 @@ public actor LocalMCPHistory {
                     usedRoots.formUnion(event.rootIDs)
                     items.append(["eventId": event.id.uuidString, "kind": event.kind,
                                   "capability": event.capability, "createdAt": Self.date(event.createdAt),
-                                  "summary": "Локальное событие"])
+                                  "summary": AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText("Локальное событие")])
                 }
                 if items.count == size || index == batch.count - 1 {
                     if index < batch.count - 1 || all.count > batch.count { nextPosition = position }

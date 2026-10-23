@@ -1,15 +1,16 @@
 import AppKit
 import SwiftUI
+import EcosystemLocalization
 import EcosystemLocalIPC
 
 /// Модель обращается только к GUI-каналу своего агента. Чтение состояния не
 /// включает login item, не запрашивает системное разрешение и не подтверждает
 /// доставку событий за внешнего клиента.
-@MainActor private final class AutomationModel: ObservableObject {
+@MainActor final class AutomationModel: ObservableObject {
     @Published var status: LocalAutomationStatus?
     @Published var login: LocalLoginStatus?
     @Published var events: [LocalInboxDelivery] = []
-    @Published var error: String?
+    @Published var error: SharedText?
     @Published var busy = false
     let client: Result<LocalRPCClient, Error>
 
@@ -34,7 +35,7 @@ import EcosystemLocalIPC
             let rows: [LocalInboxDelivery] = try await client.get().call("events.list", request)
             events = rows.sorted { $0.event.createdAt > $1.event.createdAt }
         } catch { failed = true }
-        if failed { error = "Часть данных недоступна. Проверьте сводку состояния и обновите её." }
+        if failed { error = .partialData }
     }
 
     func configure(paused: Bool? = nil, notificationsEnabled: Bool? = nil) async {
@@ -45,7 +46,7 @@ import EcosystemLocalIPC
         do {
             status = try await client.get().call("automation.configure", request)
             error = nil
-        } catch { self.error = "Не удалось сохранить настройки фоновой работы." }
+        } catch { self.error = .automationSaveFailed }
     }
 
     func requestNotifications() async {
@@ -55,7 +56,7 @@ import EcosystemLocalIPC
             // Единственное место запроса macOS-разрешения — явное нажатие.
             status = try await client.get().call("automation.request_notifications", LocalAutomationRequest())
             error = nil
-        } catch { self.error = "Не удалось запросить разрешение на уведомления. События доступны в приложении." }
+        } catch { self.error = .notificationRequestFailed }
     }
 
     func openNotificationSettings() {
@@ -63,7 +64,7 @@ import EcosystemLocalIPC
         // Разрешение принадлежит runtime bundle, а не окну основного приложения.
         guard let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension"),
               NSWorkspace.shared.open(url) else {
-            error = "Откройте «Системные настройки → Уведомления» вручную."
+            error = .notificationSettingsManual
             return
         }
     }
@@ -75,35 +76,39 @@ import EcosystemLocalIPC
         do {
             login = try await client.get().call("automation.login_configure", Request(enabled: enabled))
             error = nil
-        } catch { self.error = "Не удалось изменить автозапуск. Если macOS запретила его, проверьте настройки фоновых объектов системы." }
+        } catch { self.error = .loginSaveFailed }
     }
 }
 
 /// Общий интерфейс не объединяет процессы и разрешения Ареса и Афины:
 /// каждый экземпляр получает client только собственного runtime.
 public struct LocalAutomationSection: View {
+    @Environment(\.agentLanguage) private var language
+    private var l10n: AgentLocalization { AgentLocalization(language: language) }
     @StateObject private var model: AutomationModel
+    @State private var loginLanguage = ConfirmationLanguage(language: .english)
     @State private var confirmingLogin = false
 
     public init(client: Result<LocalRPCClient, Error>) {
         _model = StateObject(wrappedValue: AutomationModel(client: client))
     }
 
+    init(model: AutomationModel) { _model = StateObject(wrappedValue: model) }
     public var body: some View {
         Section {
             if let status = model.status {
-                Label(status.settings.paused ? "Фоновая работа приостановлена" : "Фоновая работа включена",
+                Label(status.settings.paused ? l10n.text(.backgroundPaused) : l10n.text(.backgroundEnabled),
                       systemImage: status.settings.paused ? "pause.circle" : "play.circle")
-                Toggle("Приостановить новые фоновые запуски", isOn: Binding(
+                Toggle(l10n.text(.pauseBackground), isOn: Binding(
                     get: { model.status?.settings.paused ?? false },
                     set: { value in Task { await model.configure(paused: value) } }
                 ))
                 .accessibilityIdentifier("automation.pause")
                 .disabled(model.busy)
-                Text("Пауза относится к новым фоновым запускам. Текущие задачи можно отменить в очереди задач.")
+                Text(l10n.text(.pauseScope))
                     .font(.caption).foregroundStyle(.secondary)
 
-                Toggle("Показывать уведомления о важных событиях", isOn: Binding(
+                Toggle(l10n.text(.importantNotifications), isOn: Binding(
                     get: { model.status?.settings.notificationsEnabled ?? false },
                     set: { value in Task { await model.configure(notificationsEnabled: value) } }
                 ))
@@ -111,92 +116,93 @@ public struct LocalAutomationSection: View {
                 .disabled(model.busy)
                 Text(notificationTitle(status.notificationAuthorization))
                     .font(.caption).foregroundStyle(.secondary)
-                Button("Разрешить системные уведомления") {
+                Button(l10n.text(.allowNotifications)) {
                     Task { await model.requestNotifications() }
                 }
                 .accessibilityIdentifier("automation.notifications.request")
                 .disabled(model.busy || status.notificationAuthorization == "authorized")
-                Text("Переключатель включает уведомления этого агента. Разрешение macOS запрашивается отдельной кнопкой. Без него события сохраняются в приложении.")
+                Text(l10n.text(.notificationConsent))
                     .font(.caption).foregroundStyle(.secondary)
                 if let domain = try? model.client.get().configuration.domain,
                    domain == "ares" || domain == "athena" {
-                    Text("В системных настройках выберите «\(domain == "ares" ? "Ares Background" : "Athena Background")». Разрешение выдаётся этой фоновой службе.")
+                    Text(l10n.message(.notificationSender, .text(domain == "ares" ? "Ares Background" : "Athena Background")))
                         .font(.caption).foregroundStyle(.secondary)
                 }
-                Button("Открыть уведомления macOS") { model.openNotificationSettings() }
+                Button(l10n.text(.openNotifications)) { model.openNotificationSettings() }
                     .accessibilityIdentifier("automation.notifications.settings")
-                if let failure = status.lastFailure { Text(failure).font(.caption).foregroundStyle(.orange) }
+                if let failure = status.lastFailure { Text(verbatim: failure).font(.caption).foregroundStyle(.orange) }
             } else {
-                Text("Состояние фоновой работы пока недоступно.").foregroundStyle(.secondary)
+                Text(l10n.text(.backgroundUnavailable)).foregroundStyle(.secondary)
             }
 
             if let login = model.login {
-                LabeledContent("Запуск после входа в систему", value: loginTitle(login))
+                LabeledContent(l10n.text(.loginStartup), value: loginTitle(login))
                 if login.configured {
-                    Button("Отключить запуск после входа") { Task { await model.configureLogin(enabled: false) } }
+                    Button(l10n.text(.disableLogin)) { Task { await model.configureLogin(enabled: false) } }
                         .accessibilityIdentifier("automation.login.disable")
                         .disabled(model.busy)
                 } else {
-                    Button("Включить запуск после входа") { confirmingLogin = true }
+                    Button(l10n.text(.enableLogin)) { loginLanguage = ConfirmationLanguage(language: language); confirmingLogin = true }
                         .accessibilityIdentifier("automation.login.enable")
                         .disabled(model.busy || login.disabledBySystem)
                 }
-                Text(login.registered ? "Служба зарегистрирована в macOS; доступность проверяется в сводке." : "Локальная служба сейчас не зарегистрирована.")
+                Text(login.registered ? l10n.text(.serviceRegistered) : l10n.text(.serviceUnregistered))
                     .font(.caption).foregroundStyle(.secondary)
-                Text("Отключение автозапуска действует на следующий вход и не останавливает работающую службу.")
+                Text(l10n.text(.loginDisableScope))
                     .font(.caption).foregroundStyle(.secondary)
             }
-            Text("В фоне выполняются только локальные проверки и отдельно подтверждённые правила. Разрешения внешних клиентов управляются отдельно; модель ИИ автоматически не запускается.")
+            Text(l10n.text(.backgroundBoundary))
                 .font(.caption).foregroundStyle(.secondary)
 
             DisclosureGroup {
                 if model.events.isEmpty {
-                    Text("В выборке нет событий или источник недоступен — проверьте сводку состояния.").foregroundStyle(.secondary)
+                    Text(l10n.text(.eventsEmpty)).foregroundStyle(.secondary)
                 }
                 ForEach(model.events, id: \.event.id) { row in
                     VStack(alignment: .leading, spacing: 4) {
                         // Не показываем технические токены, UUID папок и grants.
-                        Text(row.event.summary)
+                        Text(verbatim: row.event.summary)
                         Text(row.event.createdAt.formatted(date: .abbreviated, time: .shortened))
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     .padding(.vertical, 3)
                 }
-                Text("Просмотр не подтверждает получение события за Codex или DeepSeek Harness.")
+                Text(l10n.text(.originalContent)).font(.caption).foregroundStyle(.secondary)
+                Text(l10n.text(.eventsReadOnly))
                     .font(.caption).foregroundStyle(.secondary)
             } label: {
-                Text("События локального агента")
+                Text(l10n.text(.agentEvents))
                     .accessibilityIdentifier("automation.events")
             }
-            if let error = model.error { Text(error).foregroundStyle(.red) }
-            Button("Обновить состояние фоновой работы") { Task { await model.refresh() } }
+            if let error = model.error { Text(l10n.text(error)).foregroundStyle(.red) }
+            Button(l10n.text(.refreshBackground)) { Task { await model.refresh() } }
                 .accessibilityIdentifier("automation.refresh")
                 .disabled(model.busy)
         } header: {
-            Label("Фоновая работа и уведомления", systemImage: "clock.badge.checkmark")
+            Label(l10n.text(.backgroundNotifications), systemImage: "clock.badge.checkmark")
         }
         .task { await model.refresh() }
-        .alert("Включить запуск после входа?", isPresented: $confirmingLogin) {
-            Button("Отмена", role: .cancel) {}
-            Button("Включить") { Task { await model.configureLogin(enabled: true) } }
+        .alert(loginLanguage.localization.text(.loginConfirmTitle), isPresented: $confirmingLogin) {
+            Button(loginLanguage.localization.text(.cancel), role: .cancel) {}
+            Button(loginLanguage.localization.text(.enable)) { Task { await model.configureLogin(enabled: true) } }
                 .accessibilityIdentifier("automation.login.confirm")
         } message: {
-            Text("Этот агент будет работать в фоне после входа в macOS, даже если окно приложения закрыто. Он сможет выполнять локальные проверки и ранее подтверждённые правила в разрешённых папках. Доступ к новым папкам и операциям по-прежнему требует подтверждения. Модель ИИ автоматически не запускается.")
+            Text(loginLanguage.localization.text(.loginConfirmBody))
         }
     }
 
     private func notificationTitle(_ value: String) -> String {
         switch value {
-        case "authorized": "macOS разрешила системные уведомления."
-        case "denied": "macOS запретила уведомления. Изменить разрешение можно в системных настройках."
-        case "notDetermined", "not_determined": "Разрешение macOS ещё не запрошено."
-        case "provisional": "macOS разрешила тихие уведомления."
-        default: "Системные уведомления недоступны; события сохраняются в приложении."
+        case "authorized": l10n.text(.notificationsAuthorized)
+        case "denied": l10n.text(.notificationsDenied)
+        case "notDetermined", "not_determined": l10n.text(.notificationsUndetermined)
+        case "provisional": l10n.text(.notificationsProvisional)
+        default: l10n.text(.notificationsUnavailable)
         }
     }
 
     private func loginTitle(_ status: LocalLoginStatus) -> String {
-        if status.disabledBySystem { return "Запрещён в настройках macOS" }
-        return status.configured ? "Включён" : "Выключен"
+        if status.disabledBySystem { return l10n.text(.loginSystemDenied) }
+        return status.configured ? l10n.text(.enabled) : l10n.text(.disabled)
     }
 }

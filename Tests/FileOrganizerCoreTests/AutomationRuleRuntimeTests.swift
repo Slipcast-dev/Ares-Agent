@@ -71,4 +71,22 @@ extension RulePlanTests {
         let due = try await restored.due(now: Date()); XCTAssertTrue(due.isEmpty)
         await f.work.shutdown()
     }
+    func testRuntimeLanguageSettingIsGUIOnlyAndLeavesQueueAndRulesIntact() async throws {
+        let f = try await fixture(); defer { try? FileManager.default.removeItem(at: f.base) }
+        let state = f.base.appendingPathComponent("language-state")
+        try FileManager.default.createDirectory(at: state, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        let automation = try LocalAutomationService(directory: state, domain: "ares")
+        let service = AresRuntimeService(container: f.container, work: f.work, automation: automation)
+        let before = try await f.work.queue.tasks(limit: 100).map(\.id)
+        let request = LocalRPCRequest(domain: "ares", operation: "language.set", payload: Data("{\"preference\":\"en\"}".utf8))
+        for role in [LocalRole.mcp, .worker] {
+            do { _ = try await service.handle(role: role, request: request); XCTFail("Role bypass") }
+            catch { XCTAssertEqual(error as? LocalRuntimeFailure, .denied) }
+        }
+        let status = try LocalWire.decode(LocalLanguageStatus.self, await service.handle(role: .gui, request: request))
+        XCTAssertEqual(status.preference, .en)
+        let after = try await f.work.queue.tasks(limit: 100).map(\.id); XCTAssertEqual(after, before)
+        XCTAssertEqual(try String(contentsOf: f.source.appendingPathComponent("a.txt")), "alpha")
+        await f.work.shutdown()
+    }
 }

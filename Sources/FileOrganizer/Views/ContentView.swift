@@ -1,9 +1,13 @@
 import SwiftUI
+import EcosystemLocalization
 import EcosystemUI
 
 /// Главная оболочка окна. Она управляет только выбранным разделом; данные и
 /// будущие файловые задачи будут принадлежать отдельным ViewModel, а не View.
 struct ContentView: View {
+    @Environment(\.agentLanguage) private var language
+    private var l10n: AresLocalization { AresLocalization(language: language) }
+
     @ObservedObject var viewModel: OverviewViewModel
     @State private var selectedSection: AppSection? = .overview
     @StateObject private var ruleMonitor = RuleDirectoryMonitor()
@@ -19,7 +23,7 @@ struct ContentView: View {
                                                 max: EcosystemSidebarStyle.maximumWidth)
         } detail: {
             detailView(for: selectedSection ?? .overview)
-                .navigationTitle(selectedSection?.title ?? AppSection.overview.title)
+                .navigationTitle(l10n.text((selectedSection ?? .overview).title))
         }
         .navigationSplitViewStyle(.balanced)
         // Не навязываем окну прежний минимум 900×600. Нулевые нижние границы
@@ -51,13 +55,13 @@ struct ContentView: View {
                 selectedSection = .files
             }
         }
-        .alert("Не удалось завершить операцию", isPresented: Binding(
+        .alert(l10n.text("Не удалось завершить операцию"), isPresented: Binding(
             get: { viewModel.errorMessage != nil },
             set: { if !$0 { viewModel.errorMessage = nil } }
         )) {
-            Button("Закрыть", role: .cancel) {}
+            Button(l10n.text("Закрыть"), role: .cancel) {}
         } message: {
-            Text(viewModel.errorMessage ?? "")
+            Text(viewModel.errorMessage.map(l10n.render) ?? "")
         }
     }
 

@@ -1,3 +1,4 @@
+import EcosystemLocalization
 import Foundation
 import FileOrganizerCore
 
@@ -7,6 +8,7 @@ import FileOrganizerCore
 @main
 struct RulesWorker {
     static func main() async {
+        if LocalizationProbe.runIfRequested() { return }
         let arguments = CommandLine.arguments
         let databaseURL: URL
         if let index = arguments.firstIndex(of: "--database"), arguments.indices.contains(index + 1) {
@@ -22,7 +24,7 @@ struct RulesWorker {
                 try await container.ruleCoordinator.poll()
             }
         } catch {
-            fputs("Не удалось выполнить фоновую проверку правил. Подробности в истории приложения.\n", stderr)
+            fputs(AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText("ruleworker.failure") + "\n", stderr)
             exit(1)
         }
     }

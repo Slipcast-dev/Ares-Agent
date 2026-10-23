@@ -1,4 +1,5 @@
 import Foundation
+import EcosystemLocalization
 import SwiftUI
 import EcosystemContracts
 import EcosystemRuntimeSupport
@@ -12,16 +13,20 @@ import EcosystemLocalIPC
     struct Runtime: Codable, Sendable { let domain: String; let healthy: Bool }
     struct Component: Identifiable, Sendable {
         let id: String
-        let title: String
-        let value: String
+        let title: SharedText
+        let value: SharedMessage
         let available: Bool
+        let needsAttention: Bool
+        init(id: String, title: SharedText, value: SharedMessage, available: Bool, needsAttention: Bool = false) {
+            self.id = id; self.title = title; self.value = value; self.available = available; self.needsAttention = needsAttention
+        }
     }
     @Published private(set) var components: [Component] = []
     @Published private(set) var tasks: [LocalOperationalTask] = []
     @Published private(set) var emergency: QueueEmergencyStatus?
     @Published private(set) var busy = false
     @Published private(set) var refreshedAt: Date?
-    @Published private(set) var actionMessage: String?
+    @Published private(set) var actionMessage: SharedMessage?
     private let transport: Transport
     let domain: String
 
@@ -53,43 +58,46 @@ import EcosystemLocalIPC
         components = []; tasks = []; emergency = nil; refreshedAt = nil
         // Каждая ошибка изолирована: отказ login item не скрывает очередь или
         // grants. Сообщения/пути из исключений и сервера не экспортируются.
-        await read("runtime.status", "Служба", Runtime.self) { runtime in
+        await read("runtime.status", .service, Runtime.self, attention: { !$0.healthy }) { runtime in
             guard runtime.domain == self.domain else { throw LocalRuntimeFailure.invalidRequest }
-            return runtime.healthy ? "Доступна" : "Требует внимания"
+            return runtime.healthy ? SharedMessage(.available) : SharedMessage(.needsAttention)
         }
         do {
             let state = try await call("operations.emergency_status", QueueEmergencyStatus.self)
             emergency = state
-            components.append(.init(id: "emergency", title: "Аварийная остановка", value: state.stopped ? "Приём закрыт; незавершённых: \(state.pendingTasks); callbacks: \(state.activeCallbacks); требуют сверки: \(state.recoveryTasks)" : "Приём задач открыт", available: true))
-        } catch { unavailable("emergency", "Аварийная остановка") }
-        await read("automation.status", "Фоновая работа", LocalAutomationStatus.self) {
-            $0.settings.paused ? "Приостановлена" : "Включена"
+            components.append(.init(id: "emergency", title: .emergencyStop, value: state.stopped ? SharedMessage(.admissionClosed, .count(state.pendingTasks), .count(state.activeCallbacks), .count(state.recoveryTasks)) : SharedMessage(.admissionOpen), available: true))
+        } catch { unavailable("emergency", .emergencyStop) }
+        await read("automation.status", .backgroundActivity, LocalAutomationStatus.self) {
+            $0.settings.paused ? SharedMessage(.paused) : SharedMessage(.backgroundOn)
         }
-        await read("automation.login_status", "Запуск после входа", LocalLoginStatus.self) {
-            $0.disabledBySystem ? "Запрещён macOS" : ($0.configured ? "Включён" : "Выключен")
+        await read("automation.login_status", .loginComponent, LocalLoginStatus.self) {
+            $0.disabledBySystem ? SharedMessage(.blockedByMacOS) : ($0.configured ? SharedMessage(.enabled) : SharedMessage(.disabled))
         }
-        await read("access.status", "Разрешения клиентов", LocalAccessState.self) {
-            "Разрешений: \($0.grants.count); ожидают согласия: \($0.pending.count)"
+        await read("access.status", .clientPermissions, LocalAccessState.self) {
+            SharedMessage(.grantCounts, .count($0.grants.count), .count($0.pending.count))
         }
         do {
             tasks = try await call("operations.tasks", [LocalOperationalTask].self)
             guard tasks.count <= 100, Set(tasks.map(\.id)).count == tasks.count else { throw LocalRuntimeFailure.invalidRequest }
-            components.append(.init(id: "tasks", title: "Задачи", value: "Активных: \(tasks.filter { !$0.status.isTerminal }.count); требуют сверки: \(tasks.filter { $0.status == .recoveryRequired }.count)", available: true))
-        } catch { tasks = []; unavailable("tasks", "Задачи") }
+            components.append(.init(id: "tasks", title: .tasks, value: SharedMessage(.taskCounts, .count(tasks.filter { !$0.status.isTerminal }.count), .count(tasks.filter { $0.status == .recoveryRequired }.count)), available: true))
+        } catch { tasks = []; unavailable("tasks", .tasks) }
         do {
             var request = LocalAutomationRequest(); request.limit = 50
             let events = try await call("events.list", [LocalInboxDelivery].self, payload: LocalWire.encode(request))
-            components.append(.init(id: "events", title: "Входящие события", value: "В выборке: \(events.count) (до 50)", available: true))
-        } catch { unavailable("events", "Входящие события") }
+            components.append(.init(id: "events", title: .inboxEvents, value: SharedMessage(.eventSample, .count(events.count)), available: true))
+        } catch { unavailable("events", .inboxEvents) }
         refreshedAt = Date()
     }
-    private func read<T: Decodable>(_ operation: String, _ title: String, _ type: T.Type,
-                                   value: (T) throws -> String) async {
-        do { components.append(.init(id: operation, title: title, value: try value(await call(operation, type)), available: true)) }
+    private func read<T: Decodable>(_ operation: String, _ title: SharedText, _ type: T.Type,
+                                   attention: (T) -> Bool = { _ in false }, value: (T) throws -> SharedMessage) async {
+        do {
+            let result = try await call(operation, type)
+            components.append(.init(id: operation, title: title, value: try value(result), available: true, needsAttention: attention(result)))
+        }
         catch { unavailable(operation, title) }
     }
-    private func unavailable(_ id: String, _ title: String) {
-        components.append(.init(id: id, title: title, value: "Недоступно — обновите состояние", available: false))
+    private func unavailable(_ id: String, _ title: SharedText) {
+        components.append(.init(id: id, title: title, value: SharedMessage(.unavailableRefresh), available: false))
     }
     func cancel(_ task: LocalOperationalTask) async {
         guard !busy, !task.status.isTerminal else { return }
@@ -97,8 +105,8 @@ import EcosystemLocalIPC
         do {
             _ = try await call("task.cancel", LocalEmpty.self, payload: LocalWire.encode(LocalTaskID(task.id)))
             await readSnapshot()
-            actionMessage = "Запрос отмены отправлен. Проверьте итоговое состояние; уже выполненные действия не откатываются."
-        } catch { actionMessage = "Не удалось запросить отмену. Обновите состояние; не повторяйте изменяющую задачу вслепую." }
+            actionMessage = SharedMessage(.cancellationSent)
+        } catch { actionMessage = SharedMessage(.cancellationFailed) }
     }
     func setEmergencyStop(_ stopped: Bool) async {
         guard !busy else { return }
@@ -108,11 +116,11 @@ import EcosystemLocalIPC
             guard state.stopped == stopped else { throw LocalRuntimeFailure.invalidRequest }
             await readSnapshot()
             actionMessage = stopped
-                ? "Приём новых задач закрыт до явного возобновления, включая перезапуск службы. Отмена запрошена для всей очереди. Дождитесь нуля активных callbacks и проверьте восстановление; выполненные действия не откатываются."
-                : "Приём задач открыт. Отменённые задачи не повторяются; планировщики и клиенты могут отправлять новые поручения."
+                ? SharedMessage(.stopSent)
+                : SharedMessage(.resumeSent)
         } catch {
             await readSnapshot()
-            actionMessage = "Действие не подтверждено. Обновите состояние; не считайте агент остановленным или возобновлённым."
+            actionMessage = SharedMessage(.actionUnconfirmed)
         }
     }
     func pauseAndCancelVisible() async {
@@ -125,7 +133,7 @@ import EcosystemLocalIPC
             // Без подтверждённой паузы отмена не начинается: пользователь не
             // должен получить ложное обещание остановленного планировщика.
             await readSnapshot()
-            actionMessage = "Пауза не подтверждена. Отмена задач не выполнялась."
+            actionMessage = SharedMessage(.pauseUnconfirmed)
             return
         }
         var failures = 0
@@ -134,18 +142,18 @@ import EcosystemLocalIPC
             catch { failures += 1 }
         }
         await readSnapshot()
-        actionMessage = "Фон приостановлен; запросы отмены отправлены для показанных активных задач. Ошибок отмены: \(failures). Проверьте итоговые состояния. Новые ручные запросы клиентов остаются доступны."
+        actionMessage = SharedMessage(.pauseResult, .count(failures))
     }
-    var report: String {
-        // Allowlist вместо редактирования произвольного дампа: исходные пути,
-        // имена, taskId, bookmarks, события, ключи и профили не сериализуются.
+    func report(language: AgentLanguage = .russian) -> String {
+        // Allowlist сохраняется: не экспортируем идентификаторы, raw ошибки,
+        // пути/имена/конфигурации или параметры событий ради локализации.
+        let l10n = AgentLocalization(language: language)
         let safeDomain = ["ares", "athena"].contains(domain) ? domain : "unknown"
-        let timestamp = refreshedAt?.formatted(.iso8601) ?? "not refreshed"
-        return (["Ecosystem diagnostics v1", "Agent: " + safeDomain, "Snapshot: " + timestamp,
-                 "Scope: local GUI snapshot; configuration is not a verified client session."] +
-                components.map { "\($0.title): \($0.value)" } +
-                ["Task sample: latest 100; event sample: latest 50.",
-                 "No file paths, names, identifiers, secrets, configuration or event contents included."])
+        let timestamp = refreshedAt?.formatted(.iso8601) ?? l10n.text(.notRefreshed)
+        return (["Ecosystem diagnostics v1", l10n.message(.reportAgent, .text(safeDomain)),
+                 l10n.message(.reportSnapshot, .text(timestamp)), l10n.text(.reportScope)] +
+                components.map { l10n.text($0.title) + ": " + $0.value.localized(using: l10n) } +
+                [l10n.text(.reportSamples), l10n.text(.reportPrivacy)])
             .joined(separator: "\n") + "\n"
     }
 }

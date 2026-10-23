@@ -4,11 +4,13 @@ import Foundation
 import FileOrganizerCore
 import EcosystemRuntimeSupport
 import EcosystemLocalIPC
+import EcosystemLocalization
 
 /// Явный local-ad-hoc runtime. Не регистрирует себя, не читает прежнюю БД и
 /// работает только с профилем, переданным локальным launcher через --config.
 @main struct AresRuntime {
     static func main() {
+        if LocalizationProbe.runIfRequested() { exit(0) }
         do {
             if try LocalRuntimeCLI.clientIfRequested(domain: "ares") { return }
             umask(0o077)

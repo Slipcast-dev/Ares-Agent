@@ -6,6 +6,7 @@ import PackageDescription
 
 let package = Package(
     name: "FileOrganizer",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v14)
     ],
@@ -25,6 +26,7 @@ let package = Package(
     targets: [
         .executableTarget(name: "AresMaintenance", dependencies: [.product(name: "EcosystemLocalIPC", package: "EcosystemKit")]),
         .target(name: "FileOrganizerCore", dependencies: [
+            .product(name: "EcosystemLocalization", package: "EcosystemKit"),
             .product(name: "EcosystemContracts", package: "EcosystemKit"),
             .product(name: "EcosystemLocalIPC", package: "EcosystemKit"),
             .product(name: "EcosystemClientAdapters", package: "EcosystemKit"),
@@ -32,19 +34,20 @@ let package = Package(
         ]),
         .executableTarget(
             name: "FileOrganizer",
-            dependencies: ["FileOrganizerCore", .product(name: "EcosystemUI", package: "EcosystemKit")],
+            dependencies: ["FileOrganizerCore", .product(name: "EcosystemUI", package: "EcosystemKit"), .product(name: "EcosystemLocalization", package: "EcosystemKit")],
             resources: [.process("Resources")]
         ),
         .executableTarget(
             name: "FileOrganizerMCP",
-            dependencies: ["FileOrganizerCore"]
+            dependencies: ["FileOrganizerCore", .product(name: "EcosystemLocalization", package: "EcosystemKit")]
         ),
-        .executableTarget(name: "AresRuntime", dependencies: ["FileOrganizerCore"]),
-        .executableTarget(name: "AresStoreTool", dependencies: ["FileOrganizerCore"]),
-        .executableTarget(name: "FileOrganizerRulesWorker", dependencies: ["FileOrganizerCore"]),
+        .executableTarget(name: "AresRuntime", dependencies: [.product(name: "EcosystemLocalization", package: "EcosystemKit"), "FileOrganizerCore"]),
+        .executableTarget(name: "AresStoreTool", dependencies: ["FileOrganizerCore", .product(name: "EcosystemLocalization", package: "EcosystemKit")]),
+        .executableTarget(name: "FileOrganizerRulesWorker", dependencies: ["FileOrganizerCore", .product(name: "EcosystemLocalization", package: "EcosystemKit")]),
+        .testTarget(name: "FileOrganizerUITests", dependencies: ["FileOrganizer"]),
         .testTarget(
             name: "FileOrganizerCoreTests",
-            dependencies: ["FileOrganizerCore"]
+            dependencies: ["FileOrganizerCore", .product(name: "EcosystemLocalization", package: "EcosystemKit")]
         )
     ]
 )

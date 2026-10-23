@@ -1,4 +1,4 @@
-![Ares](assets/ares-banner.png)
+![Ares](docs/assets/banner.svg)
 
 <p align="center"><img src="docs/assets/ares-icon.png" width="160" alt="Ares"></p>
 
@@ -8,13 +8,9 @@
 
 Ares is an independent local macOS agent. Safe local file indexing, duplicate analysis and approved automation rules.
 
-Version **0.29.0** · macOS14+ target · current release **Apple Silicon arm64**.
+Version **0.37.0** · macOS14+ target · current release **Apple Silicon arm64**.
 Intel/macOS14 execution remains unverified. This is a source-available project
 under the custom non-commercial [LICENSE](LICENSE), not an MIT-licensed project.
-
-[![Version 0.29.0](https://img.shields.io/badge/Version-0.29.0-a65237?style=flat-square)](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.29.0) [![CI](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Slipcast-dev/Ares-Agent/actions/workflows/ci.yml)
-
-[DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.dmg) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/Ares-0.29.0-unsigned.pkg) · [SHA256SUMS](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.29.0/SHA256SUMS)
 
 ## Installation
 
@@ -51,8 +47,22 @@ No model keys or user data are bundled. See [security](SECURITY.md),
 Read [CONTRIBUTING](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md).
 Security reports should follow SECURITY.md; do not post personal data in issues.
 
-[Лицензия на русском](LICENSE) · [English license translation](LICENSE.en.md).
 
-## 0.29.0
+## RU/EN localization / Локализация
 
-Aligned0.29.0 distribution. Ares runtime behavior and EcosystemKit0.23.0 are unchanged; the monitor-backlog fix applies to Athena.
+**0.37.0 prerelease.** Select System, Русский or English in the agent settings.
+Each application keeps its own language. Dates and numbers follow the macOS
+region; user names, paths and historical free text retain their original values.
+System Settings uses the macOS language.
+
+Full manual VoiceOver/keyboard, macOS 14/Intel execution and installed-client
+acceptance remain open. This prerelease has not completed full acceptance.
+
+```sh
+python3 scripts/verify_localization_acceptance.py --ares-dir . --kit-dir Packages/EcosystemKit --require-reviewed-boundaries --output localization-acceptance.json
+ECOSYSTEM_SKIP_LSREGISTER=1 ECOSYSTEM_APP_VERSION=0.37.0 scripts/package_app.zsh
+python3 scripts/prepare_local_release.py --run --version 0.37.0 --agent Ares --use-prepared-apps --apps-dir dist --output installers/0.37.0
+```
+
+Installer output is unsigned Developer ID and not notarized. These commands
+create and verify artifacts; they do not install applications or publish them.

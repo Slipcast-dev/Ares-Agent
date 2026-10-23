@@ -57,6 +57,8 @@ final class InstalledRuntimeMaintenanceTests: XCTestCase {
         for name in ["automation-v1.json", "events-v1.json", "settings.json", "bookmarks.bin"] {
             try put("fixture-" + name + "-Ω", state.appendingPathComponent(name))
         }
+        let language = try LocalLanguagePreferences(directory: state, domain: domain)
+        _ = try await language.set(.en)
         // Согласие выдаётся только синтетическому in-process GUI, без TCC и
         // доступа к реальным каталогам. Проверяем настоящий Codable документ.
         let policy = try LocalAccessPolicy(directory: state, domain: domain)
@@ -230,6 +232,16 @@ final class InstalledRuntimeMaintenanceTests: XCTestCase {
         XCTAssertThrowsError(try InstalledRuntimeMaintenance.rollback(domain: "ares", profile: profile, checkpoint: checkpoint))
         XCTAssertEqual(try dataEntries(profile, "ares"), before)
     }
+    func testLanguageChangeAfterUpgradeRefusesDataLosingRollback() async throws {
+        let (_, profile) = try setup()
+        try await seed("ares", profile: profile)
+        let checkpoint = try InstalledRuntimeMaintenance.upgrade(domain: "ares", application: app("ares", generation: "language-new"), profile: profile)
+        let language = try LocalLanguagePreferences(directory: profile.appendingPathComponent("ares-state"), domain: "ares")
+        _ = try await language.set(.ru)
+        XCTAssertThrowsError(try InstalledRuntimeMaintenance.rollback(domain: "ares", profile: profile, checkpoint: checkpoint))
+        let retained = await language.status(); XCTAssertEqual(retained.preference, .ru)
+    }
+
     func testOptInChangeCannotBeRestoredByCodeRollback() throws {
         let (_, profile) = try setup()
         let markerURL = profile.appendingPathComponent("profile.json")

@@ -1,12 +1,21 @@
 import Foundation
 import FileOrganizerCore
 import EcosystemLocalIPC
+import EcosystemLocalization
 
 /// stdio-only MCP сервер. Он принимает только идентификаторы объектов из
 /// локальной базы и поэтому не становится каналом доступа к произвольным путям.
 @main
 struct FileOrganizerMCP {
     static func main() {
+        if LocalizationProbe.runIfRequested() { return }
+        if Array(CommandLine.arguments.dropFirst()) == ["--mcp-localization-probe"] {
+            let value = ["local": localDefinitions + LocalCommonMCP.tools, "legacy": definitions]
+            if let data = try? JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]) {
+                print(String(decoding: data, as: UTF8.self))
+            }
+            return
+        }
         let container = AppContainer(databaseURL: AppContainer.defaultApplicationSupportDatabaseURL(), localRole: .mcp)
         guard (try? container.preparePersistentStore()) != nil else { return }
         let tools = container.isLocalRuntimeClient ? localDefinitions + LocalCommonMCP.tools : definitions
@@ -75,7 +84,7 @@ struct FileOrganizerMCP {
                     correlationID: args["correlationId"] as? String,
                     idempotencyKey: args["idempotencyKey"] as? String ?? UUID().uuidString)
                 return toolResult(["taskId": task.id.uuidString, "status": task.status.rawValue])
-            } catch { return toolError((error as? LocalizedError)?.errorDescription ?? "Не удалось создать задачу.") }
+            } catch { return toolError(error) }
         }
         if name == "file.search" {
             guard args.keys.allSatisfy({ ["rootId", "query"].contains($0) }), let query = args["query"] as? String, query.count <= 120, let records = try? await container.fileRepository.searchRecords(forRootID: rootID, query: query) else { return toolError("Некорректный поисковый запрос.") }
@@ -118,9 +127,15 @@ struct FileOrganizerMCP {
         definition("file.analyze_storage", "Сводка локального индекса.", ["rootId": ["type": "string", "format": "uuid"]]),
         definition("file.get_audit_report", "Обезличенный журнал.", [:])
     ]
-    private static func definition(_ name: String, _ description: String, _ properties: [String: Any], required: [String] = []) -> [String: Any] { ["name": name, "description": description, "inputSchema": ["type": "object", "additionalProperties": false, "properties": properties, "required": required]] }
+    private static func definition(_ name: String, _ description: String, _ properties: [String: Any], required: [String] = []) -> [String: Any] { ["name": name, "description": RuntimeLocalization.bilingual(description), "inputSchema": ["type": "object", "additionalProperties": false, "properties": properties, "required": required]] }
     private static func recordPayload(_ record: FileRecord) -> [String: Any] { ["id": record.id.uuidString, "relativePath": record.relativePath, "name": record.fileName, "byteSize": record.byteSize] }
     private static func toolResult(_ object: [String: Any]) -> [String: Any] { ["content": [["type": "text", "text": json(object)]], "isError": false] }
-    private static func toolError(_ text: String) -> [String: Any] { ["content": [["type": "text", "text": text]], "isError": true] }
+    private static func toolError(_ key: String) -> [String: Any] {
+        ["content": [["type": "text", "text": AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText(key)]], "isError": true]
+    }
+    /// Произвольный localizedDescription не становится ключом или ответом клиенту.
+    private static func toolError(_ error: Error) -> [String: Any] {
+        ["content": [["type": "text", "text": AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeError(error)]], "isError": true]
+    }
     private static func json(_ object: [String: Any]) -> String { guard let data = try? JSONSerialization.data(withJSONObject: object, options: [.sortedKeys]) else { return "{}" }; return String(data: data, encoding: .utf8) ?? "{}" }
 }

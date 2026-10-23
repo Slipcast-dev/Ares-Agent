@@ -4,7 +4,7 @@ set -euo pipefail
 # Скрипт формирует локальный .app из SPM-исполняемого файла. Он не публикует
 # артефакт, не ищет сертификаты и не отправляет его на notarization.
 ROOT_DIR="${0:A:h:h}"
-OUTPUT_DIR="$ROOT_DIR/dist"
+OUTPUT_DIR="${ECOSYSTEM_APP_OUTPUT_DIR:-$ROOT_DIR/dist}"
 APP_DIR="$OUTPUT_DIR/Ares.app"
 # Bundle сначала собирается отдельно: Finder не должен увидеть приложение
 # без Info.plist или иконки в промежутке между удалением и копированием.
@@ -47,6 +47,18 @@ if [[ ! -d "$RESOURCE_BUNDLE" ]]; then
   echo "Не найден ресурсный bundle SwiftPM: $RESOURCE_BUNDLE" >&2
   exit 1
 fi
+# Явные таблицы обоих языков обязательны: developer fallback не должен
+# скрыть отсутствие собственного перевода в переносимой копии приложения.
+ARES_RESOURCES="$RESOURCE_BUNDLE"
+if [[ -d "$RESOURCE_BUNDLE/Contents/Resources" ]]; then
+  ARES_RESOURCES="$RESOURCE_BUNDLE/Contents/Resources"
+fi
+for locale in ru en; do
+  if [[ ! -f "$ARES_RESOURCES/$locale.lproj/Ares.strings" ]]; then
+    echo "Missing Ares localization resources: $locale" >&2
+    exit 1
+  fi
+done
 cp -R "$RESOURCE_BUNDLE" "$CONTENTS/Resources/"
 # Роли/схемы общего пакета должны находиться и в установленном приложении,
 # а не случайно читаться из .build на машине разработчика.
@@ -56,6 +68,19 @@ if [[ ! -d "$CONTRACT_BUNDLE" ]]; then
   exit 1
 fi
 cp -R "$CONTRACT_BUNDLE" "$CONTENTS/Resources/"
+# Bundle.module локализации нужен и GUI, и отдельному Background.app.
+LOCALIZATION_BUNDLE="$BUILD_DIR/EcosystemKit_EcosystemLocalization.bundle"
+LOCALIZATION_RESOURCES="$LOCALIZATION_BUNDLE"
+if [[ -d "$LOCALIZATION_BUNDLE/Contents/Resources" ]]; then
+  LOCALIZATION_RESOURCES="$LOCALIZATION_BUNDLE/Contents/Resources"
+fi
+for locale in ru en; do
+  if [[ ! -f "$LOCALIZATION_RESOURCES/$locale.lproj/Localizable.strings" || ! -f "$LOCALIZATION_RESOURCES/$locale.lproj/Localizable.stringsdict" || ! -f "$LOCALIZATION_RESOURCES/$locale.lproj/Shared.strings" || ! -f "$LOCALIZATION_RESOURCES/$locale.lproj/Runtime.strings" ]]; then
+    echo "Missing localization resources: $locale" >&2
+    exit 1
+  fi
+done
+cp -R "$LOCALIZATION_BUNDLE" "$CONTENTS/Resources/"
 
 # Runtime должен перемещаться вместе с приложением. Вложенный .app не регистрирует
 # службу и не включает автозапуск: activation/grants остаются явным решением.
@@ -63,20 +88,30 @@ BACKGROUND="$CONTENTS/Library/LoginItems/AresBackground.app"
 mkdir -p "$BACKGROUND/Contents/MacOS" "$BACKGROUND/Contents/Resources"
 cp "$BUILD_DIR/AresRuntime" "$BACKGROUND/Contents/MacOS/AresRuntime"
 cp -R "$CONTRACT_BUNDLE" "$BACKGROUND/Contents/Resources/"
-python3 - "$BACKGROUND/Contents/Info.plist" "${ECOSYSTEM_APP_VERSION:-0.29.0}" <<'PLIST'
+cp -R "$LOCALIZATION_BUNDLE" "$BACKGROUND/Contents/Resources/"
+python3 - "$BACKGROUND/Contents/Info.plist" "${ECOSYSTEM_APP_VERSION:-0.37.0}" <<'PLIST'
 import plistlib
 import sys
 from pathlib import Path
 Path(sys.argv[1]).write_bytes(plistlib.dumps({
     'CFBundlePackageType': 'APPL', 'CFBundleExecutable': 'AresRuntime',
     'CFBundleIdentifier': 'dev.slipcast.fileorganizer.background',
-    'CFBundleName': 'Ares Background', 'CFBundleVersion': sys.argv[2],
+    'CFBundleName': 'Ares Background', 'CFBundleDisplayName': 'Ares Background',
+    'CFBundleDevelopmentRegion': 'en', 'CFBundleLocalizations': ['ru', 'en'],
+    'CFBundleVersion': sys.argv[2],
     'CFBundleShortVersionString': sys.argv[2],
     'CFBundleIconFile': 'FileOrganizerAres.icns',
     'LSMinimumSystemVersion': '14.0', 'LSUIElement': True,
     'NSPrincipalClass': 'NSApplication'}))
 PLIST
-/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ECOSYSTEM_APP_VERSION:-0.29.0}" "$CONTENTS/Info.plist"
+# Локализуются только имена bundle; sender ID и исполняемый файл остаются
+# прежними. Ресурсы обоих .app добавляем до codesign, чтобы seal включал их.
+for locale in ru en; do
+  mkdir -p "$CONTENTS/Resources/$locale.lproj" "$BACKGROUND/Contents/Resources/$locale.lproj"
+  cp "$ROOT_DIR/distribution/Localization/GUI/$locale.lproj/InfoPlist.strings" "$CONTENTS/Resources/$locale.lproj/InfoPlist.strings"
+  cp "$ROOT_DIR/distribution/Localization/Background/$locale.lproj/InfoPlist.strings" "$BACKGROUND/Contents/Resources/$locale.lproj/InfoPlist.strings"
+done
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ECOSYSTEM_APP_VERSION:-0.37.0}" "$CONTENTS/Info.plist"
 
 # `sips` создаёт обязательные размеры из исходного изображения Ареса; исходник
 # не меняется, поэтому приложение и репозиторий используют один визуальный образ.

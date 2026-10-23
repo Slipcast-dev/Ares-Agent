@@ -1,6 +1,7 @@
 import CryptoKit
 import Darwin
 import Foundation
+import EcosystemLocalization
 
 /// Общая транзакция для одного desktop patch и двух независимых приложений.
 /// YAML посторонних entries никогда не сериализуется заново; manifest хранит
@@ -33,14 +34,16 @@ public actor HarnessAdapter {
         let before = try fingerprint(), snapshot = try inspect()
         let prepared = try prepare(connected: connected, snapshot: snapshot)
         guard before == (try fingerprint()) else { throw HarnessAdapterError.stalePlan }
+        // Двуязычный текст относится только к новому DTO: fingerprint вычислен
+        // из прежних bytes конфигурации, сохранённые планы не переписываются.
         return HarnessConnectionPlan(clientId: "deepseekHarness", domain: name,
             profile: configuration.profile, version: configuration.installedVersion, connected: connected,
             fingerprint: before, changes: prepared.changed ? [connected
-                ? "Подключить роль \(name), её отдельный MCP и provider/persona в профиле Harness."
-                : "Удалить только принадлежащие экосистеме MCP, provider и роль \(name)."] : [],
-            warnings: ["Модель наследуется от родительского контекста Harness; провайдер роли определяет штатное делегирование.",
-                "Подключение не выдаёт разрешения runtime. Фильтр инструментов не является системной песочницей.",
-                "Уже открытый чат может сохранять прежнюю конфигурацию. Реальная загрузка и делегирование проверяются отдельно."],
+                ? RuntimeLocalization.bilingual("Подключить роль %@, её отдельный MCP и provider/persona в профиле Harness.", name)
+                : RuntimeLocalization.bilingual("Удалить только принадлежащие экосистеме MCP, provider и роль %@.", name)] : [],
+            warnings: [RuntimeLocalization.bilingual("Модель наследуется от родительского контекста Harness; провайдер роли определяет штатное делегирование."),
+                RuntimeLocalization.bilingual("Подключение не выдаёт разрешения runtime. Фильтр инструментов не является системной песочницей."),
+                RuntimeLocalization.bilingual("Уже открытый чат может сохранять прежнюю конфигурацию. Реальная загрузка и делегирование проверяются отдельно.")],
             backupDirectory: prepared.changed ? state.appendingPathComponent("backups").path : nil)
     }
 
@@ -191,8 +194,8 @@ public actor HarnessAdapter {
         return Prepared(patch: patch, registry: encoded, changed: patch != snapshot.patch || encoded != snapshot.registry)
     }
     private func currentStatus() throws -> HarnessAdapterStatus {
-        if try read(journal) != nil { return makeStatus(false, "recoveryRequired", "Незавершённая операция; preview не изменяет файлы.") }
-        guard supported else { return makeStatus(false, "unsupported", "Версия Harness не соответствует проверенному контракту \(HarnessPatch.contractID).") }
+        if try read(journal) != nil { return makeStatus(false, "recoveryRequired", RuntimeLocalization.bilingual("Незавершённая операция; preview не изменяет файлы.")) }
+        guard supported else { return makeStatus(false, "unsupported", RuntimeLocalization.bilingual("Версия Harness не соответствует проверенному контракту %@.", HarnessPatch.contractID)) }
         do {
             let snapshot = try inspect(), text = try checkedText(snapshot)
             if snapshot.decoded.owners[name] != nil {
@@ -207,13 +210,13 @@ public actor HarnessAdapter {
                 // мигрирует его молча: GUI предложит штатный preview подключения.
                 guard let range = try blockRange(text, domain: name),
                       String(text[range]) == HarnessPatch.block(configuration: configuration) else {
-                    return makeStatus(false, "updateRequired", "Настройки Harness требуют обновления для установленной версии. Нажмите «Подключить», проверьте план и подтвердите обновление.")
+                    return makeStatus(false, "updateRequired", RuntimeLocalization.bilingual("Настройки Harness требуют обновления для установленной версии. Нажмите «Подключить», проверьте план и подтвердите обновление."))
                 }
-                return makeStatus(true, "connected", "Роль, provider и MCP настроены в профиле; загрузка текущим чатом и делегирование проверяются отдельно.")
+                return makeStatus(true, "connected", RuntimeLocalization.bilingual("Роль, provider и MCP настроены в профиле; загрузка текущим чатом и делегирование проверяются отдельно."))
             }
-            if HarnessPatch.conflicts(try HarnessPatch.inspect(Data(text.utf8)), domain: configuration.domain) { return makeStatus(false, "conflict", "Чужая запись занимает имя MCP или субагента.") }
-            return makeStatus(false, "disconnected", "Роль не подключена в выбранном профиле Harness.")
-        } catch HarnessAdapterError.conflict { return makeStatus(false, "conflict", "Управляемый блок изменён или имя занято. Чужие настройки не перезаписаны.") }
+            if HarnessPatch.conflicts(try HarnessPatch.inspect(Data(text.utf8)), domain: configuration.domain) { return makeStatus(false, "conflict", RuntimeLocalization.bilingual("Чужая запись занимает имя MCP или субагента.")) }
+            return makeStatus(false, "disconnected", RuntimeLocalization.bilingual("Роль не подключена в выбранном профиле Harness."))
+        } catch HarnessAdapterError.conflict { return makeStatus(false, "conflict", RuntimeLocalization.bilingual("Управляемый блок изменён или имя занято. Чужие настройки не перезаписаны.")) }
     }
     private func makeStatus(_ connected: Bool, _ state: String, _ detail: String) -> HarnessAdapterStatus {
         HarnessAdapterStatus(clientId: "deepseekHarness", domain: name, profile: configuration.profile,

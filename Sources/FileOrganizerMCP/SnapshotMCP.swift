@@ -1,6 +1,7 @@
 import Foundation
 import CryptoKit
 import EcosystemLocalIPC
+import EcosystemLocalization
 import EcosystemRuntimeSupport
 import FileOrganizerCore
 
@@ -53,7 +54,7 @@ enum SnapshotMCP {
         let task: LocalTaskID = try await client.call("work.submit", Submission(capability: name, job: job, key: value.idempotencyKey ?? UUID().uuidString))
         if ["file.scan", "file.compute_duplicates"].contains(name) { return ["taskId": task.id.uuidString, "status": "accepted"] }
         let page: FileSnapshotPage = try await client.waitForResult(task.id, cancelOnCancellation: false, onProgress: { progress in
-                if let progress { await context?.progress(Double(progress.processed.value), progress.total.map { Double($0.value) }, "Выполнение") }
+                if let progress { await context?.progress(Double(progress.processed.value), progress.total.map { Double($0.value) }, AgentLocalization(language: RuntimeLocalization.clientLanguage).runtimeText("Выполнение")) }
             })
         return payload(page)
     }

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CPU: %@; память: %@/%@ байт; доступно на накопителе: %@ байт.</key>
+	<string>CPU: %@; memory: %@/%@ bytes; available storage: %@ bytes.</string>
+	<key>Codex отклонил конфигурацию подключённого агента; файлы не изменены.</key>
+	<string>Codex rejected the connected agent configuration; no files were changed.</string>
+	<key>Codex сообщает о чужом MCP-сервере с тем же именем.</key>
+	<string>Codex reports an unrelated MCP server with the same name.</string>
+	<key>Mac: %@; macOS: %@; архитектура: %@; ядер: %@/%@.</key>
+	<string>Mac: %@; macOS: %@; architecture: %@; cores: %@/%@.</string>
+	<key>ares.error.registration.changedDuringWrite</key>
+	<string>Another process changed the configuration. Refresh status and try again.</string>
+	<key>ares.error.registration.commandFailed</key>
+	<string>The client rejected the MCP configuration command. Check its configuration.</string>
+	<key>ares.error.registration.conflict</key>
+	<string>The ares entry already exists and does not belong to this app. It was not changed.</string>
+	<key>ares.error.registration.invalidConfiguration</key>
+	<string>The configuration format is unsupported or the Ares block was manually changed. The file was not changed.</string>
+	<key>ares.error.registration.timedOut</key>
+	<string>The client did not respond within 15 seconds. Try again.</string>
+	<key>ares.error.registration.unavailable</key>
+	<string>The client or its configuration was not found. Install and launch it once.</string>
+	<key>athena.error.ai.insecureEndpoint</key>
+	<string>Cloud providers require HTTPS.</string>
+	<key>athena.error.ai.insecureLocalEndpoint</key>
+	<string>HTTP is allowed only for local Ollama on a loopback address.</string>
+	<key>athena.error.ai.invalidEndpoint</key>
+	<string>Enter a valid API address.</string>
+	<key>athena.error.ai.invalidResponse</key>
+	<string>The provider returned an unsupported response.</string>
+	<key>athena.error.ai.missingAPIKey</key>
+	<string>No API key is configured for the selected provider.</string>
+	<key>athena.error.ai.network</key>
+	<string>Could not connect to the provider.</string>
+	<key>athena.error.ai.rateLimited</key>
+	<string>The provider request limit was exceeded.</string>
+	<key>athena.error.ai.secretStorageFailed</key>
+	<string>Could not securely save the key in Keychain.</string>
+	<key>athena.error.ai.server</key>
+	<string>The provider returned a server error.</string>
+	<key>athena.error.ai.unauthorized</key>
+	<string>The provider rejected the API key.</string>
+	<key>athena.error.mcp.codexRegistrationDetails</key>
+	<string>Codex could not register the MCP executable: %@</string>
+	<key>athena.error.mcp.codexRegistrationFailed</key>
+	<string>Codex could not register the MCP executable.</string>
+	<key>athena.error.service.invalidInput</key>
+	<string>Invalid input: %@</string>
+	<key>athena.error.service.unavailable</key>
+	<string>The “%@” feature is not available yet.</string>
+	<key>athena.error.storage.cannotEnumerateDirectory</key>
+	<string>Could not start scanning the selected directory.</string>
+	<key>athena.error.storage.invalidDirectory</key>
+	<string>Choose an existing directory to analyze.</string>
+	<key>athena.error.storage.volumeInformationUnavailable</key>
+	<string>Could not read system storage information.</string>
+	<key>athena.error.system.machCallFailed</key>
+	<string>Could not read macOS system statistics.</string>
+	<key>athena.error.system.missingValue</key>
+	<string>The system did not provide a value: %@.</string>
+	<key>athena.error.system.sysctlFailed</key>
+	<string>Could not read the system value “%@”.</string>
+	<key>athena.finding.cpuCritical.explanation</key>
+	<string>Usage is calculated from the difference between consecutive system CPU snapshots.</string>
+	<key>athena.finding.cpuCritical.recommendation</key>
+	<string>Measure again in a few minutes and review active applications.</string>
+	<key>athena.finding.cpuCritical.title</key>
+	<string>Critically high CPU usage</string>
+	<key>athena.finding.cpuWarning.explanation</key>
+	<string>Usage is calculated from the difference between consecutive system CPU snapshots.</string>
+	<key>athena.finding.cpuWarning.recommendation</key>
+	<string>Measure again in a few minutes and review active applications.</string>
+	<key>athena.finding.cpuWarning.title</key>
+	<string>High CPU usage</string>
+	<key>athena.finding.memoryCritical.explanation</key>
+	<string>macOS reports critical memory pressure.</string>
+	<key>athena.finding.memoryCritical.recommendation</key>
+	<string>Close unneeded resource-intensive applications and check again.</string>
+	<key>athena.finding.memoryCritical.title</key>
+	<string>High memory pressure</string>
+	<key>athena.finding.memoryWarning.explanation</key>
+	<string>macOS reports memory pressure.</string>
+	<key>athena.finding.memoryWarning.recommendation</key>
+	<string>Review resource-intensive applications and measure again.</string>
+	<key>athena.finding.memoryWarning.title</key>
+	<string>Elevated memory pressure</string>
+	<key>athena.finding.noCriticalSigns.explanation</key>
+	<string>Available metrics do not exceed thresholds; unavailable measurements do not confirm normal operation.</string>
+	<key>athena.finding.noCriticalSigns.recommendation</key>
+	<string>Continue checking your Mac periodically.</string>
+	<key>athena.finding.noCriticalSigns.title</key>
+	<string>No critical signs detected</string>
+	<key>athena.finding.storageCritical.explanation</key>
+	<string>System storage usage exceeded the diagnostic threshold.</string>
+	<key>athena.finding.storageCritical.recommendation</key>
+	<string>Review large files and free up space without automatically deleting data.</string>
+	<key>athena.finding.storageCritical.title</key>
+	<string>Critically low storage space</string>
+	<key>athena.finding.storageWarning.explanation</key>
+	<string>System storage usage exceeded the diagnostic threshold.</string>
+	<key>athena.finding.storageWarning.recommendation</key>
+	<string>Review large files and free up space without automatically deleting data.</string>
+	<key>athena.finding.storageWarning.title</key>
+	<string>Low storage space</string>
+	<key>athena.service.feature.agentBridge</key>
+	<string>Agent Bridge</string>
+	<key>athena.service.feature.aiChat</key>
+	<string>AI chat</string>
+	<key>athena.service.feature.aiProviders</key>
+	<string>AI providers</string>
+	<key>athena.service.feature.athenaMCPExecutable</key>
+	<string>Athena MCP executable</string>
+	<key>athena.service.feature.codexSubagent</key>
+	<string>Codex subagent connection</string>
+	<key>athena.service.feature.diagnostics</key>
+	<string>Diagnostics</string>
+	<key>athena.service.feature.harnessSubagent</key>
+	<string>Harness subagent connection</string>
+	<key>athena.service.feature.localConsent</key>
+	<string>The command requires local consent</string>
+	<key>athena.service.feature.mcpConnection</key>
+	<string>MCP connection</string>
+	<key>athena.service.feature.storageAnalysis</key>
+	<string>Storage analysis</string>
+	<key>athena.service.feature.storageScan</key>
+	<string>Storage scan</string>
+	<key>athena.service.feature.systemInformation</key>
+	<string>System information</string>
+	<key>athena.service.feature.systemMetrics</key>
+	<string>System metrics</string>
+	<key>athena.service.reason.commandNotAllowed</key>
+	<string>The external agent command is not in the allowlist.</string>
+	<key>athena.service.reason.unknownCommand</key>
+	<string>Unknown command.</string>
+	<key>athena.system.value.availableStorageSpace</key>
+	<string>available storage space</string>
+	<key>athena.system.value.totalStorageCapacity</key>
+	<string>total storage capacity</string>
+	<key>automation.deliveryFailure</key>
+	<string>The notification was not delivered; the event was saved.</string>
+	<key>automation.inboxFailure</key>
+	<string>The event could not be added to the inbox. Its original history remains available in the app.</string>
+	<key>cli.connectionHelp</key>
+	<string>Preview only shows a plan. Apply requires explicit confirmation and checks that the original files have not changed. The interface language does not change the client model or provider.</string>
+	<key>error.CodexAdapterError.cliUnavailable</key>
+	<string>An installed Codex CLI is required to validate the connection.</string>
+	<key>error.CodexAdapterError.cliValidationFailed</key>
+	<string>Codex CLI rejected the prepared configuration.</string>
+	<key>error.CodexAdapterError.conflict</key>
+	<string>A foreign or modified agent configuration was detected.</string>
+	<key>error.CodexAdapterError.invalidConfiguration</key>
+	<string>The adapter configuration is invalid.</string>
+	<key>error.CodexAdapterError.ioFailure</key>
+	<string>The configuration could not be saved safely.</string>
+	<key>error.CodexAdapterError.recoveryRequired</key>
+	<string>An unfinished operation requires recovery without overwriting foreign changes.</string>
+	<key>error.CodexAdapterError.stalePlan</key>
+	<string>Files changed after preview. Create a new plan.</string>
+	<key>error.CodexAdapterError.unsafePath</key>
+	<string>The configuration path or file permissions are unsafe.</string>
+	<key>error.HarnessAdapterError.conflict</key>
+	<string>The MCP, role or provider name is occupied, or the managed block was changed.</string>
+	<key>error.HarnessAdapterError.invalidConfiguration</key>
+	<string>The Harness YAML profile is damaged or ambiguous.</string>
+	<key>error.HarnessAdapterError.ioFailure</key>
+	<string>The Harness profile could not be saved safely.</string>
+	<key>error.HarnessAdapterError.recoveryRequired</key>
+	<string>An unfinished Harness operation requires explicit recovery.</string>
+	<key>error.HarnessAdapterError.stalePlan</key>
+	<string>The profile changed after preview. Create a new plan.</string>
+	<key>error.HarnessAdapterError.unsafePath</key>
+	<string>The Harness profile path or permissions are unsafe.</string>
+	<key>error.HarnessAdapterError.unsupportedVersion</key>
+	<string>The installed Harness format has not been verified. Connection was blocked.</string>
+	<key>error.InstalledRuntimeBootstrap.Failure.changedApplication</key>
+	<string>The app differs from the version that created this profile. Automatic service replacement was blocked; back up and migrate the profile.</string>
+	<key>error.InstalledRuntimeBootstrap.Failure.commandFailed</key>
+	<string>The local service could not start. Reopen the app and check system permissions.</string>
+	<key>error.InstalledRuntimeBootstrap.Failure.invalidProfile</key>
+	<string>The local profile is damaged or has unsafe permissions. Data was retained; restore the profile from a verified backup.</string>
+	<key>error.InstalledRuntimeBootstrap.Failure.systemDisabled</key>
+	<string>macOS disabled the service. Allow it in background item settings, then reopen the app.</string>
+	<key>error.InstalledRuntimeMaintenance.Failure.busy</key>
+	<string>The service is running or the profile is busy. Stop this specific service before maintenance.</string>
+	<key>error.InstalledRuntimeMaintenance.Failure.changedData</key>
+	<string>Rollback was blocked: data, the queue, or permissions changed after the backup. New work was retained.</string>
+	<key>error.InstalledRuntimeMaintenance.Failure.damagedBackup</key>
+	<string>The backup failed owner, content, or SHA-256 verification.</string>
+	<key>error.InstalledRuntimeMaintenance.Failure.incompatible</key>
+	<string>The database schema is unknown or damaged. The original profile was retained.</string>
+	<key>error.InstalledRuntimeMaintenance.Failure.interrupted</key>
+	<string>Maintenance was interrupted. Complete verified journal recovery before starting the service.</string>
+	<key>error.LocalRuntimeFailure.busy</key>
+	<string>An agent task is already using this resource.</string>
+	<key>error.LocalRuntimeFailure.cancelled</key>
+	<string>The operation was cancelled.</string>
+	<key>error.LocalRuntimeFailure.conflict</key>
+	<string>The request key was already used with different parameters.</string>
+	<key>error.LocalRuntimeFailure.deadlineExceeded</key>
+	<string>The execution deadline expired.</string>
+	<key>error.LocalRuntimeFailure.denied</key>
+	<string>This client is not permitted to perform the operation.</string>
+	<key>error.LocalRuntimeFailure.invalidConfiguration</key>
+	<string>The local runtime configuration is invalid.</string>
+	<key>error.LocalRuntimeFailure.invalidRequest</key>
+	<string>The operation parameters are invalid.</string>
+	<key>error.LocalRuntimeFailure.operationFailed</key>
+	<string>The agent could not complete the operation.</string>
+	<key>error.LocalRuntimeFailure.recoveryRequired</key>
+	<string>The result of the previous operation must be reviewed.</string>
+	<key>error.LocalRuntimeFailure.requiresGUI</key>
+	<string>This action requires the local interface and was not performed by the background agent.</string>
+	<key>error.LocalRuntimeFailure.staleSnapshot</key>
+	<string>Files have changed. Refresh the file list and try again.</string>
+	<key>error.LocalRuntimeFailure.unavailable</key>
+	<string>The local agent is unavailable. Start its local profile.</string>
+	<key>macOS не предоставила доступ к выбранной папке.</key>
+	<string>macOS did not grant access to the selected folder.</string>
+	<key>maintenance.removeReady</key>
+	<string>After quitting its GUI, you can remove this application’s .app. The profile was retained. Backup: %@</string>
+	<key>maintenance.usage</key>
+	<string>Usage: maintenance uninstall PROFILE --confirm | backup PROFILE | upgrade PROFILE --confirm | rollback PROFILE CHECKPOINT --confirm | recover PROFILE --confirm
+Stop this profile's launchd job first; do not interrupt active operations.
+</string>
+	<key>rootId не разрешён или некорректен.</key>
+	<string>rootId is not authorized or is invalid.</string>
+	<key>ruleworker.failure</key>
+	<string>The background rule check could not be completed. Details are available in the app history.</string>
+	<key>runtime.error.cancelled</key>
+	<string>Execution was cancelled.</string>
+	<key>runtime.error.unknown</key>
+	<string>The operation could not be completed.</string>
+	<key>Агент не подключён в выбранном профиле.</key>
+	<string>The agent is not connected in the selected profile.</string>
+	<key>Версия Harness не соответствует проверенному контракту %@.</key>
+	<string>The Harness version does not match the verified %@ contract.</string>
+	<key>Включите локальное чтение содержимого в редакторе правила.</key>
+	<string>Enable local content reading in the rule editor.</string>
+	<key>Выключенный проект правила. Подтверждение действий и чтения содержимого выполняется в локальном интерфейсе.</key>
+	<string>Disabled rule draft. Actions and content reading are approved in the local interface.</string>
+	<key>Выполнение</key>
+	<string>Running</string>
+	<key>Выполнение отменено.</key>
+	<string>Execution cancelled.</string>
+	<key>Вычисляет SHA-256 для версий файлов текущего снимка; возвращает taskId.</key>
+	<string>Computes SHA-256 for file versions in the current snapshot; returns taskId.</string>
+	<key>Действие требует интерфейса или разрешения macOS и не выполнено фоновым агентом.</key>
+	<string>The action requires the interface or macOS permission and was not performed by the background agent.</string>
+	<key>Диагностика: %@. Находки: %@.</key>
+	<string>Diagnostics: %@. Findings: %@.</string>
+	<key>Для этой папки не сохранено разрешение доступа.</key>
+	<string>No access permission is saved for this folder.</string>
+	<key>Для этой папки уже выполняется задача.</key>
+	<string>A task is already running for this folder.</string>
+	<key>Доступ к операциям выдаётся отдельно в приложении агента.</key>
+	<string>Access to operations is granted separately in the agent application.</string>
+	<key>Доступ к папке отозван или диск отключён.</key>
+	<string>Folder access was revoked or the drive was disconnected.</string>
+	<key>Задача не найдена или параметры некорректны.</key>
+	<string>Task not found or invalid parameters.</string>
+	<key>Запускает индексирование уже разрешённой папки.</key>
+	<string>Starts indexing an already authorized folder.</string>
+	<key>Имя роли или MCP-сервера уже занято.</key>
+	<string>The role or MCP server name is already in use.</string>
+	<key>Инструмент не принимает параметры.</key>
+	<string>This tool does not accept parameters.</string>
+	<key>Инструмент не разрешён. Сканирование запускается только из интерфейса приложения.</key>
+	<string>This tool is not allowed. Scanning can only be started from the application interface.</string>
+	<key>Локальная операция Athena.</key>
+	<string>Local Athena operation.</string>
+	<key>Локальная операция Athena: %@</key>
+	<string>Local Athena operation: %@</string>
+	<key>Локальное событие</key>
+	<string>Local event</string>
+	<key>Модель наследуется от родительского контекста Harness; провайдер роли определяет штатное делегирование.</key>
+	<string>The model is inherited from the parent Harness context; the role provider determines native delegation.</string>
+	<key>Модель, версия macOS, архитектура и число ядер без серийного номера.</key>
+	<string>Model, macOS version, architecture, and core count without the serial number.</string>
+	<key>Можно добавить только папку.</key>
+	<string>Only a folder can be added.</string>
+	<key>Мои действующие разрешения и ожидающие планы; без приватных данных других клиентов.</key>
+	<string>My active permissions and pending plans; excludes other clients’ private data.</string>
+	<key>Назначение уже существует; перезапись запрещена.</key>
+	<string>The destination already exists; overwriting is prohibited.</string>
+	<key>Накопитель: всего %@ байт, доступно %@ байт.</key>
+	<string>Storage: %@ bytes total, %@ bytes available.</string>
+	<key>Настройки Harness требуют обновления для установленной версии. Нажмите «Подключить», проверьте план и подтвердите обновление.</key>
+	<string>The Harness settings require an update for the installed version. Click “Connect”, review the plan, and approve the update.</string>
+	<key>Не удалось выполнить локальную операцию подключения Codex.</key>
+	<string>Could not complete the local Codex connection operation.</string>
+	<key>Не удалось выполнить локальную операцию подключения Harness.</key>
+	<string>Could not complete the local Harness connection operation.</string>
+	<key>Не удалось выполнить операцию.</key>
+	<string>The operation could not be completed.</string>
+	<key>Не удалось начать сканирование выбранной папки.</key>
+	<string>Could not start scanning the selected folder.</string>
+	<key>Не удалось прочитать аудит.</key>
+	<string>Could not read the audit log.</string>
+	<key>Не удалось прочитать корни.</key>
+	<string>Could not read authorized roots.</string>
+	<key>Недостаточно свободного места с учётом результата и резерва.</key>
+	<string>Insufficient free space for the result and required reserve.</string>
+	<key>Незавершённая операция; preview не изменяет файлы.</key>
+	<string>An operation is incomplete; preview does not change files.</string>
+	<key>Некорректные параметры сканирования.</key>
+	<string>Invalid scan parameters.</string>
+	<key>Некорректные параметры.</key>
+	<string>Invalid parameters.</string>
+	<key>Некорректный поисковый запрос.</key>
+	<string>Invalid search query.</string>
+	<key>Нужно локальное подтверждение этой версии правила или плана.</key>
+	<string>Local approval is required for this version of the rule or plan.</string>
+	<key>Обезличенный журнал.</key>
+	<string>Redacted audit log.</string>
+	<key>Общая операция локального агента: %@</key>
+	<string>Shared local agent operation: %@</string>
+	<key>Общий и доступный объём системного накопителя без путей и списка файлов.</key>
+	<string>Total and available system storage without paths or file lists.</string>
+	<key>Операция не завершена; требуется сверка журнала.</key>
+	<string>The operation is incomplete; the journal must be reconciled.</string>
+	<key>Операция превысила время ожидания.</key>
+	<string>The operation timed out.</string>
+	<key>Папка превышает лимит этого анализа: 100 000 файлов.</key>
+	<string>The folder exceeds this analysis limit: 100,000 files.</string>
+	<key>План устарел или файлы изменились. Создайте новый предварительный просмотр.</key>
+	<string>The plan expired or files changed. Create a new preview.</string>
+	<key>Поддерживается major 1.</key>
+	<string>Major version 1 is supported.</string>
+	<key>Подключение не выдаёт разрешения runtime. Фильтр инструментов не является системной песочницей.</key>
+	<string>Connecting does not grant runtime permissions. The tool filter is not an operating-system sandbox.</string>
+	<key>Подключить роль %@ и её MCP-сервер в выбранном профиле Codex.</key>
+	<string>Connect the %@ role and its MCP server in the selected Codex profile.</string>
+	<key>Подключить роль %@, её отдельный MCP и provider/persona в профиле Harness.</key>
+	<string>Connect the %@ role, its separate MCP, and provider/persona in the Harness profile.</string>
+	<key>Поиск в локальном индексе.</key>
+	<string>Searches the local index.</string>
+	<key>После подключения начните новый сеанс Codex, чтобы перечитать роли.</key>
+	<string>After connecting, start a new Codex session to reload the roles.</string>
+	<key>Правила Ares: %@. Мутации требуют локально утверждённого плана или включённого правила; MCP не выдаёт подтверждение.</key>
+	<string>Ares rules: %@. Mutations require a locally approved plan or an enabled rule; MCP cannot grant approval.</string>
+	<key>Превышен лимит объектов, исходных данных или общий бюджет цепочки правил.</key>
+	<string>The object limit, source data limit, or total rule-chain budget was exceeded.</string>
+	<key>Предложить ограниченный доступ и получить план для подтверждения в локальном окне агента. Не включает доступ автоматически.</key>
+	<string>Propose limited access and obtain a plan for approval in the agent’s local window. Does not enable access automatically.</string>
+	<key>Проверка результата не прошла. Исходник сохранён.</key>
+	<string>Result verification failed. The source file was preserved.</string>
+	<key>Проверьте настройки правила и папку назначения.</key>
+	<string>Check the rule settings and destination folder.</string>
+	<key>Проверьте параметры, связи и циклы правила.</key>
+	<string>Check the rule parameters, links, and cycles.</string>
+	<key>Проверьте состояние агента и локальные разрешения.</key>
+	<string>Check the agent status and local permissions.</string>
+	<key>Путь выходит за пределы разрешённой папки или содержит ссылку.</key>
+	<string>The path is outside the authorized folder or contains a link.</string>
+	<key>Разрешение для папки устарело. Выберите её снова.</key>
+	<string>Folder permission is outdated. Select it again.</string>
+	<key>Роль и MCP-блок принадлежат экосистеме и не изменены.</key>
+	<string>The role and MCP block belong to the ecosystem and have not been modified.</string>
+	<key>Роль не подключена в выбранном профиле Harness.</key>
+	<string>The role is not connected in the selected Harness profile.</string>
+	<key>Роль, provider и MCP настроены в профиле; загрузка текущим чатом и делегирование проверяются отдельно.</key>
+	<string>The role, provider, and MCP are configured in the profile; loading by the current chat and delegation are verified separately.</string>
+	<key>Сводка локального индекса.</key>
+	<string>Local index summary.</string>
+	<key>Сначала выполните вычисление дубликатов.</key>
+	<string>First, compute duplicates.</string>
+	<key>Сначала обновите список файлов этой папки.</key>
+	<string>First, refresh this folder’s file list.</string>
+	<key>Сначала разрешите уведомления кнопкой в разделе «Правила».</key>
+	<string>First, allow notifications using the button in Rules.</string>
+	<key>Сохранённые локальные события: явное чтение, временный захват и подтверждение; модель автоматически не запускается.</key>
+	<string>Stored local events: explicit reading, temporary claims, and acknowledgements; no model is started automatically.</string>
+	<key>Сохранённые результаты SHA-256.</key>
+	<string>Saved SHA-256 results.</string>
+	<key>Список разрешённых папок; только чтение.</key>
+	<string>Lists authorized folders; read-only.</string>
+	<key>Статус фоновой задачи.</key>
+	<string>Background task status.</string>
+	<key>Страница не соответствует текущему запросу. Начните просмотр заново.</key>
+	<string>The page does not match the current request. Start browsing again.</string>
+	<key>Структурированный отчёт и безопасные рекомендации, созданные локально.</key>
+	<string>A structured report and safe recommendations generated locally.</string>
+	<key>Текущие CPU, память и свободное место без истории процессов.</key>
+	<string>Current CPU, memory, and free space without process history.</string>
+	<key>Удалить принадлежащие экосистеме роль %@ и блок MCP.</key>
+	<string>Remove the ecosystem-owned %@ role and MCP block.</string>
+	<key>Удалить только принадлежащие экосистеме MCP, provider и роль %@.</key>
+	<string>Remove only the ecosystem-owned MCP, provider, and %@ role.</string>
+	<key>Уже выполняется другое правило.</key>
+	<string>Another rule is already running.</string>
+	<key>Уже открытый чат может сохранять прежнюю конфигурацию. Реальная загрузка и делегирование проверяются отдельно.</key>
+	<string>An existing chat may retain the previous configuration. Actual loading and delegation are verified separately.</string>
+	<key>Управляемые файлы изменены вручную; автоматическая перезапись запрещена.</key>
+	<string>Managed files were changed manually; automatic overwriting is prohibited.</string>
+	<key>Управляемый блок изменён или имя занято. Чужие настройки не перезаписаны.</key>
+	<string>The managed block was changed or the name is in use. Unrelated settings were not overwritten.</string>
+	<key>Файл недоступен или путь содержит ссылку.</key>
+	<string>The file is unavailable or the path contains a link.</string>
+	<key>Файлы изменились. Обновите список файлов и повторите запрос.</key>
+	<string>Files changed. Refresh the file list and try again.</string>
+	<key>Чужая запись занимает имя MCP или субагента.</key>
+	<string>An unrelated entry occupies the MCP or subagent name.</string>
+	<key>нет</key>
+	<string>none</string>
+	<key>подготавливается</key>
+	<string>preparing</string>
+</dict>
+</plist>
