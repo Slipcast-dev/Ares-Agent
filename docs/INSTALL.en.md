@@ -2,7 +2,7 @@
 
 Current prerelease: [v0.37.0](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.37.0).
 
-PKG/DMG: Apple Silicon arm64. macOS14+ target, automatically built/tested locally on macOS27.0.1 and in macOS15 CI.
+PKG/DMG: Apple Silicon arm64. macOS14+ target, automatically built/tested in macOS15 GitHub CI.
 **Без Developer ID / No Developer ID signature. Not notarized.**
 Verify SHA256SUMS. Do not disable Gatekeeper globally.
 

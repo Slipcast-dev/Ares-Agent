@@ -1101,11 +1101,11 @@
     },
     {
       "path": "docs/INSTALL.en.md",
-      "sha256": "bf83798e147b66b33e8ed706a8d319fe2cb65ecc93c53c40419874b1f2131ba3"
+      "sha256": "f6ad3306bb6460bf2fa649633d9ec4a98ddf9f17f32a7d90409079b92545b097"
     },
     {
       "path": "docs/INSTALL.ru.md",
-      "sha256": "1978805d68bf0ee09f83ae1e1d8c2e70453097b646e165123e514a9c2381e2d0"
+      "sha256": "3330d2c52655e9150bfd8ce05f5ba56e1176fd792e73a951317bb2281cce269c"
     },
     {
       "path": "docs/LIFECYCLE.md",
@@ -1125,7 +1125,7 @@
     },
     {
       "path": "docs/STATUS.md",
-      "sha256": "d75e12433cd426a07d869317f146993e11620e0b7caa0243540b6b2b0d6d9e73"
+      "sha256": "6436ef6dfee44f6d03f93642d7bf92b08039557b675b782b5aae0b7aa0b5a14c"
     },
     {
       "path": "docs/assets/ares-icon.png",

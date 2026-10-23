@@ -8,7 +8,7 @@
 | Общий пакет / Shared package | EcosystemKit 0.29.0; vendored and SHA-256 locked |
 | Установщики / Installers | Apple Silicon arm64; PKG + DMG + SHA256SUMS |
 | Целевая ОС / OS target | macOS 14+ |
-| Автоматические проверки / Automation | macOS 15 GitHub CI; local macOS 27.0.1 |
+| Автоматические проверки / Automation | macOS 15 GitHub CI; local regression evidence is documented separately |
 | Локализация / Language | Independent System / Русский / English |
 | Подпись / Signing | Local ad-hoc only; no Apple Developer ID; not notarized |
 | Лицензия / License | Custom non-commercial, source-available; not MIT/OSI |
