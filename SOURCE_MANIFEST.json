@@ -57,7 +57,7 @@
     },
     {
       "path": "EcosystemKit.lock.json",
-      "sha256": "57dacf78d7bb29ede23f8cac3268ae2edb7e4bcea106a80edf58ed5595e65b64"
+      "sha256": "f2b93869878f30b8dcb4c2778ade8c02c0ec233baab73a9d277464e4ed0c3145"
     },
     {
       "path": "LICENSE",
@@ -521,7 +521,7 @@
     },
     {
       "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalMCPHistoryTests.swift",
-      "sha256": "5cf519062cf3941926f9ec6fe1cd39cf85ed9f95b5f997de45be222771f914ee"
+      "sha256": "51f81be4ade6d073a3a85f1182185e6ba5542b76352f5e693e7a3624c62beecc"
     },
     {
       "path": "Packages/EcosystemKit/Tests/EcosystemLocalIPCTests/LocalizationNotificationTests.swift",

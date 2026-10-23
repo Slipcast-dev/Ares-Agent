@@ -449,7 +449,7 @@
     },
     {
       "path": "Tests/EcosystemLocalIPCTests/LocalMCPHistoryTests.swift",
-      "sha256": "5cf519062cf3941926f9ec6fe1cd39cf85ed9f95b5f997de45be222771f914ee"
+      "sha256": "51f81be4ade6d073a3a85f1182185e6ba5542b76352f5e693e7a3624c62beecc"
     },
     {
       "path": "Tests/EcosystemLocalIPCTests/LocalizationNotificationTests.swift",

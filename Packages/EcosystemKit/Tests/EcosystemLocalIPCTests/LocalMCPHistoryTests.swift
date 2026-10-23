@@ -126,7 +126,12 @@ final class LocalMCPHistoryTests: XCTestCase {
         let output = try await page(value, operation: "mcp.event.list", size: 100)
         let items = try XCTUnwrap(output["items"] as? [[String: Any]])
         XCTAssertEqual(items.count, 1); XCTAssertEqual(items.first?["eventId"] as? String, visible.uuidString)
-        XCTAssertEqual(items.first?["summary"] as? String, "Локальное событие"); XCTAssertNil(items.first?["rootIDs"])
+        // Это проверка redaction, а не системного языка машины, выполняющей тест.
+        // Безопасный placeholder имеет два допустимых перевода; приватный summary
+        // не должен пройти ни в одном из них. Выбор языка проверяется отдельно.
+        let safeSummary = try XCTUnwrap(items.first?["summary"] as? String)
+        XCTAssertTrue(["Локальное событие", "Local event"].contains(safeSummary))
+        XCTAssertNil(items.first?["rootIDs"])
         XCTAssertFalse(String(decoding: try JSONSerialization.data(withJSONObject: output), as: UTF8.self).contains("Private"))
     }
 
