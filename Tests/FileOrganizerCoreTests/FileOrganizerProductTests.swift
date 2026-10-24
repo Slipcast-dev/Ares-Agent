@@ -6,6 +6,6 @@ final class FileOrganizerProductTests: XCTestCase {
     /// на эти данные, поэтому их изменение должно быть осознанным и тестируемым.
     func testProductIdentityIsStable() {
         XCTAssertEqual(FileOrganizerProduct.displayName, "Ares")
-        XCTAssertEqual(FileOrganizerProduct.version, "0.1.0")
+        XCTAssertEqual(FileOrganizerProduct.version, "0.38.1")
     }
 }

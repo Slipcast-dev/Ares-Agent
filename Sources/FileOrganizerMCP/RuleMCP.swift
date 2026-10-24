@@ -7,6 +7,24 @@ import EcosystemLocalization
 /// MCP может создавать выключенный проект, но не подтверждать план.
 /// Нормализация default значений выполняется до строгого server decoding.
 enum RuleMCP {
+    /// Нормализация внутренних моделей обязана получать JSON-объект. Модель
+    /// может позднее изменить Encodable и выдать массив/скаляр: такой сбой
+    /// возвращается как штатная ошибка MCP, а не завершает весь stdio-процесс.
+    /// Подробности Encoder не раскрываем клиенту: они относятся к внутренней
+    /// реализации, а не к некорректным аргументам пользователя.
+    static func encodedModelObject<Value: Encodable>(_ value: Value) throws -> [String: Any] {
+        do {
+            let data = try JSONEncoder().encode(value)
+            let object = try JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
+            guard let dictionary = object as? [String: Any] else {
+                throw LocalRuntimeFailure.operationFailed
+            }
+            return dictionary
+        } catch {
+            throw LocalRuntimeFailure.operationFailed
+        }
+    }
+
     private struct Reply: Decodable { let version: Int; let domain: String; let result: Data?; let error: LocalRuntimeFailure? }
     static let names = ["rule.list", "rule.get", "rule.validate", "rule.preview", "rule.propose", "rule.run", "rule.request_enable", "rule.disable", "rule.history"]
     static func call(_ name: String, args: [String: Any], client: LocalRPCClient, context: MCPCallContext? = nil) async throws -> [String: Any] {
@@ -47,10 +65,11 @@ enum RuleMCP {
         if ["rule.validate", "rule.propose"].contains(name) {
             guard let draft = args["rule"] as? [String: Any] else { throw LocalRuntimeFailure.invalidRequest }
             // Запрещаем передавать permission/enabled/content consent как аргументы.
-            var normalized = try JSONSerialization.jsonObject(with: JSONEncoder().encode(AutomationRule())) as! [String: Any]
+            var normalized = try encodedModelObject(AutomationRule())
             guard Set(draft.keys).isSubset(of: Set(normalized.keys).union(["rootID", "maximumFiles", "maximumBytes", "sourceRuleID", "scheduleTimeZone"]).subtracting(["id", "enabled", "allowContentReading"])) else { throw LocalRuntimeFailure.invalidRequest }
             for (key, value) in draft { normalized[key] = value }
-            if let conditions = draft["conditions"] as? [String: Any], var defaults = try JSONSerialization.jsonObject(with: JSONEncoder().encode(RuleConditions())) as? [String: Any] {
+            if let conditions = draft["conditions"] as? [String: Any] {
+                var defaults = try encodedModelObject(RuleConditions())
                 let optional: Set<String> = ["minimumBytes", "maximumBytes", "modifiedAfter", "createdAfter", "firstSeenAfter"]
                 guard Set(conditions.keys).isSubset(of: Set(defaults.keys).union(optional)) else { throw LocalRuntimeFailure.invalidRequest }
                 defaults.merge(conditions) { _, value in value }; normalized["conditions"] = defaults
@@ -58,7 +77,7 @@ enum RuleMCP {
             if let actions = draft["actions"] as? [[String: Any]] {
                 normalized["actions"] = try actions.map { action -> [String: Any] in
                     guard Set(action.keys).isSubset(of: ["kind", "value", "destinationRootID", "nextRuleID", "archiveTogether"]) else { throw LocalRuntimeFailure.invalidRequest }
-                    var defaults = try JSONSerialization.jsonObject(with: JSONEncoder().encode(RuleAction(kind: .log))) as! [String: Any]
+                    var defaults = try encodedModelObject(RuleAction(kind: .log))
                     defaults.merge(action) { _, value in value }; return defaults
                 }
             }

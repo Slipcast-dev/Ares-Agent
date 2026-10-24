@@ -195,7 +195,7 @@ def main() -> None:
     """Новый output сохраняет прошлые сборки; finally отмонтирует только свой DMG."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", action="store_true")
-    parser.add_argument("--version", help="Default: current coordinated release 0.38.0")
+    parser.add_argument("--version", help="Default: current coordinated release 0.38.1")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--use-prepared-apps",
@@ -205,9 +205,9 @@ def main() -> None:
     parser.add_argument("--apps-dir", type=Path, help="Explicit prepared applications directory; never installed")
     parser.add_argument("--agent", choices=tuple(PRODUCTS), help="Package just one prepared standalone agent")
     args = parser.parse_args()
-    # Оба проекта согласованы в локальном комплекте 0.38.0. --agent по-прежнему
+    # Оба проекта согласованы в локальном комплекте 0.38.1. --agent по-прежнему
     # ограничивает состав сборки; явный --version нужен для исторических выпусков.
-    args.version = args.version or "0.38.0"
+    args.version = args.version or "0.38.1"
     if not args.run or not re.fullmatch(
         r"[0-9]+\.[0-9]+\.[0-9]+", args.version
     ):

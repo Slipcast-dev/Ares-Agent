@@ -44,6 +44,12 @@ let package = Package(
         .executableTarget(name: "AresRuntime", dependencies: [.product(name: "EcosystemLocalization", package: "EcosystemKit"), "FileOrganizerCore"]),
         .executableTarget(name: "AresStoreTool", dependencies: ["FileOrganizerCore", .product(name: "EcosystemLocalization", package: "EcosystemKit")]),
         .executableTarget(name: "FileOrganizerRulesWorker", dependencies: ["FileOrganizerCore", .product(name: "EcosystemLocalization", package: "EcosystemKit")]),
+        // Проверки MCP-границы импортируют executable как модуль: main не
+        // запускается, поэтому тесты не открывают рабочую базу или stdio-сеанс.
+        .testTarget(name: "FileOrganizerMCPTests", dependencies: [
+            "FileOrganizerMCP", "FileOrganizerCore",
+            .product(name: "EcosystemLocalIPC", package: "EcosystemKit")
+        ]),
         .testTarget(name: "FileOrganizerUITests", dependencies: ["FileOrganizer"]),
         .testTarget(
             name: "FileOrganizerCoreTests",

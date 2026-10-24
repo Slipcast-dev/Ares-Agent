@@ -17,4 +17,4 @@ jobs:
       - run: scripts/package_app.zsh
         env:
           ECOSYSTEM_SKIP_LSREGISTER: '1'
-          ECOSYSTEM_APP_VERSION: '0.38.0'
+          ECOSYSTEM_APP_VERSION: '0.38.1'

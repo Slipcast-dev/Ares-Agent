@@ -8,11 +8,14 @@
 
 Арес — отдельный локальный агент macOS. Безопасная работа с файлами, правилами и индексом.
 
-Версия **0.38.0**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
+Версия **0.38.1**. Целевая macOS14+, текущий выпуск — **Apple Silicon arm64**.
 Запуск на Intel и macOS14 отдельно ещё не принят. Проект с доступными исходниками
 использует собственную некоммерческую [лицензию](LICENSE), а не MIT/OSI-лицензию.
 
-[Релиз 0.38.0](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.38.0) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.0/Ares-0.38.0-unsigned.pkg) · [DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.0/Ares-0.38.0-unsigned.dmg) · [SHA-256](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.0/SHA256SUMS) · [Проверки и ограничения](docs/RELEASE.md)
+[Релиз 0.38.1](https://github.com/Slipcast-dev/Ares-Agent/releases/tag/v0.38.1) · [PKG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.1/Ares-0.38.1-unsigned.pkg) · [DMG](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.1/Ares-0.38.1-unsigned.dmg) · [SHA-256](https://github.com/Slipcast-dev/Ares-Agent/releases/download/v0.38.1/SHA256SUMS) · [Проверки и ограничения](docs/RELEASE.md)
+
+
+В 0.38.1 проверяется форма сериализации внутренних моделей MCP; ошибка возвращается клиенту без аварийного завершения. Документация отделяет текущие инструкции от архивов.
 
 ## Установка
 
@@ -57,7 +60,7 @@ scripts/package_app.zsh
 
 ## RU/EN localization / Локализация
 
-Предварительный выпуск 0.38.0. Полная ручная приёмка VoiceOver/клавиатуры
+Предварительный выпуск 0.38.1. Полная ручная приёмка VoiceOver/клавиатуры
 и аппаратные проверки остаются открытыми.
 Select System, Русский or English in this agent's settings. Each agent keeps its
 own language. Даты/числа следуют региону macOS. User names, paths and historical
@@ -65,8 +68,8 @@ free text retain their original language. System Settings follows macOS language
 
 ```sh
 python3 scripts/verify_localization_acceptance.py --ares-dir . --kit-dir Packages/EcosystemKit --require-reviewed-boundaries --output localization-acceptance.json
-ECOSYSTEM_SKIP_LSREGISTER=1 ECOSYSTEM_APP_VERSION=0.38.0 scripts/package_app.zsh
-python3 scripts/prepare_local_release.py --run --version 0.38.0 --agent Ares --use-prepared-apps --apps-dir dist --output installers/0.38.0
+ECOSYSTEM_SKIP_LSREGISTER=1 ECOSYSTEM_APP_VERSION=0.38.1 scripts/package_app.zsh
+python3 scripts/prepare_local_release.py --run --version 0.38.1 --agent Ares --use-prepared-apps --apps-dir dist --output installers/0.38.1
 ```
 
 Installer output is unsigned Developer ID and not notarized. These commands

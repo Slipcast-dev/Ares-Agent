@@ -1,0 +1,76 @@
+{
+  "Ares": {
+    "command": "swift test",
+    "bundles": {
+      "FileOrganizerUITests.xctest": {
+        "tests": 11,
+        "skipped": 1,
+        "failures": 0
+      },
+      "FileOrganizerMCPTests.xctest": {
+        "tests": 5,
+        "skipped": 0,
+        "failures": 0
+      },
+      "FileOrganizerCoreTests.xctest": {
+        "tests": 85,
+        "skipped": 0,
+        "failures": 0
+      }
+    },
+    "tests": 101,
+    "skipped": 1,
+    "failures": 0
+  },
+  "Athena": {
+    "command": "swift test",
+    "bundles": {
+      "MacAssistantCoreTests.xctest": {
+        "tests": 277,
+        "skipped": 1,
+        "failures": 0
+      }
+    },
+    "tests": 277,
+    "skipped": 1,
+    "failures": 0
+  },
+  "Kit": {
+    "command": "swift test --package-path Packages/EcosystemKit",
+    "bundles": {
+      "EcosystemUITests.xctest": {
+        "tests": 23,
+        "skipped": 0,
+        "failures": 0
+      },
+      "EcosystemRuntimeSupportTests.xctest": {
+        "tests": 48,
+        "skipped": 0,
+        "failures": 0
+      },
+      "EcosystemLocalizationTests.xctest": {
+        "tests": 14,
+        "skipped": 0,
+        "failures": 0
+      },
+      "EcosystemLocalIPCTests.xctest": {
+        "tests": 137,
+        "skipped": 0,
+        "failures": 0
+      },
+      "EcosystemContractsTests.xctest": {
+        "tests": 19,
+        "skipped": 0,
+        "failures": 0
+      },
+      "EcosystemClientAdaptersTests.xctest": {
+        "tests": 58,
+        "skipped": 0,
+        "failures": 0
+      }
+    },
+    "tests": 299,
+    "skipped": 0,
+    "failures": 0
+  }
+}

@@ -1,5 +1,13 @@
 # Changes / Изменения
 
+## 0.38.1 — 2026-10-24
+
+- Checked MCP model serialization replaces forced dictionary casts in Ares.
+- Five regression cases cover object defaults, arrays/scalars/null, encoder failure and a subsequent successful call.
+- Application/MCP release versions and installer links are aligned.
+- Current documentation identifies working sources separately from published snapshots and archived stages.
+- File automation permissions and behavior are unchanged. Manual hardware/accessibility gates remain open.
+
 ## 0.38.0 — 2026-10-23, pre-release
 
 - Coordinated 0.38.0 application, background runtime and installer metadata.
